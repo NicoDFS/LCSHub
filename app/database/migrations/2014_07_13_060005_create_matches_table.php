@@ -17,7 +17,7 @@ class CreateMatchesTable extends Migration {
                 $table->engine = 'InnoDB';
 
                 $table->increments('id');
-                $table->string('dateTime');
+                $table->datetime('dateTime');
                 $table->string('matchName');
                 $table->integer('winnerId')->nullable();
                 $table->integer('matchId')->unique();

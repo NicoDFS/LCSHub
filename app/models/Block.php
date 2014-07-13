@@ -5,7 +5,7 @@ class Block extends Eloquent {
 
     public function matches()
     {
-        return $this->hasMany('Match');
+        return $this->hasMany('Match', 'blockId', 'blockId');
     }
 
 

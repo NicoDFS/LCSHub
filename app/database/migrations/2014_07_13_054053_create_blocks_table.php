@@ -18,7 +18,7 @@ class CreateBlocksTable extends Migration {
 
                 $table->increments('id');
                 $table->integer('blockId')->unique();
-                $table->string('dateTime');
+                $table->datetime('dateTime');
                 $table->string('tickets')->nullable();
                 $table->integer('leagueId');
                 $table->integer('tournamentId');
@@ -28,7 +28,7 @@ class CreateBlocksTable extends Migration {
                 $table->string('leagueColor');
                 $table->integer('week');
                 $table->string('label');
-                $table->string('bodyTime');
+                $table->datetime('bodyTime');
                 $table->timestamps();
 
             });
