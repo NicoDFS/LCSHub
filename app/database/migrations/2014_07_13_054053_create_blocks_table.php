@@ -14,17 +14,21 @@ class CreateBlocksTable extends Migration {
 	{
 	    Schema::create('blocks', function($table)
             {
+                $table->engine = 'InnoDB';
+
                 $table->increments('id');
+                $table->integer('blockId')->unique();
                 $table->string('dateTime');
-                $table->string('tickets');
-                $table->string('leagueId');
-                $table->string('tournamentId');
+                $table->string('tickets')->nullable();
+                $table->integer('leagueId');
+                $table->integer('tournamentId');
                 $table->string('tournamentName');
-                $table->string('significance');
-                $table->string('tbdTime');
+                $table->integer('significance');
+                $table->integer('tbdTime');
                 $table->string('leagueColor');
-                $table->string('week');
+                $table->integer('week');
                 $table->string('label');
+                $table->string('bodyTime');
                 $table->timestamps();
 
             });
