@@ -11,7 +11,17 @@
 |
 */
 
-Route::get('/', function()
+/*
+|   Route::get('/', function()
+|   {
+|	return View::make('hello');
+|   });
+*/
+
+Route::get('/block/{id}', function($id)
 {
-	return View::make('hello');
+
+    $block = Block::whereBlockId($id);
+    return $block->matches;
+
 });
