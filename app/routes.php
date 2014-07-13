@@ -21,7 +21,7 @@
 Route::get('/block/{id}', function($id)
 {
 
-    $block = Block::whereBlockId($id);
+    $block = Block::where('blockId', $id)->first();
     return $block->matches;
 
 });
