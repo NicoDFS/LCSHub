@@ -19,6 +19,7 @@ class CreateGamesTable extends Migration {
 
                 $table->increments('id');
                 $table->datetime('dateTime');
+                $table->integer('gameId')->unique();
                 $table->integer('winnerId')->nullable();
                 $table->integer('gameNumbers');
                 $table->integer('maxGames');
