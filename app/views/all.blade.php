@@ -19,7 +19,17 @@
                 <ul class="list-group">
 
                 @foreach($block->matches as $match)
-                    <li class="list-group-item">{{  $match->matchName  }}
+
+                    <li class="list-group-item">
+
+                        @if($match->blueId == $match->winnerId)
+                            <span style="color:green">{{ $match->blueName }}</span> vs {{ $match->redName }}
+                        @endif
+
+                        @if($match->redId == $match->winnerId)
+                            <span style="color:green">{{ $match->redName }}</span> vs {{ $match->blueName }}
+                        @endif
+
                         @if ($match->isLive && !$match->isFinished)
                             <span class='pull-right'>Live</span>
                         @endif
@@ -31,6 +41,7 @@
                         @if(!$match->isLive && $match->isFinished)
                             <span class='pull-right'>Finished</span>
                         @endif
+
                     </li>
                 @endforeach
 
