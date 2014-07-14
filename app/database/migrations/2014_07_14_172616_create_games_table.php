@@ -22,7 +22,7 @@ class CreateGamesTable extends Migration {
                 $table->integer('winnerId')->nullable();
                 $table->integer('gameNumbers');
                 $table->integer('maxGames');
-                $table->integer('gameLength');
+                $table->integer('gameLength')->nullable();
                 $table->integer('matchId');
                 $table->integer('noVods');
 
@@ -30,8 +30,8 @@ class CreateGamesTable extends Migration {
                 $table->string('tournamentName');
                 $table->integer('tournamentRound');
 
-                $table->string('vodType');
-                $table->string('vodURL');
+                $table->string('vodType')->nullable();
+                $table->string('vodURL')->nullable();
                 $table->text('embedCode')->nullable();
 
                 $table->integer('blueId');
@@ -42,16 +42,16 @@ class CreateGamesTable extends Migration {
                 $table->string('redName');
                 $table->string('redLogoURL');
 
-                $table->integer('player0');
-                $table->integer('player1');
-                $table->integer('player2');
-                $table->integer('player3');
-                $table->integer('player4');
-                $table->integer('player5');
-                $table->integer('player6');
-                $table->integer('player7');
-                $table->integer('player8');
-                $table->integer('player9');
+                $table->integer('player0')->nullable();
+                $table->integer('player1')->nullable();
+                $table->integer('player2')->nullable();
+                $table->integer('player3')->nullable();
+                $table->integer('player4')->nullable();
+                $table->integer('player5')->nullable();
+                $table->integer('player6')->nullable();
+                $table->integer('player7')->nullable();
+                $table->integer('player8')->nullable();
+                $table->integer('player9')->nullable();
 
                 $table->timestamps();
 
