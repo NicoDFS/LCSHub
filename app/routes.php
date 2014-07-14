@@ -52,6 +52,21 @@ Route::get('/all', function()
     $allBlocks = Block::with('matches')->orderBy('dateTime', 'DESC')->get();
 
     return View::make('all')->with('blocks', $allBlocks);
+
+});
+
+Route::get('/insertgames', function()
+{
+    $matches = Match::where('isFinished', true)->get();
+
+    Eloquent::unguard();
+
+    foreach($matches as $match)
+    {
+        $gameURL = 'http://na.lolesports.com:80/api/game/' . $match->gameId . '.json';
+        $game = json_decode(file_get_contents($gameURL));
+    }
+
 });
 
 Route::get('/insertblocks', function()
@@ -207,3 +222,5 @@ Route::get('/insertblocks', function()
     }
 
 });
+
+
