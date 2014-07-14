@@ -57,7 +57,7 @@ Route::get('/all', function()
 
 Route::get('/insertgames', function()
 {
-    $matches = Match::where('isFinished', true)->get();
+    $matches = Match::where('isFinished', true)->take(1)->get();
 
     Eloquent::unguard();
 
@@ -65,7 +65,7 @@ Route::get('/insertgames', function()
     {
         $gameURL = 'http://na.lolesports.com:80/api/game/' . $match->gameId . '.json';
         $gameData = json_decode(file_get_contents($gameURL));
-        //dd($gameData);
+
         $playersInserted = array();
 
         foreach($gameData->players as $playerData)
@@ -102,12 +102,12 @@ Route::get('/insertgames', function()
                     'deaths'            => $playerData->deaths,
                     'assists'           => $playerData->assists,
                     'kda'               => $playerData->kda,
-                    'item0Id'           => $playerData->$itemArray[0],
-                    'item1Id'           => $playerData->$itemArray[1],
-                    'item2Id'           => $playerData->$itemArray[2],
-                    'item3Id'           => $playerData->$itemArray[3],
-                    'item4Id'           => $playerData->$itemArray[4],
-                    'item5Id'           => $playerData->$itemArray[5],
+                    'item0Id'           => (isset($itemArray[0]) ? $playerData->$itemArray[0] : null),
+                    'item1Id'           => (isset($itemArray[1]) ? $playerData->$itemArray[1] : null),
+                    'item2Id'           => (isset($itemArray[2]) ? $playerData->$itemArray[2] : null),
+                    'item3Id'           => (isset($itemArray[3]) ? $playerData->$itemArray[3] : null),
+                    'item4Id'           => (isset($itemArray[4]) ? $playerData->$itemArray[4] : null),
+                    'item5Id'           => (isset($itemArray[5]) ? $playerData->$itemArray[5] : null),
                     'item6Id'           => (isset($itemArray[6]) ? $playerData->$itemArray[6] : null),
                     'spell0Id'          => $playerData->$spellArray[0],
                     'spell1Id'          => $playerData->$spellArray[1],
@@ -119,29 +119,30 @@ Route::get('/insertgames', function()
             }
         }
 
+
         $game = Game::firstOrCreate(['gameId' => $match->gameId]);
 
         $game->update([
-            'dateTime'              => $game->dateTime,
+            'dateTime'              => date('Y-m-d H:i:s', strtotime($gameData->dateTime)),
             'gameId'                => $match->gameId,
-            'winnerId'              => $game->winnerId,
-            'gameNumber'            => $game->gameNumber,
-            'maxGames'              => $game->maxGames,
-            'gameLength'            => $game->gameLength,
-            'matchId'               => $game->matchId,
-            'noVods'                => $game->noVods,
-            'tournamentId'          => $game->tournament->id,
-            'tournamentName'        => $game->tournament->name,
-            'tournamentRound'       => $game->tournament->round,
-            'vodType'               => ($game->vods == null ? null : $game->vods->vod->type),
-            'vodURL'                => ($game->vods == null ? null : $game->vods->vod->URL),
-            'embedCode'             => ($game->vods == null ? null : $game->vods->vod->embedCode),
-            'blueId'                => $game->contestants->blue->id,
-            'blueName'              => $game->contestants->blue->name,
-            'blueLogoURL'           => $game->contestants->blue->logoURL,
-            'redId'                 => $game->contestants->red->id,
-            'redName'               => $game->contestants->red->name,
-            'redLogoURL'            => $game->contestants->red->logoURL,
+            'winnerId'              => $gameData->winnerId,
+            'gameNumber'            => $gameData->gameNumber,
+            'maxGames'              => $gameData->maxGames,
+            'gameLength'            => $gameData->gameLength,
+            'matchId'               => $gameData->matchId,
+            'noVods'                => $gameData->noVods,
+            'tournamentId'          => $gameData->tournament->id,
+            'tournamentName'        => $gameData->tournament->name,
+            'tournamentRound'       => $gameData->tournament->round,
+            'vodType'               => ($gameData->vods == null ? null : $gameData->vods->vod->type),
+            'vodURL'                => ($gameData->vods == null ? null : $gameData->vods->vod->URL),
+            'embedCode'             => ($gameData->vods == null ? null : $gameData->vods->vod->embedCode),
+            'blueId'                => $gameData->contestants->blue->id,
+            'blueName'              => $gameData->contestants->blue->name,
+            'blueLogoURL'           => $gameData->contestants->blue->logoURL,
+            'redId'                 => $gameData->contestants->red->id,
+            'redName'               => $gameData->contestants->red->name,
+            'redLogoURL'            => $gameData->contestants->red->logoURL,
             'player0'               => $playersInserted[0],
             'player1'               => $playersInserted[1],
             'player2'               => $playersInserted[2],
