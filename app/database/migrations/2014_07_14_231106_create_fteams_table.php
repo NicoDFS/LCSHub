@@ -21,6 +21,7 @@ class CreateFteamsTable extends Migration {
                 $table->integer('fId');
                 $table->integer('riotId');
                 $table->string('name');
+                $table->string('shortName');
                 $table->text('flavorText');
                 $table->string('positions');
 

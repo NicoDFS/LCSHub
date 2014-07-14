@@ -18,7 +18,28 @@ class CreateFteamsweekTable extends Migration {
                 $table->engine = 'InnoDB';
 
                 $table->increments('id');
+                $table->integer('fId');
+                $table->integer('riotId');
 
+                $table->integer('week');
+
+                $table->integer('firstBloodProjected');
+                $table->integer('firstBloodActual');
+
+                $table->integer('towerKillsProjected');
+                $table->integer('towerKillsActual');
+
+                $table->integer('baronKillsProjected');
+                $table->integer('baronKillsActual');
+
+                $table->integer('dragonKillsProjected');
+                $table->integer('dragonKillsActual');
+
+                $table->integer('matchVictoryProjected');
+                $table->integer('matchVictoryActual');
+
+                $table->integer('matchDefeatProjected');
+                $table->integer('matchDefeatActual');
 
                 $table->timestamps();
 
