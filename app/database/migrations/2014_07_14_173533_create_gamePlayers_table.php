@@ -32,13 +32,13 @@ class CreateGamePlayersTable extends Migration {
                 $table->integer('assists');
                 $table->double('kda', 5, 3);
 
-                $table->integer('item0Id');
-                $table->integer('item1Id');
-                $table->integer('item2Id');
-                $table->integer('item3Id');
-                $table->integer('item4Id');
-                $table->integer('item5Id');
-                $table->integer('item6Id');
+                $table->integer('item0Id')->nullable();
+                $table->integer('item1Id')->nullable();
+                $table->integer('item2Id')->nullable();
+                $table->integer('item3Id')->nullable();
+                $table->integer('item4Id')->nullable();
+                $table->integer('item5Id')->nullable();
+                $table->integer('item6Id')->nullable();
 
                 $table->integer('spell0Id');
                 $table->integer('spell1Id');

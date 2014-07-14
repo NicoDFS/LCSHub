@@ -64,7 +64,97 @@ Route::get('/insertgames', function()
     foreach($matches as $match)
     {
         $gameURL = 'http://na.lolesports.com:80/api/game/' . $match->gameId . '.json';
-        $game = json_decode(file_get_contents($gameURL));
+        $gameData = json_decode(file_get_contents($gameURL));
+        //dd($gameData);
+        $playersInserted = array();
+
+        foreach($gameData->players as $playerData)
+        {
+            if(GamePlayer::whereRaw('gameId = ' . $match->gameId . ' AND playerId = ' . $playerData->id)->count() == 0)
+            {
+                $itemArray = array();
+                foreach($playerData as $key => $value)
+                {
+                    if(strpos($key, 'item') !== false)
+                    {
+                        $itemArray[] = $key;
+                    }
+                }
+
+                $spellArray = array();
+                foreach($playerData as $key => $value)
+                {
+                    if(strpos($key, 'spell') !== false)
+                    {
+                        $spellArray[] = $key;
+                    }
+                }
+
+                $gamePlayer = GamePlayer::create([
+                    'gameId'            => $match->gameId,
+                    'playerId'          => $playerData->id,
+                    'teamId'            => $playerData->teamId,
+                    'name'              => $playerData->name,
+                    'photoURL'          => $playerData->photoURL,
+                    'championId'        => $playerData->championId,
+                    'endLevel'          => $playerData->endLevel,
+                    'kills'             => $playerData->kills,
+                    'deaths'            => $playerData->deaths,
+                    'assists'           => $playerData->assists,
+                    'kda'               => $playerData->kda,
+                    'item0Id'           => $playerData->$itemArray[0],
+                    'item1Id'           => $playerData->$itemArray[1],
+                    'item2Id'           => $playerData->$itemArray[2],
+                    'item3Id'           => $playerData->$itemArray[3],
+                    'item4Id'           => $playerData->$itemArray[4],
+                    'item5Id'           => $playerData->$itemArray[5],
+                    'item6Id'           => (isset($itemArray[6]) ? $playerData->$itemArray[6] : null),
+                    'spell0Id'          => $playerData->$spellArray[0],
+                    'spell1Id'          => $playerData->$spellArray[1],
+                    'totalGold'         => $playerData->totalGold,
+                    'minionsKilled'     => $playerData->minionsKilled
+                ]);
+
+                $playersInserted[] = $gamePlayer->id;
+            }
+        }
+
+        $game = Game::firstOrCreate(['gameId' => $match->gameId]);
+
+        $game->update([
+            'dateTime'              => $game->dateTime,
+            'gameId'                => $match->gameId,
+            'winnerId'              => $game->winnerId,
+            'gameNumber'            => $game->gameNumber,
+            'maxGames'              => $game->maxGames,
+            'gameLength'            => $game->gameLength,
+            'matchId'               => $game->matchId,
+            'noVods'                => $game->noVods,
+            'tournamentId'          => $game->tournament->id,
+            'tournamentName'        => $game->tournament->name,
+            'tournamentRound'       => $game->tournament->round,
+            'vodType'               => ($game->vods == null ? null : $game->vods->vod->type),
+            'vodURL'                => ($game->vods == null ? null : $game->vods->vod->URL),
+            'embedCode'             => ($game->vods == null ? null : $game->vods->vod->embedCode),
+            'blueId'                => $game->contestants->blue->id,
+            'blueName'              => $game->contestants->blue->name,
+            'blueLogoURL'           => $game->contestants->blue->logoURL,
+            'redId'                 => $game->contestants->red->id,
+            'redName'               => $game->contestants->red->name,
+            'redLogoURL'            => $game->contestants->red->logoURL,
+            'player0'               => $playersInserted[0],
+            'player1'               => $playersInserted[1],
+            'player2'               => $playersInserted[2],
+            'player3'               => $playersInserted[3],
+            'player4'               => $playersInserted[4],
+            'player5'               => $playersInserted[5],
+            'player6'               => $playersInserted[6],
+            'player7'               => $playersInserted[7],
+            'player8'               => $playersInserted[8],
+            'player9'               => $playersInserted[9],
+        ]);
+
+        $game->save();
     }
 
 });

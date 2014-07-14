@@ -2,6 +2,8 @@
 
 class GamePlayer extends Eloquent {
 
+
+    protected $table = 'gamePlayers';
     /*
     public function players()
     {
