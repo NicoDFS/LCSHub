@@ -22,12 +22,18 @@
 
                     <li class="list-group-item">
 
-                        @if($match->blueId == $match->winnerId)
-                            <span style="color:green">{{ $match->blueName }}</span> vs {{ $match->redName }}
-                        @endif
+                        @if($match->isFinished)
 
-                        @if($match->redId == $match->winnerId)
-                            <span style="color:green">{{ $match->redName }}</span> vs {{ $match->blueName }}
+                            @if($match->blueId == $match->winnerId)
+                                <span style="color:green">{{ $match->blueName }}</span> vs {{ $match->redName }}
+                            @endif
+
+                            @if($match->redId == $match->winnerId)
+                                {{ $match->blueName }} vs <span style="color:green">{{ $match->redName }}</span>
+                            @endif
+
+                        @else
+                            {{ $match->blueName }} vs {{ $match->redName }}
                         @endif
 
                         @if ($match->isLive && !$match->isFinished)
