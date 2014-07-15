@@ -12,13 +12,14 @@ class CreateFteamsweekTable extends Migration {
 	 */
 	public function up()
 	{
-	    Schema::create('fTeamsWeek', function($table)
+	    Schema::create('fTeamWeeks', function($table)
             {
 
                 $table->engine = 'InnoDB';
 
                 $table->increments('id');
                 $table->integer('fId');
+                $table->integer('fTeamId');
                 $table->integer('riotId');
 
                 $table->integer('week');
@@ -53,7 +54,7 @@ class CreateFteamsweekTable extends Migration {
 	 */
 	public function down()
 	{
-	    Schema::drop('fTeamsWeek');
-
+	    Schema::drop('fTeamWeeks');
+        }
 
 }

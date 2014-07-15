@@ -55,6 +55,57 @@ Route::get('/all', function()
 
 });
 
+Route::get('/insertfteam', function()
+{
+
+    Eloquent::unguard();
+
+    $fTeamURL = 'http://fantasy.na.lolesports.com/en-US/api/season/4';
+    $fTeamData = json_decode(file_get_contents($fTeamURL));
+
+    foreach($fTeamData->proTeams as $team)
+    {
+        $fTeam = FTeam::firstOrCreate(['fId' => $team->id]);
+
+        $fTeam->update([
+            'fId'           => $team->id,
+            'riotId'        => $team->riotId,
+            'name'          => $team->name,
+            'shortName'     => $team->shortName,
+            'flavorText'    => $team->flavorTextEntries[0]->flavorText,
+            'positions'     => $team->positions[0]
+        ]);
+
+        $fTeam->save();
+
+        foreach($team->statsByWeek as $sWeek)
+        {
+            if(FTeamWeek::whereRaw('fid = ' . $team->id . ' AND week = ' . $sWeek->week)->count() == 0)
+            {
+                FTeamWeek::create([
+                    'fId'                       => $team->id,
+                    'fTeamId'                   => $fTeam->id,
+                    'riotId'                    => $team->riotId,
+                    'week'                      => $sWeek->week,
+                    'firstBloodProjected'       => $sWeek->firstBlood->projectedValue,
+                    'firstBloodActual'          => $sWeek->firstBlood->actualValue,
+                    'towerKillsProjected'       => $sWeek->towerKills->projectedValue,
+                    'towerKillsActual'          => $sWeek->towerKills->actualValue,
+                    'baronKillsProjected'       => $sWeek->baronKills->projectedValue,
+                    'baronKillsActual'          => $sWeek->baronKills->actualValue,
+                    'dragonKillsProjected'      => $sWeek->dragonKills->projectedValue,
+                    'dragonKillsActual'         => $sWeek->dragonKills->actualValue,
+                    'matchVictoryProjected'     => $sWeek->matchVictory->projectedValue,
+                    'matchVictoryActual'        => $sWeek->matchVictory->actualValue,
+                    'matchDefeatProjected'      => $sWeek->matchDefeat->projectedValue,
+                    'matchDefeatActual'         => $sWeek->matchDefeat->actualValue
+                ]);
+            }
+        }
+    }
+
+});
+
 Route::get('/insertgames', function()
 {
     $matches = Match::where('isFinished', true)->take(1)->get();

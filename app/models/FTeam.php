@@ -3,7 +3,7 @@
 class FTeam extends Eloquent {
 
 
-    protected $table = 'fTeam';
+    protected $table = 'fTeams';
     /*
     public function players()
     {

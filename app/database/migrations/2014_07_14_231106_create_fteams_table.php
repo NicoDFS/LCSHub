@@ -19,7 +19,7 @@ class CreateFteamsTable extends Migration {
 
                 $table->increments('id');
                 $table->integer('fId');
-                $table->integer('riotId');
+                $table->integer('riotId')->unique();
                 $table->string('name');
                 $table->string('shortName');
                 $table->text('flavorText');
