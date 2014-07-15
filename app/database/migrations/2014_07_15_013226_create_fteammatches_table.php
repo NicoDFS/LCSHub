@@ -25,12 +25,12 @@ class CreateFteammatchesTable extends Migration {
                 $table->string('teamName');
                 $table->integer('matchVictory');
                 $table->integer('matchDefeat');
-                $table->integer('baronsKilled');
-                $table->integer('dragonsKilled');
-                $table->integer('firstBlood');
-                $table->integer('firstTower');
-                $table->integer('firstInhibitor');
-                $table->integer('towersKilled');
+                $table->integer('baronsKilled')->nullable();
+                $table->integer('dragonsKilled')->nullable();
+                $table->integer('firstBlood')->nullable();
+                $table->integer('firstTower')->nullable();
+                $table->integer('firstInhibitor')->nullable();
+                $table->integer('towersKilled')->nullable();
 
                 $table->timestamps();
 

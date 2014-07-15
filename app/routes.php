@@ -55,6 +55,91 @@ Route::get('/all', function()
 
 });
 
+Route::get('/insertfgamedata', function()
+{
+
+    Eloquent::unguard();
+
+    $tournaments = array('NA' => 104, 'EU' => 102);
+
+    foreach($tournaments as $tId)
+    {
+        $fGameURL = 'http://na.lolesports.com:80/api/gameStatsFantasy.json?tournamentId=' . $tId;
+        $fGameData = json_decode(file_get_contents($fGameURL));
+
+        foreach($fGameData->teamStats as $tKey => $tStats)
+        {
+
+            $teamArray = array();
+            foreach($tStats as $key => $value)
+            {
+                if(strpos($key, 'team') !== false)
+                {
+                    $teamArray[] = $key;
+                }
+            }
+
+            foreach($teamArray as $teamId)
+            {
+                if(FTeamGame::whereRaw('matchId = ' . $tStats->matchId . ' AND teamId = ' . $tStats->$teamId->teamId)->count() == 0)
+                {
+                    $fTeamGame = FTeamGame::create([
+                        'dateTime'          => date('Y-m-d H:i:s', strtotime($tStats->dateTime)),
+                        'gameId'            => (int) substr($tKey, 4),
+                        'matchId'           => $tStats->matchId,
+                        'teamId'            => $tStats->$teamId->teamId,
+                        'teamName'          => $tStats->$teamId->teamName,
+                        'matchVictory'      => $tStats->$teamId->matchVictory,
+                        'matchDefeat'       => $tStats->$teamId->matchDefeat,
+                        'baronsKilled'      => $tStats->$teamId->baronsKilled,
+                        'dragonsKilled'     => $tStats->$teamId->dragonsKilled,
+                        'firstBlood'        => $tStats->$teamId->firstBlood,
+                        'firstTower'        => $tStats->$teamId->firstTower,
+                        'firstInhibitor'    => $tStats->$teamId->firstInhibitor,
+                        'towersKilled'      => $tStats->$teamId->towersKilled
+                    ]);
+                }
+            }
+        }
+
+        foreach($fGameData->playerStats as $pKey => $pStats)
+        {
+            $playerArray = array();
+            foreach($pStats as $key => $value)
+            {
+                if(strpos($key, 'player') !== false)
+                {
+                    $playerArray[] = $key;
+                }
+            }
+
+            foreach($playerArray as $playerId)
+            {
+                if(FPlayerGame::whereRaw('matchId = ' . $pStats->matchId . ' AND fId = ' . $pStats->$playerId->playerId)->count() == 0)
+                {
+                    $fPlayerGame = FPlayerGame::create([
+                        'dateTime'          => date('Y-m-d H:i:s', strtotime($pStats->dateTime)),
+                        'matchId'           => $pStats->matchId,
+                        'gameId'            => substr($pKey, 4),
+                        'fId'               => $pStats->$playerId->playerId,
+                        'kills'             => $pStats->$playerId->kills,
+                        'deaths'            => $pStats->$playerId->deaths,
+                        'assists'           => $pStats->$playerId->assists,
+                        'minionKills'       => $pStats->$playerId->minionKills,
+                        'doubleKills'       => $pStats->$playerId->doubleKills,
+                        'tripleKills'       => $pStats->$playerId->tripleKills,
+                        'quadraKills'       => $pStats->$playerId->quadraKills,
+                        'pentaKills'        => $pStats->$playerId->pentaKills,
+                        'playerName'        => $pStats->$playerId->playerName,
+                        'role'              => $pStats->$playerId->role
+                    ]);
+                }
+            }
+        }
+    }
+
+});
+
 Route::get('/insertfdata', function()
 {
 

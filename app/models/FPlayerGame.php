@@ -1,9 +1,9 @@
 <?php
 
-class FTeamWeek extends Eloquent {
+class FPlayerGame extends Eloquent {
 
 
-    protected $table = 'fTeamWeeks';
+    protected $table = 'fPlayerGames';
     /*
     public function players()
     {

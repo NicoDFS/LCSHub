@@ -12,7 +12,30 @@ class CreateFplayergamesTable extends Migration {
 	 */
 	public function up()
 	{
-		//
+
+            Schema::create('fPlayerGames', function($table)
+            {
+                $table->engine = 'InnoDB';
+
+                $table->increments('id');
+                $table->datetime('dateTime');
+                $table->integer('matchId');
+                $table->integer('gameId');
+                $table->integer('fId');
+                $table->integer('kills')->nullable();
+                $table->integer('deaths')->nullable();
+                $table->integer('assists')->nullable();
+                $table->integer('minionKills')->nullable();
+                $table->integer('doubleKills')->nullable();
+                $table->integer('tripleKills')->nullable();
+                $table->integer('quadraKills')->nullable();
+                $table->integer('pentaKills')->nullable();
+                $table->string('playerName');
+                $table->string('role');
+
+                $table->timestamps();
+            });
+
 	}
 
 	/**
@@ -22,7 +45,7 @@ class CreateFplayergamesTable extends Migration {
 	 */
 	public function down()
 	{
-		//
+	    Schema::drop('fPlayerGames');
 	}
 
 }
