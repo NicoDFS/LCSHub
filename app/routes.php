@@ -77,38 +77,13 @@ Route::get('/insertfteam', function()
         ]);
 
         $fTeam->save();
-
-        foreach($team->statsByWeek as $sWeek)
-        {
-            if(FTeamWeek::whereRaw('fid = ' . $team->id . ' AND week = ' . $sWeek->week)->count() == 0)
-            {
-                FTeamWeek::create([
-                    'fId'                       => $team->id,
-                    'fTeamId'                   => $fTeam->id,
-                    'riotId'                    => $team->riotId,
-                    'week'                      => $sWeek->week,
-                    'firstBloodProjected'       => $sWeek->firstBlood->projectedValue,
-                    'firstBloodActual'          => $sWeek->firstBlood->actualValue,
-                    'towerKillsProjected'       => $sWeek->towerKills->projectedValue,
-                    'towerKillsActual'          => $sWeek->towerKills->actualValue,
-                    'baronKillsProjected'       => $sWeek->baronKills->projectedValue,
-                    'baronKillsActual'          => $sWeek->baronKills->actualValue,
-                    'dragonKillsProjected'      => $sWeek->dragonKills->projectedValue,
-                    'dragonKillsActual'         => $sWeek->dragonKills->actualValue,
-                    'matchVictoryProjected'     => $sWeek->matchVictory->projectedValue,
-                    'matchVictoryActual'        => $sWeek->matchVictory->actualValue,
-                    'matchDefeatProjected'      => $sWeek->matchDefeat->projectedValue,
-                    'matchDefeatActual'         => $sWeek->matchDefeat->actualValue
-                ]);
-            }
-        }
     }
 
 });
 
 Route::get('/insertgames', function()
 {
-    $matches = Match::where('isFinished', true)->take(1)->get();
+    $matches = Match::where('isFinished', true)->get();
 
     Eloquent::unguard();
 
