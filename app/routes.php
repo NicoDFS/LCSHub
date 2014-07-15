@@ -55,7 +55,7 @@ Route::get('/all', function()
 
 });
 
-Route::get('/insertfteam', function()
+Route::get('/insertfdata', function()
 {
 
     Eloquent::unguard();
@@ -77,6 +77,25 @@ Route::get('/insertfteam', function()
         ]);
 
         $fTeam->save();
+    }
+
+    $fPlayerURL = 'http://fantasy.na.lolesports.com/en-US/api/season/4';
+    $fPlayerData = json_decode(file_get_contents($fPlayerURL));
+
+    foreach($fPlayerData->proPlayers as $player)
+    {
+        $fPlayer = FPlayer::firstOrCreate(['fId' => $player->id]);
+
+        $fPlayer->update([
+            'fId'           => $player->id,
+            'riotId'        => $player->riotId,
+            'name'          => $player->name,
+            'proTeamId'     => $player->proTeamId,
+            'flavorText'    => (isset($player->flavorTextEntries[0]) ? $player->flavorTextEntries[0]->flavorText : null),
+            'positions'     => $player->positions[0]
+        ]);
+
+        $fPlayer->save();
     }
 
 });

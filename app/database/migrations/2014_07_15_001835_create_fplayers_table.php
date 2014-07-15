@@ -21,7 +21,8 @@ class CreateFplayersTable extends Migration {
                 $table->integer('fId');
                 $table->integer('riotId')->unique();
                 $table->integer('proTeamId');
-                $table->text('flavorText');
+                $table->string('name');
+                $table->text('flavorText')->nullable();
                 $table->string('positions');
 
                 $table->timestamps();

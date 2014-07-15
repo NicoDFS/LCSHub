@@ -22,7 +22,7 @@ class CreateFteamsTable extends Migration {
                 $table->integer('riotId')->unique();
                 $table->string('name');
                 $table->string('shortName');
-                $table->text('flavorText');
+                $table->text('flavorText')->nullable();
                 $table->string('positions');
 
                 $table->timestamps();
