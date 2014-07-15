@@ -25,12 +25,12 @@ class CreateGamePlayersTable extends Migration {
                 $table->string('name');
                 $table->string('photoURL');
 
-                $table->integer('championId');
-                $table->integer('endLevel');
-                $table->integer('kills');
-                $table->integer('deaths');
-                $table->integer('assists');
-                $table->double('kda', 5, 3);
+                $table->integer('championId')->nullable();
+                $table->integer('endLevel')->nullable();
+                $table->integer('kills')->nullable();
+                $table->integer('deaths')->nullable();
+                $table->integer('assists')->nullable();
+                $table->double('kda', 5, 3)->nullable();
 
                 $table->integer('item0Id')->nullable();
                 $table->integer('item1Id')->nullable();
@@ -40,11 +40,11 @@ class CreateGamePlayersTable extends Migration {
                 $table->integer('item5Id')->nullable();
                 $table->integer('item6Id')->nullable();
 
-                $table->integer('spell0Id');
-                $table->integer('spell1Id');
+                $table->integer('spell0Id')->nullable();
+                $table->integer('spell1Id')->nullable();
 
-                $table->integer('totalGold');
-                $table->integer('minionsKilled');
+                $table->integer('totalGold')->nullable();
+                $table->integer('minionsKilled')->nullable();
 
 
                 $table->timestamps();

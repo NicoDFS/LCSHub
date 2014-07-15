@@ -157,7 +157,7 @@ Route::get('/insertfdata', function()
             'riotId'        => $team->riotId,
             'name'          => $team->name,
             'shortName'     => $team->shortName,
-            'flavorText'    => $team->flavorTextEntries[0]->flavorText,
+            'flavorText'    => (isset($team->flavorTextEntries[0]) ? $team->flavorTextEntries[0]->flavorText : null),
             'positions'     => $team->positions[0]
         ]);
 
@@ -183,6 +183,15 @@ Route::get('/insertfdata', function()
         $fPlayer->save();
     }
 
+});
+
+Route::get('/deletegames', function()
+{
+
+    DB::table('games')->truncate();
+    DB::table('gamePlayers')->truncate();
+
+    return "TRUNCATED";
 });
 
 Route::get('/insertgames', function()
@@ -239,8 +248,8 @@ Route::get('/insertgames', function()
                     'item4Id'           => (isset($itemArray[4]) ? $playerData->$itemArray[4] : null),
                     'item5Id'           => (isset($itemArray[5]) ? $playerData->$itemArray[5] : null),
                     'item6Id'           => (isset($itemArray[6]) ? $playerData->$itemArray[6] : null),
-                    'spell0Id'          => $playerData->$spellArray[0],
-                    'spell1Id'          => $playerData->$spellArray[1],
+                    'spell0Id'          => (isset($spellArray[0]) ? $playerData->$spellArray[0] : null),
+                    'spell1Id'          => (isset($spellArray[1]) ? $playerData->$spellArray[1] : null),
                     'totalGold'         => $playerData->totalGold,
                     'minionsKilled'     => $playerData->minionsKilled
                 ]);
