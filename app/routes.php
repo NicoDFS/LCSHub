@@ -161,7 +161,6 @@ Route::get('/insertfdata', function()
             'positions'     => $team->positions[0]
         ]);
 
-        $fTeam->save();
     }
 
     $fPlayerURL = 'http://fantasy.na.lolesports.com/en-US/api/season/4';
@@ -180,7 +179,6 @@ Route::get('/insertfdata', function()
             'positions'     => $player->positions[0]
         ]);
 
-        $fPlayer->save();
     }
 
 });
@@ -192,6 +190,63 @@ Route::get('/deletegames', function()
     DB::table('gamePlayers')->truncate();
 
     return "TRUNCATED";
+});
+
+Route::get('/insertleagues', function()
+{
+
+    Eloquent::unguard();
+
+    for($i = 1; $i < 20; $i++)
+    {
+        $leagueURL = 'http://na.lolesports.com:80/api/league/' . $i . '.json';
+
+        try
+        {
+            $leagueData = json_decode(file_get_contents($leagueURL));
+        }
+        catch(Exception $ex)
+        {
+            continue;
+        }
+
+        $streams = array();
+
+        if(isset($leagueData->internationalLiveStream))
+        {
+            foreach($leagueData->internationalLiveStream as $stream)
+            {
+                if($stream->language == 'English' && $stream->display_language == 'English')
+                {
+                    foreach($stream->streams as $lStream)
+                    {
+                        $streams[strtolower($lStream->title)] = $lStream->url;
+                    }
+                }
+            }
+        }
+
+        $league = League::firstOrCreate(['leagueId' => $leagueData->id]);
+
+        $league->update([
+            'leagueId'              => $leagueData->id,
+            'color'                 => $leagueData->color,
+            'leagueImage'           => $leagueData->leagueImage,
+            'defaultTournamentId'   => $leagueData->defaultTournamentId,
+            'defaultSeriesId'       => $leagueData->defaultSeriesId,
+            'shortName'             => $leagueData->shortName,
+            'url'                   => $leagueData->url,
+            'label'                 => $leagueData->label,
+            'noVods'                => $leagueData->noVods,
+            'menuWeight'            => $leagueData->menuWeight,
+            'twitch'                => (isset($streams['twitch']) ? $streams['twitch'] : null),
+            'youtube'               => (isset($streams['youtube']) ? $streams['youtube'] : null),
+            'azubu'                 => (isset($streams['azubu']) ? $streams['azubu'] : null),
+            'leagueTournaments'     => implode(', ', $leagueData->leagueTournaments)
+        ]);
+
+    }
+
 });
 
 Route::get('/insertgames', function()
@@ -293,8 +348,6 @@ Route::get('/insertgames', function()
             'player8'               => $playersInserted[8],
             'player9'               => $playersInserted[9],
         ]);
-
-        $game->save();
     }
 
 });
@@ -332,8 +385,6 @@ Route::get('/insertblocks', function()
                     'label'             => $program->label,
                     'bodyTime'          => date('Y-m-d H:i:s', strtotime($program->body[0]->bodyTime))
                 ]);
-
-                $block->save();
 
                 foreach($program->matches as $matchData)
                 {
@@ -374,7 +425,6 @@ Route::get('/insertblocks', function()
                         'gameHasVod'        => $matchData->gamesInfo->game0->hasVod,
                     ]);
 
-                    $match->save();
                 }
             }
         }
@@ -404,8 +454,6 @@ Route::get('/insertblocks', function()
             'label'             => $program->label,
             'bodyTime'          => date('Y-m-d H:i:s', strtotime($program->body[0]->bodyTime))
         ]);
-
-        $block->save();
 
         foreach($program->matches as $matchData)
         {
@@ -446,7 +494,6 @@ Route::get('/insertblocks', function()
                 'gameHasVod'        => $matchData->gamesInfo->game0->hasVod,
             ]);
 
-            $match->save();
         }
 
     }

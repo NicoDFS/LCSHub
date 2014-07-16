@@ -17,7 +17,7 @@ class CreateLeaguesTable extends Migration {
                 $table->engine = 'InnoDB';
 
                 $table->increments('id');
-                $table->integer('leagueId');
+                $table->integer('leagueId')->unique();
                 $table->string('color');
                 $table->string('leagueImage');
                 $table->integer('defaultTournamentId');
@@ -27,10 +27,10 @@ class CreateLeaguesTable extends Migration {
                 $table->string('label');
                 $table->boolean('noVods');
                 $table->integer('menuWeight');
-                $table->string('twitch');
-                $table->string('youtube');
-                $table->string('azubu');
-                $table->string('leagueTournaments');
+                $table->string('twitch')->nullable();
+                $table->string('youtube')->nullable();
+                $table->text('azubu')->nullable();
+                $table->string('leagueTournaments')->nullable();
 
                 $table->timestamps();
             });
