@@ -192,6 +192,40 @@ Route::get('/deletegames', function()
     return "TRUNCATED";
 });
 
+Route::get('/inserttournagameplayers', function()
+{
+
+    Eloquent::unguard();
+
+    $leagues = League::whereRaw('defaultTournamentId = 104 OR defaultTournamentId = 102')->get();
+
+    foreach($leagues as $league)
+    {
+        $leagueDataURL = 'http://na.lolesports.com:80/api/tournament/ ' . $league->defaultTournamentId . '.json';
+        $leagueData = json_decode(file_get_contents($leagueDataURL));
+
+        $tournament = Tournament::firstOrCreate(['tournamentId' => $league->defaultTournamentId]);
+
+        $tournament->update([
+            'leagueId'          => $league->leagueId,
+            'tournamentId'      => $league->defaultTournamentId,
+            'name'              => $leagueData->name,
+            'namePublic'        => $leagueData->namePublic,
+            'isFinished'        => $leagueData->isFinished,
+            'dateBegin'         => date('Y-m-d H:i:s', strtotime($leagueData->dateBegin)),
+            'dateEnd'           => date('Y-m-d H:i:s', strtotime($leagueData->dateEnd)),
+            'noVods'            => $leagueData->noVods,
+            'season'            => $leagueData->season
+        ]);
+
+        foreach($leagueData->contestants as $key => $contestant)
+        {
+
+        }
+    }
+
+});
+
 Route::get('/insertleagues', function()
 {
 
