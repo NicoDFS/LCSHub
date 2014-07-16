@@ -7,7 +7,7 @@ class InsertController extends BaseController {
     {
         Eloquent::unguard();
 
-        $tournaments = array('NA' => 104, 'EU' => 102);
+        $tournaments = array('NA LCS' => Config::get('tournaments.NA_LCS'), 'EU LCS' => Config::get('tournaments.EU_LCS'));
 
         foreach($tournaments as $tId)
         {
@@ -108,10 +108,7 @@ class InsertController extends BaseController {
 
         }
 
-        $fPlayerURL = 'http://fantasy.na.lolesports.com/en-US/api/season/4';
-        $fPlayerData = json_decode(file_get_contents($fPlayerURL));
-
-        foreach($fPlayerData->proPlayers as $player)
+        foreach($fTeamData->proPlayers as $player)
         {
             $fPlayer = FPlayer::firstOrCreate(['fId' => $player->id]);
 
@@ -131,7 +128,7 @@ class InsertController extends BaseController {
     {
         Eloquent::unguard();
 
-        $leagues = League::whereRaw('defaultTournamentId = 104 OR defaultTournamentId = 102')->get();
+        $leagues = League::whereRaw('defaultTournamentId = ' . Config::get('tournaments.NA_LCS') . ' OR defaultTournamentId = ' . Config::get('tournaments.EU_LCS'))->get();
 
         foreach($leagues as $league)
         {
@@ -255,9 +252,9 @@ class InsertController extends BaseController {
 
     public function games()
     {
-        $matches = Match::where('isFinished', true)->get();
-
         Eloquent::unguard();
+
+        $matches = Match::where('isFinished', true)->get();
 
         foreach($matches as $match)
         {
@@ -357,15 +354,14 @@ class InsertController extends BaseController {
 
     public function blocks()
     {
-        $lcs = array('NA' => 104, 'EU' => 102);
-        $method = 'all';
-
         Eloquent::unguard();
 
-        foreach($lcs as $region => $tournament)
+        $tournaments = Tournament::all();
+
+        foreach($tournaments as $tournament)
         {
 
-            $programmingUrl = 'http://na.lolesports.com/api/programming.json/?parameters[method]=' . $method . '&parameters[limit]=100&parameters[expand_matches]=1&parameters[tournament]=' . $tournament;
+            $programmingUrl = 'http://na.lolesports.com/api/programming.json/?parameters[method]=all&parameters[limit]=100&parameters[expand_matches]=1&parameters[tournament]=' . $tournament->tournamentId;
             $programming = json_decode(file_get_contents($programmingUrl));
 
             foreach($programming as $program)
@@ -427,75 +423,7 @@ class InsertController extends BaseController {
 
                 }
             }
-
         }
-
-
-        /*$programIds = array('1826', '1827', '1828');
-
-        foreach($programIds as $pId)
-        {
-            $programmingUrl = 'http://na.lolesports.com:80/api/programming/' . $pId . '.json?expand_matches=1';
-            $program = json_decode(file_get_contents($programmingUrl));
-
-            $block = Block::firstOrCreate(['blockId' => $program->blockId]);
-
-            $block->update([
-                'dateTime'          => date('Y-m-d H:i:s', strtotime($program->dateTime)),
-                'tickets'           => $program->tickets,
-                'leagueId'          => $program->leagueId,
-                'tournamentId'      => $program->tournamentId,
-                'tournamentName'    => $program->tournamentName,
-                'significance'      => $program->significance,
-                'tbdTime'           => $program->tbdTime,
-                'leagueColor'       => $program->leagueColor,
-                'week'              => $program->week,
-                'label'             => $program->label,
-                'bodyTime'          => date('Y-m-d H:i:s', strtotime($program->body[0]->bodyTime))
-            ]);
-
-            foreach($program->matches as $matchData)
-            {
-                $match = Match::firstOrCreate(['matchId' => $matchData->matchId]);
-
-                $match->update([
-                    'dateTime'          => date('Y-m-d H:i:s', strtotime($matchData->dateTime)),
-                    'matchName'         => $matchData->matchName,
-                    'winnerId'          => $matchData->winnerId,
-                    'url'               => $matchData->url,
-                    'maxGames'          => $matchData->maxGames,
-                    'isLive'            => $matchData->isLive,
-                    'isFinished'        => $matchData->isFinished,
-                    'liveStreams'       => $matchData->liveStreams,
-                    'polldaddyId'       => $matchData->polldaddyId,
-                    'blockId'           => $program->blockId,
-
-                    'tournamentId'      => $matchData->tournament->id,
-                    'tournamentName'    => $matchData->tournament->name,
-                    'tournamentRound'   => $matchData->tournament->round,
-
-                    'blueId'            => $matchData->contestants->blue->id,
-                    'blueName'          => $matchData->contestants->blue->name,
-                    'blueLogoURL'       => $matchData->contestants->blue->logoURL,
-                    'blueAcronym'       => $matchData->contestants->blue->acronym,
-                    'blueWins'          => $matchData->contestants->blue->wins,
-                    'blueLosses'        => $matchData->contestants->blue->losses,
-
-                    'redId'             => $matchData->contestants->red->id,
-                    'redName'           => $matchData->contestants->red->name,
-                    'redLogoURL'        => $matchData->contestants->red->logoURL,
-                    'redAcronym'        => $matchData->contestants->red->acronym,
-                    'redWins'           => $matchData->contestants->red->wins,
-                    'redLosses'         => $matchData->contestants->red->losses,
-
-                    'gameId'            => $matchData->gamesInfo->game0->id,
-                    'gameNoVods'        => $matchData->gamesInfo->game0->noVods,
-                    'gameHasVod'        => $matchData->gamesInfo->game0->hasVod,
-                ]);
-
-            }
-
-        }*/
     }
 
 }

@@ -79,7 +79,6 @@ Route::get('/reset', function()
     Player::truncate();
     Team::truncate();
     Tournament::truncate();
-    User::truncate();
 
     return "Truncated all tables.";
 
