@@ -7,11 +7,11 @@ class InsertController extends BaseController {
     {
         Eloquent::unguard();
 
-        $tournaments = array('NA LCS' => Config::get('tournaments.NA_LCS'), 'EU LCS' => Config::get('tournaments.EU_LCS'));
+        $tournaments = Tournament::all();
 
         foreach($tournaments as $tId)
         {
-            $fGameURL = 'http://na.lolesports.com:80/api/gameStatsFantasy.json?tournamentId=' . $tId;
+            $fGameURL = 'http://na.lolesports.com:80/api/gameStatsFantasy.json?tournamentId=' . $tId->tournamentId;
             $fGameData = json_decode(file_get_contents($fGameURL));
 
             foreach($fGameData->teamStats as $tKey => $tStats)
