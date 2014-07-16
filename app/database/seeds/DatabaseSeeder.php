@@ -11,8 +11,9 @@ class DatabaseSeeder extends Seeder {
 	{
 		Eloquent::unguard();
 
-		//$this->call('BlocksTableSeeder');
-                //$this->call('MatchesTableSeeder');
+                $insertController = new InsertController;
+                $insertController->all();
+
 	}
 
 }

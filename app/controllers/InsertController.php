@@ -3,6 +3,27 @@
 class InsertController extends BaseController {
 
 
+    public function all()
+    {
+        $this->leagues();
+        echo '[' . date("Y-m-d H:i:s") . '] ' . 'Inserted Leagues \n';
+
+        $this->tournamentTeamsPlayers();
+        echo '[' . date("Y-m-d H:i:s") . '] ' . 'Inserted Tournaments Teams and Players \n';
+
+        $this->blocks();
+        echo '[' . date("Y-m-d H:i:s") . '] ' . 'Inserted Blocks \n';
+
+        $this->games();
+        echo '[' . date("Y-m-d H:i:s") . '] ' . 'Inserted Games \n';
+
+        $this->fantasyTeamData();
+        echo '[' . date("Y-m-d H:i:s") . '] ' . 'Inserted Fantasy Team Data \n';
+
+        $this->fantasyGameData();
+        echo '[' . date("Y-m-d H:i:s") . '] ' . 'Inserted Fantasy Game Data \n';
+    }
+
     public function fantasyGameData()
     {
         Eloquent::unguard();

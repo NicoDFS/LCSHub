@@ -84,6 +84,8 @@ Route::get('/reset', function()
 
 });
 
+Route::get('/insertall', 'InsertController@all');
+
 Route::get('/insertfgamedata', 'InsertController@fantasyGameData');
 
 Route::get('/insertfdata', 'InsertController@fantasyTeamData');
