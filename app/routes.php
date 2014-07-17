@@ -111,6 +111,8 @@ Route::get('/reset', function()
 
 });
 
+Route::get('/inserttoday', 'InsertController@today');
+
 Route::get('/insertall', 'InsertController@all');
 
 Route::get('/insertfgamedata', 'InsertController@fantasyGameData');

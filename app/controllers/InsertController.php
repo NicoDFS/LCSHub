@@ -43,86 +43,9 @@ class InsertController extends BaseController {
         Eloquent::unguard();
 
         $tournaments = Tournament::all();
+        return $this->insertFantasyGameData($tournaments);
 
-        foreach($tournaments as $tId)
-        {
-            $fGameURL = "http://na.lolesports.com:80/api/gameStatsFantasy.json?tournamentId=" . $tId->tournamentId;
-            $fGameData = json_decode(file_get_contents($fGameURL));
-
-            foreach($fGameData->teamStats as $tKey => $tStats)
-            {
-
-                $teamArray = array();
-                foreach($tStats as $key => $value)
-                {
-                    if(strpos($key, "team") !== false)
-                    {
-                        $teamArray[] = $key;
-                    }
-                }
-
-                foreach($teamArray as $teamId)
-                {
-                    if(FTeamGame::whereRaw("matchId = " . $tStats->matchId . " AND teamId = " . $tStats->$teamId->teamId)->count() == 0)
-                    {
-                        $fTeamGame = FTeamGame::create([
-                            "dateTime"          => date("Y-m-d H:i:s", strtotime($tStats->dateTime)),
-                            "gameId"            => (int) substr($tKey, 4),
-                            "matchId"           => $tStats->matchId,
-                            "teamId"            => $tStats->$teamId->teamId,
-                            "teamName"          => $tStats->$teamId->teamName,
-                            "matchVictory"      => $tStats->$teamId->matchVictory,
-                            "matchDefeat"       => $tStats->$teamId->matchDefeat,
-                            "baronsKilled"      => $tStats->$teamId->baronsKilled,
-                            "dragonsKilled"     => $tStats->$teamId->dragonsKilled,
-                            "firstBlood"        => $tStats->$teamId->firstBlood,
-                            "firstTower"        => $tStats->$teamId->firstTower,
-                            "firstInhibitor"    => $tStats->$teamId->firstInhibitor,
-                            "towersKilled"      => $tStats->$teamId->towersKilled
-                        ]);
-                    }
-                }
-            }
-
-            foreach($fGameData->playerStats as $pKey => $pStats)
-            {
-                $playerArray = array();
-                foreach($pStats as $key => $value)
-                {
-                    if(strpos($key, "player") !== false)
-                    {
-                        $playerArray[] = $key;
-                    }
-                }
-
-                foreach($playerArray as $playerId)
-                {
-                    if(FPlayerGame::whereRaw("matchId = " . $pStats->matchId . " AND fId = " . $pStats->$playerId->playerId)->count() == 0)
-                    {
-                        $fPlayerGame = FPlayerGame::create([
-                            "dateTime"          => date("Y-m-d H:i:s", strtotime($pStats->dateTime)),
-                            "matchId"           => $pStats->matchId,
-                            "gameId"            => substr($pKey, 4),
-                            "fId"               => $pStats->$playerId->playerId,
-                            "kills"             => $pStats->$playerId->kills,
-                            "deaths"            => $pStats->$playerId->deaths,
-                            "assists"           => $pStats->$playerId->assists,
-                            "minionKills"       => $pStats->$playerId->minionKills,
-                            "doubleKills"       => $pStats->$playerId->doubleKills,
-                            "tripleKills"       => $pStats->$playerId->tripleKills,
-                            "quadraKills"       => $pStats->$playerId->quadraKills,
-                            "pentaKills"        => $pStats->$playerId->pentaKills,
-                            "playerName"        => $pStats->$playerId->playerName,
-                            "role"              => $pStats->$playerId->role
-                        ]);
-                    }
-                }
-            }
-        }
-
-        return [FTeamGame::all()->count(), FPlayerGame::all()->count()];
     }
-
     public function fantasyTeamData()
     {
         Eloquent::unguard();
@@ -298,8 +221,96 @@ class InsertController extends BaseController {
         Eloquent::unguard();
 
         $matches = Match::where("isFinished", true)->get();
+        return $this->insertGames($matches, true);
 
-        foreach($matches as $match)
+    }
+    public function blocks()
+    {
+        Eloquent::unguard();
+
+        $tournaments = Tournament::all();
+
+        foreach($tournaments as $tournament)
+        {
+
+            $programmingUrl = "http://na.lolesports.com/api/programming.json?parameters[method]=all&parameters[limit]=100&parameters[expand_matches]=1&parameters[tournament]=" . $tournament->tournamentId;
+            $programming = json_decode(file_get_contents($programmingUrl));
+
+            return $this->insertBlocks($programming, true);
+        }
+
+    }
+
+    public function insertBlocks($data)
+    {
+        Eloquent::unguard();
+
+        foreach($data as $program)
+        {
+            $block = Block::firstOrCreate(["blockId" => $program->blockId]);
+
+            $block->update([
+                "dateTime"          => date("Y-m-d H:i:s", strtotime($program->dateTime)),
+                "tickets"           => $program->tickets,
+                "leagueId"          => $program->leagueId,
+                "tournamentId"      => $program->tournamentId,
+                "tournamentName"    => $program->tournamentName,
+                "significance"      => $program->significance,
+                "tbdTime"           => $program->tbdTime,
+                "leagueColor"       => $program->leagueColor,
+                "week"              => $program->week,
+                "label"             => $program->label,
+                "bodyTime"          => date("Y-m-d H:i:s", strtotime($program->body[0]->bodyTime))
+            ]);
+
+            foreach($program->matches as $matchData)
+            {
+                $match = Match::firstOrCreate(["matchId" => $matchData->matchId]);
+
+                $match->update([
+                    "dateTime"          => date("Y-m-d H:i:s", strtotime($matchData->dateTime)),
+                    "matchName"         => $matchData->matchName,
+                    "winnerId"          => $matchData->winnerId,
+                    "url"               => $matchData->url,
+                    "maxGames"          => $matchData->maxGames,
+                    "isLive"            => $matchData->isLive,
+                    "isFinished"        => $matchData->isFinished,
+                    "liveStreams"       => $matchData->liveStreams,
+                    "polldaddyId"       => $matchData->polldaddyId,
+                    "blockId"           => $program->blockId,
+
+                    "tournamentId"      => $matchData->tournament->id,
+                    "tournamentName"    => $matchData->tournament->name,
+                    "tournamentRound"   => $matchData->tournament->round,
+
+                    "blueId"            => $matchData->contestants->blue->id,
+                    "blueName"          => $matchData->contestants->blue->name,
+                    "blueLogoURL"       => $matchData->contestants->blue->logoURL,
+                    "blueAcronym"       => $matchData->contestants->blue->acronym,
+                    "blueWins"          => $matchData->contestants->blue->wins,
+                    "blueLosses"        => $matchData->contestants->blue->losses,
+
+                    "redId"             => $matchData->contestants->red->id,
+                    "redName"           => $matchData->contestants->red->name,
+                    "redLogoURL"        => $matchData->contestants->red->logoURL,
+                    "redAcronym"        => $matchData->contestants->red->acronym,
+                    "redWins"           => $matchData->contestants->red->wins,
+                    "redLosses"         => $matchData->contestants->red->losses,
+
+                    "gameId"            => $matchData->gamesInfo->game0->id,
+                    "gameNoVods"        => $matchData->gamesInfo->game0->noVods,
+                    "gameHasVod"        => $matchData->gamesInfo->game0->hasVod,
+                ]);
+
+            }
+        }
+
+        return [Block::all()->count(), Match::all()->count()];
+    }
+
+    public function insertGames($data)
+    {
+        foreach($data as $match)
         {
             $gameURL = "http://na.lolesports.com:80/api/game/" . $match->gameId . ".json";
             $gameData = json_decode(file_get_contents($gameURL));
@@ -399,81 +410,122 @@ class InsertController extends BaseController {
 
         return [Game::all()->count(), GamePlayer::all()->count()];
     }
-
-    public function blocks()
+    public function insertFantasyGameData($data)
     {
         Eloquent::unguard();
 
-        $tournaments = Tournament::all();
-
-        foreach($tournaments as $tournament)
+        foreach($data as $tId)
         {
+            $fGameURL = "http://na.lolesports.com:80/api/gameStatsFantasy.json?tournamentId=" . $tId->tournamentId;
+            $fGameData = json_decode(file_get_contents($fGameURL));
 
-            $programmingUrl = "http://na.lolesports.com/api/programming.json?parameters[method]=all&parameters[limit]=100&parameters[expand_matches]=1&parameters[tournament]=" . $tournament->tournamentId;
-            $programming = json_decode(file_get_contents($programmingUrl));
-
-            foreach($programming as $program)
+            foreach($fGameData->teamStats as $tKey => $tStats)
             {
-                $block = Block::firstOrCreate(["blockId" => $program->blockId]);
 
-                $block->update([
-                    "dateTime"          => date("Y-m-d H:i:s", strtotime($program->dateTime)),
-                    "tickets"           => $program->tickets,
-                    "leagueId"          => $program->leagueId,
-                    "tournamentId"      => $program->tournamentId,
-                    "tournamentName"    => $program->tournamentName,
-                    "significance"      => $program->significance,
-                    "tbdTime"           => $program->tbdTime,
-                    "leagueColor"       => $program->leagueColor,
-                    "week"              => $program->week,
-                    "label"             => $program->label,
-                    "bodyTime"          => date("Y-m-d H:i:s", strtotime($program->body[0]->bodyTime))
-                ]);
-
-                foreach($program->matches as $matchData)
+                $teamArray = array();
+                foreach($tStats as $key => $value)
                 {
-                    $match = Match::firstOrCreate(["matchId" => $matchData->matchId]);
+                    if(strpos($key, "team") !== false)
+                    {
+                        $teamArray[] = $key;
+                    }
+                }
 
-                    $match->update([
-                        "dateTime"          => date("Y-m-d H:i:s", strtotime($matchData->dateTime)),
-                        "matchName"         => $matchData->matchName,
-                        "winnerId"          => $matchData->winnerId,
-                        "url"               => $matchData->url,
-                        "maxGames"          => $matchData->maxGames,
-                        "isLive"            => $matchData->isLive,
-                        "isFinished"        => $matchData->isFinished,
-                        "liveStreams"       => $matchData->liveStreams,
-                        "polldaddyId"       => $matchData->polldaddyId,
-                        "blockId"           => $program->blockId,
+                foreach($teamArray as $teamId)
+                {
+                    if(FTeamGame::whereRaw("matchId = " . $tStats->matchId . " AND teamId = " . $tStats->$teamId->teamId)->count() == 0)
+                    {
+                        $fTeamGame = FTeamGame::create([
+                            "dateTime"          => date("Y-m-d H:i:s", strtotime($tStats->dateTime)),
+                            "gameId"            => (int) substr($tKey, 4),
+                            "matchId"           => $tStats->matchId,
+                            "teamId"            => $tStats->$teamId->teamId,
+                            "teamName"          => $tStats->$teamId->teamName,
+                            "matchVictory"      => $tStats->$teamId->matchVictory,
+                            "matchDefeat"       => $tStats->$teamId->matchDefeat,
+                            "baronsKilled"      => $tStats->$teamId->baronsKilled,
+                            "dragonsKilled"     => $tStats->$teamId->dragonsKilled,
+                            "firstBlood"        => $tStats->$teamId->firstBlood,
+                            "firstTower"        => $tStats->$teamId->firstTower,
+                            "firstInhibitor"    => $tStats->$teamId->firstInhibitor,
+                            "towersKilled"      => $tStats->$teamId->towersKilled
+                        ]);
+                    }
+                }
+            }
 
-                        "tournamentId"      => $matchData->tournament->id,
-                        "tournamentName"    => $matchData->tournament->name,
-                        "tournamentRound"   => $matchData->tournament->round,
+            foreach($fGameData->playerStats as $pKey => $pStats)
+            {
+                $playerArray = array();
+                foreach($pStats as $key => $value)
+                {
+                    if(strpos($key, "player") !== false)
+                    {
+                        $playerArray[] = $key;
+                    }
+                }
 
-                        "blueId"            => $matchData->contestants->blue->id,
-                        "blueName"          => $matchData->contestants->blue->name,
-                        "blueLogoURL"       => $matchData->contestants->blue->logoURL,
-                        "blueAcronym"       => $matchData->contestants->blue->acronym,
-                        "blueWins"          => $matchData->contestants->blue->wins,
-                        "blueLosses"        => $matchData->contestants->blue->losses,
-
-                        "redId"             => $matchData->contestants->red->id,
-                        "redName"           => $matchData->contestants->red->name,
-                        "redLogoURL"        => $matchData->contestants->red->logoURL,
-                        "redAcronym"        => $matchData->contestants->red->acronym,
-                        "redWins"           => $matchData->contestants->red->wins,
-                        "redLosses"         => $matchData->contestants->red->losses,
-
-                        "gameId"            => $matchData->gamesInfo->game0->id,
-                        "gameNoVods"        => $matchData->gamesInfo->game0->noVods,
-                        "gameHasVod"        => $matchData->gamesInfo->game0->hasVod,
-                    ]);
-
+                foreach($playerArray as $playerId)
+                {
+                    if(FPlayerGame::whereRaw("matchId = " . $pStats->matchId . " AND fId = " . $pStats->$playerId->playerId)->count() == 0)
+                    {
+                        $fPlayerGame = FPlayerGame::create([
+                            "dateTime"          => date("Y-m-d H:i:s", strtotime($pStats->dateTime)),
+                            "matchId"           => $pStats->matchId,
+                            "gameId"            => substr($pKey, 4),
+                            "fId"               => $pStats->$playerId->playerId,
+                            "kills"             => $pStats->$playerId->kills,
+                            "deaths"            => $pStats->$playerId->deaths,
+                            "assists"           => $pStats->$playerId->assists,
+                            "minionKills"       => $pStats->$playerId->minionKills,
+                            "doubleKills"       => $pStats->$playerId->doubleKills,
+                            "tripleKills"       => $pStats->$playerId->tripleKills,
+                            "quadraKills"       => $pStats->$playerId->quadraKills,
+                            "pentaKills"        => $pStats->$playerId->pentaKills,
+                            "playerName"        => $pStats->$playerId->playerName,
+                            "role"              => $pStats->$playerId->role
+                        ]);
+                    }
                 }
             }
         }
 
-        return [Block::all()->count(), Match::all()->count()];
+        return [FTeamGame::all()->count(), FPlayerGame::all()->count()];
+    }
+
+    public function today()
+    {
+        $timezone = 'America/Los_Angeles';
+        Cookie::queue('timezone', 'America/Louisville', (60 * 24));
+
+        if(Cookie::get('timezone'))
+        {
+            $timezone = Cookie::get('timezone');
+        }
+
+        $datetime = new DateTime('now', new DateTimeZone($timezone));
+
+        $query = "dateTime >= '" . $datetime->format('Y-m-d') . " 00:00:00' AND dateTime <= '" . $datetime->format('Y-m-d') . " 23:59:59'";
+        $todayBlock = Block::whereRaw($query)->first();
+
+        if(!is_null($todayBlock))
+        {
+            $programmingUrl = "http://na.lolesports.com:80/api/programming/{$todayBlock->blockId}.json?expand_matches=1";
+            $programming = json_decode(file_get_contents($programmingUrl));
+            $this->insertBlocks([$programming]);
+
+            $matches = Match::where('blockId', $todayBlock->blockId)->finished()->get();
+            $this->insertGames($matches);
+
+
+            $this->insertFantasyGameData([Tournament::where('tournamentId', $todayBlock->tournamentId)->first()]);
+
+            echo "DONE";
+        }
+        else
+        {
+
+        }
     }
 
 }

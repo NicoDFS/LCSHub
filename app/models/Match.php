@@ -8,5 +8,10 @@ class Match extends Eloquent {
         return $this->belongsTo('Block', 'blockId', 'blockId');
     }
 
+    public function scopeFinished($query)
+    {
+        return $query->where('isFinished', true);
+    }
+
 
 }
