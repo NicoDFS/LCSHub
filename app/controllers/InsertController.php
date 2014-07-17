@@ -308,7 +308,7 @@ class InsertController extends BaseController {
 
             foreach($gameData->players as $playerData)
             {
-                if(GamePlayer::whereRaw("gameId = " . $match->gameId . " AND playerId = " . $playerData->id)->count() == 0)
+                if( ($playaId = GamePlayer::whereRaw("gameId = " . $match->gameId . " AND playerId = " . $playerData->id)->first()) === null)
                 {
                     $itemArray = array();
                     foreach($playerData as $key => $value)
@@ -353,6 +353,10 @@ class InsertController extends BaseController {
                     ]);
 
                     $playersInserted[] = $gamePlayer->id;
+                }
+                else
+                {
+                    $playersInserted[] = $playaId->id;
                 }
             }
 

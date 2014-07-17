@@ -30,9 +30,18 @@ Route::get('/match/{id}', function($id)
     $fantasyPlayers = $game->getFantasyPlayers();
     $fantasyTeams = $game->getFantasyTeams();
 
-    foreach($fantasyPlayers as $key => $value)
+    echo $match->matchName . "<br/><br/>";
+
+    foreach($fantasyPlayers as $player)
     {
-        dd($value);
+        echo $player->playerName . " kda: {$player->kills}/{$player->deaths}/{$player->assists}  fPoints: " . $player->getFantasyPoints() . "<br/>";
+    }
+
+    echo "<br/>";
+
+    foreach($fantasyTeams as $team)
+    {
+        echo $team->teamName . " win: {$team->matchVictory} loss: {$team->matchDefeat} fPoints: " . $team->getFantasyPoints() . "<br/>";
     }
 
 });
