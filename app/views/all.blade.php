@@ -45,7 +45,7 @@
                         @endif
 
                         @if(!$match->isLive && $match->isFinished)
-                            <span class='pull-right'>Finished</span>
+                            <a href='/match/{{ $match->matchId }}'><span class='pull-right'>Finished</span></a>
                         @endif
 
                     </li>

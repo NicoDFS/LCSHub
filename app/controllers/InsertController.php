@@ -346,7 +346,6 @@ class InsertController extends BaseController {
                         "item3Id"           => (isset($itemArray[3]) ? $playerData->$itemArray[3] : null),
                         "item4Id"           => (isset($itemArray[4]) ? $playerData->$itemArray[4] : null),
                         "item5Id"           => (isset($itemArray[5]) ? $playerData->$itemArray[5] : null),
-                        "item6Id"           => (isset($itemArray[6]) ? $playerData->$itemArray[6] : null),
                         "spell0Id"          => (isset($spellArray[0]) ? $playerData->$spellArray[0] : null),
                         "spell1Id"          => (isset($spellArray[1]) ? $playerData->$spellArray[1] : null),
                         "totalGold"         => $playerData->totalGold,

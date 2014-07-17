@@ -38,7 +38,6 @@ class CreateGamePlayersTable extends Migration {
                 $table->integer('item3Id')->nullable();
                 $table->integer('item4Id')->nullable();
                 $table->integer('item5Id')->nullable();
-                $table->integer('item6Id')->nullable();
 
                 $table->integer('spell0Id')->nullable();
                 $table->integer('spell1Id')->nullable();

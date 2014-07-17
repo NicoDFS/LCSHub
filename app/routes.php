@@ -19,6 +19,24 @@ Route::get('/block/{id}', function($id)
 
 });
 
+Route::get('/match/{id}', function($id)
+{
+
+    $match = Match::where('matchId', $id)->first();
+    $game = Game::where('gameId', $match->gameId)->first();
+
+    $players = $game->getPlayers();
+
+    $fantasyPlayers = $game->getFantasyPlayers();
+    $fantasyTeams = $game->getFantasyTeams();
+
+    foreach($fantasyPlayers as $key => $value)
+    {
+        dd($value);
+    }
+
+});
+
 Route::get('/today', function()
 {
 
