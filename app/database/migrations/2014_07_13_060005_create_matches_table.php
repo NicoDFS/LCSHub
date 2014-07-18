@@ -27,7 +27,7 @@ class CreateMatchesTable extends Migration {
                 $table->boolean('isFinished');
                 $table->boolean('liveStreams');
                 $table->string('polldaddyId');
-                $table->integer('blockId');
+                $table->integer('blockId')->index();
 
                 $table->integer('tournamentId');
                 $table->string('tournamentName');

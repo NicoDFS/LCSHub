@@ -10,22 +10,22 @@ class InsertController extends BaseController {
 
         echo $this->debug("Starting database seed");
 
-        $leagues = $this->leagues();
+        $leagues = $this->leagues(true);
         echo $this->debug("Inserted Leagues ($leagues)");
 
-        $ttp = $this->tournamentTeamsPlayers();
+        $ttp = $this->tournamentTeamsPlayers(true);
         echo $this->debug("Inserted Tournaments Teams and Players (" . implode($ttp, ", ") . ")");
 
-        $blocks = $this->blocks();
+        $blocks = $this->blocks(true);
         echo $this->debug("Inserted Blocks and Matches (" . implode($blocks, ", ") . ")");
 
-        $games = $this->games();
+        $games = $this->games(true);
         echo $this->debug("Inserted Games (" . implode($games, ", ") . ")");
 
-        $fData = $this->fantasyTeamData();
+        $fData = $this->fantasyTeamData(true);
         echo $this->debug("Inserted Fantasy Team Data (" . implode($fData, ", ") . ")");
 
-        $fGame = $this->fantasyGameData();
+        $fGame = $this->fantasyGameData(true);
         echo $this->debug("Inserted Fantasy Game Data (" . implode($fGame, ", ") . ")");
 
         $end = microtime(true);
@@ -38,15 +38,18 @@ class InsertController extends BaseController {
         return "\033[37m[" . date("Y-m-d H:i:s") . "]\033[0m \033[31m" . $message . "\033[0m\n";
     }
 
-    public function fantasyGameData()
+    public function fantasyGameData($returnCount = false)
     {
         Eloquent::unguard();
 
         $tournaments = Tournament::all();
-        return $this->insertFantasyGameData($tournaments);
+        $this->insertFantasyGameData($tournaments);
+
+        if($returnCount)
+        return [FTeamGame::all()->count(), FPlayerGame::all()->count()];
 
     }
-    public function fantasyTeamData()
+    public function fantasyTeamData($returnCount = false)
     {
         Eloquent::unguard();
 
@@ -83,10 +86,11 @@ class InsertController extends BaseController {
 
         }
 
+        if($returnCount)
         return [FTeam::all()->count(), FPlayer::all()->count()];
     }
 
-    public function tournamentTeamsPlayers()
+    public function tournamentTeamsPlayers($returnCount = false)
     {
         Eloquent::unguard();
 
@@ -156,10 +160,11 @@ class InsertController extends BaseController {
             }
         }
 
+        if($returnCount);
         return [Tournament::all()->count(), Team::all()->count(), Player::all()->count()];
     }
 
-    public function leagues()
+    public function leagues($returnCount = false)
     {
         Eloquent::unguard();
 
@@ -213,18 +218,22 @@ class InsertController extends BaseController {
 
         }
 
+        if($returnCount)
         return League::all()->count();
     }
 
-    public function games()
+    public function games($returnCount = false)
     {
         Eloquent::unguard();
 
         $matches = Match::where("isFinished", true)->get();
-        return $this->insertGames($matches, true);
+        $this->insertGames($matches, true);
+
+        if($returnCount)
+        return [Game::all()->count(), GamePlayer::all()->count()];
 
     }
-    public function blocks()
+    public function blocks($returnCount = false)
     {
         Eloquent::unguard();
 
@@ -236,8 +245,11 @@ class InsertController extends BaseController {
             $programmingUrl = "http://na.lolesports.com/api/programming.json?parameters[method]=all&parameters[limit]=100&parameters[expand_matches]=1&parameters[tournament]=" . $tournament->tournamentId;
             $programming = json_decode(file_get_contents($programmingUrl));
 
-            return $this->insertBlocks($programming, true);
+            $this->insertBlocks($programming, true);
         }
+
+        if($returnCount)
+        return [Block::all()->count(), Match::all()->count()];
 
     }
 
@@ -305,7 +317,7 @@ class InsertController extends BaseController {
             }
         }
 
-        return [Block::all()->count(), Match::all()->count()];
+        //return [Block::all()->count(), Match::all()->count()];
     }
 
     public function insertGames($data)
@@ -408,8 +420,9 @@ class InsertController extends BaseController {
             ]);
         }
 
-        return [Game::all()->count(), GamePlayer::all()->count()];
+        //return [Game::all()->count(), GamePlayer::all()->count()];
     }
+
     public function insertFantasyGameData($data)
     {
         Eloquent::unguard();
@@ -490,7 +503,85 @@ class InsertController extends BaseController {
             }
         }
 
-        return [FTeamGame::all()->count(), FPlayerGame::all()->count()];
+        //return [FTeamGame::all()->count(), FPlayerGame::all()->count()];
+    }
+
+    public function insertSpecificFantasyGameData($tournamentId, $games)
+    {
+        Eloquent::unguard();
+
+        $fGameURL = "http://na.lolesports.com:80/api/gameStatsFantasy.json?tournamentId=" . $tournamentId;
+        $fGameData = json_decode(file_get_contents($fGameURL));
+
+        foreach($games as $gameId)
+        {
+            $tStats = $fGameData->teamStats->{'game' . $gameId};
+
+            $teamArray = array();
+            foreach($tStats as $key => $value)
+            {
+                if(strpos($key, "team") !== false)
+                {
+                    $teamArray[] = $key;
+                }
+            }
+
+            foreach($teamArray as $teamId)
+            {
+                if(FTeamGame::whereRaw("matchId = " . $tStats->matchId . " AND teamId = " . $tStats->$teamId->teamId)->count() == 0)
+                {
+                    $fTeamGame = FTeamGame::create([
+                        "dateTime"          => date("Y-m-d H:i:s", strtotime($tStats->dateTime)),
+                        "gameId"            => (int) substr($tKey, 4),
+                        "matchId"           => $tStats->matchId,
+                        "teamId"            => $tStats->$teamId->teamId,
+                        "teamName"          => $tStats->$teamId->teamName,
+                        "matchVictory"      => $tStats->$teamId->matchVictory,
+                        "matchDefeat"       => $tStats->$teamId->matchDefeat,
+                        "baronsKilled"      => $tStats->$teamId->baronsKilled,
+                        "dragonsKilled"     => $tStats->$teamId->dragonsKilled,
+                        "firstBlood"        => $tStats->$teamId->firstBlood,
+                        "firstTower"        => $tStats->$teamId->firstTower,
+                        "firstInhibitor"    => $tStats->$teamId->firstInhibitor,
+                        "towersKilled"      => $tStats->$teamId->towersKilled
+                    ]);
+                }
+            }
+
+            $pStats = $fGameData->playerStats->{'game' . $gameId};
+
+            $playerArray = array();
+            foreach($pStats as $key => $value)
+            {
+                if(strpos($key, "player") !== false)
+                {
+                    $playerArray[] = $key;
+                }
+            }
+
+            foreach($playerArray as $playerId)
+            {
+                if(FPlayerGame::whereRaw("matchId = " . $pStats->matchId . " AND fId = " . $pStats->$playerId->playerId)->count() == 0)
+                {
+                    $fPlayerGame = FPlayerGame::create([
+                        "dateTime"          => date("Y-m-d H:i:s", strtotime($pStats->dateTime)),
+                        "matchId"           => $pStats->matchId,
+                        "gameId"            => substr($pKey, 4),
+                        "fId"               => $pStats->$playerId->playerId,
+                        "kills"             => $pStats->$playerId->kills,
+                        "deaths"            => $pStats->$playerId->deaths,
+                        "assists"           => $pStats->$playerId->assists,
+                        "minionKills"       => $pStats->$playerId->minionKills,
+                        "doubleKills"       => $pStats->$playerId->doubleKills,
+                        "tripleKills"       => $pStats->$playerId->tripleKills,
+                        "quadraKills"       => $pStats->$playerId->quadraKills,
+                        "pentaKills"        => $pStats->$playerId->pentaKills,
+                        "playerName"        => $pStats->$playerId->playerName,
+                        "role"              => $pStats->$playerId->role
+                    ]);
+                }
+            }
+        }
     }
 
     public function today()
@@ -517,8 +608,13 @@ class InsertController extends BaseController {
             $matches = Match::where('blockId', $todayBlock->blockId)->finished()->get();
             $this->insertGames($matches);
 
+            $gameIds = array();
+            foreach($matches as $match)
+            {
+                $gameIds[] = $match->gameId;
+            }
 
-            $this->insertFantasyGameData([Tournament::where('tournamentId', $todayBlock->tournamentId)->first()]);
+            $this->insertSpecificFantasyGameData($todayBlock->tournamentId, $gameIds);
 
             echo "DONE";
         }

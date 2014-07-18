@@ -20,7 +20,7 @@ class CreateFplayergamesTable extends Migration {
                 $table->increments('id');
                 $table->datetime('dateTime');
                 $table->integer('matchId');
-                $table->integer('gameId');
+                $table->integer('gameId')->index();
                 $table->integer('fId');
                 $table->integer('kills')->nullable();
                 $table->integer('deaths')->nullable();
@@ -32,6 +32,8 @@ class CreateFplayergamesTable extends Migration {
                 $table->integer('pentaKills')->nullable();
                 $table->string('playerName');
                 $table->string('role');
+
+                $table->index(['fId', 'matchId']);
 
                 $table->timestamps();
             });

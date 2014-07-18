@@ -19,7 +19,7 @@ class CreateFteammatchesTable extends Migration {
 
                 $table->increments('id');
                 $table->datetime('dateTime');
-                $table->integer('gameId');
+                $table->integer('gameId')->index();
                 $table->integer('matchId');
                 $table->integer('teamId');
                 $table->string('teamName');

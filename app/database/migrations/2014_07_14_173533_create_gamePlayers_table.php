@@ -19,7 +19,7 @@ class CreateGamePlayersTable extends Migration {
 
                 $table->increments('id');
 
-                $table->integer('gameId');
+                $table->integer('gameId')->index();
                 $table->integer('playerId');
                 $table->integer('teamId');
                 $table->string('name');
