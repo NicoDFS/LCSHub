@@ -11,6 +11,11 @@
 |
 */
 
+Route::get('/home', function()
+{
+    return View::make('html.home');
+});
+
 Route::get('/block/{id}', function($id)
 {
 
