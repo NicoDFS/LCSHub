@@ -64,7 +64,7 @@ Route::get('/today', function()
 
     if(!is_null($todayBlock))
     {
-        return View::make('today')->with('matches', $todayBlock->matches);
+        return View::make('today')->with('block', $todayBlock);
     }
     else
     {

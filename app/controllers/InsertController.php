@@ -53,7 +53,7 @@ class InsertController extends BaseController {
     {
         Eloquent::unguard();
 
-        $fTeamURL = "http://fantasy.na.lolesports.com/en-US/api/season/4";
+        $fTeamURL = "http://fantasy.na.lolesports.com/en-US/api/season/4?timestamp=" . time();
         $fTeamData = json_decode(file_get_contents($fTeamURL));
 
         foreach($fTeamData->proTeams as $team)
@@ -98,7 +98,7 @@ class InsertController extends BaseController {
 
         foreach($leagues as $league)
         {
-            $leagueDataURL = "http://na.lolesports.com:80/api/tournament/" . $league->defaultTournamentId . ".json";
+            $leagueDataURL = "http://na.lolesports.com:80/api/tournament/" . $league->defaultTournamentId . ".json?timestamp=" . time();
             $leagueData = json_decode(file_get_contents($leagueDataURL));
 
             $tournament = Tournament::firstOrCreate(["tournamentId" => $league->defaultTournamentId]);
@@ -170,7 +170,7 @@ class InsertController extends BaseController {
 
         for($i = 1; $i < 20; $i++)
         {
-            $leagueURL = "http://na.lolesports.com:80/api/league/" . $i . ".json";
+            $leagueURL = "http://na.lolesports.com:80/api/league/" . $i . ".json?timestamp=" . time();
 
             try
             {
@@ -242,7 +242,7 @@ class InsertController extends BaseController {
         foreach($tournaments as $tournament)
         {
 
-            $programmingUrl = "http://na.lolesports.com/api/programming.json?parameters[method]=all&parameters[limit]=100&parameters[expand_matches]=1&parameters[tournament]=" . $tournament->tournamentId;
+            $programmingUrl = "http://na.lolesports.com/api/programming.json?parameters[method]=all&parameters[limit]=100&parameters[expand_matches]=1&timestamp= " . time() . "&parameters[tournament]=" . $tournament->tournamentId;
             $programming = json_decode(file_get_contents($programmingUrl));
 
             $this->insertBlocks($programming, true);
@@ -287,7 +287,7 @@ class InsertController extends BaseController {
                     "maxGames"          => $matchData->maxGames,
                     "isLive"            => $matchData->isLive,
                     "isFinished"        => $matchData->isFinished,
-                    "liveStreams"       => $matchData->liveStreams,
+                    "liveStreams"       => (isset($matchData->liveStreams) ? true : false),
                     "polldaddyId"       => $matchData->polldaddyId,
                     "blockId"           => $program->blockId,
 
@@ -315,16 +315,16 @@ class InsertController extends BaseController {
                 ]);
 
             }
+
         }
 
-        //return [Block::all()->count(), Match::all()->count()];
     }
 
     public function insertGames($data)
     {
         foreach($data as $match)
         {
-            $gameURL = "http://na.lolesports.com:80/api/game/" . $match->gameId . ".json";
+            $gameURL = "http://na.lolesports.com:80/api/game/" . $match->gameId . ".json?timestamp=" . time();
             $gameData = json_decode(file_get_contents($gameURL));
 
             $playersInserted = array();
@@ -429,7 +429,7 @@ class InsertController extends BaseController {
 
         foreach($data as $tId)
         {
-            $fGameURL = "http://na.lolesports.com:80/api/gameStatsFantasy.json?tournamentId=" . $tId->tournamentId;
+            $fGameURL = "http://na.lolesports.com:80/api/gameStatsFantasy.json?timestamp=" . time() . "&tournamentId=" . $tId->tournamentId;
             $fGameData = json_decode(file_get_contents($fGameURL));
 
             foreach($fGameData->teamStats as $tKey => $tStats)
@@ -510,7 +510,7 @@ class InsertController extends BaseController {
     {
         Eloquent::unguard();
 
-        $fGameURL = "http://na.lolesports.com:80/api/gameStatsFantasy.json?tournamentId=" . $tournamentId;
+        $fGameURL = "http://na.lolesports.com:80/api/gameStatsFantasy.json?timestamp=" . time() . "&tournamentId=" . $tournamentId;
         $fGameData = json_decode(file_get_contents($fGameURL));
 
         foreach($games as $gameId)
@@ -532,7 +532,7 @@ class InsertController extends BaseController {
                 {
                     $fTeamGame = FTeamGame::create([
                         "dateTime"          => date("Y-m-d H:i:s", strtotime($tStats->dateTime)),
-                        "gameId"            => (int) substr($tKey, 4),
+                        "gameId"            => $gameId,
                         "matchId"           => $tStats->matchId,
                         "teamId"            => $tStats->$teamId->teamId,
                         "teamName"          => $tStats->$teamId->teamName,
@@ -566,7 +566,7 @@ class InsertController extends BaseController {
                     $fPlayerGame = FPlayerGame::create([
                         "dateTime"          => date("Y-m-d H:i:s", strtotime($pStats->dateTime)),
                         "matchId"           => $pStats->matchId,
-                        "gameId"            => substr($pKey, 4),
+                        "gameId"            => $gameId,
                         "fId"               => $pStats->$playerId->playerId,
                         "kills"             => $pStats->$playerId->kills,
                         "deaths"            => $pStats->$playerId->deaths,
@@ -616,7 +616,7 @@ class InsertController extends BaseController {
 
             $this->insertSpecificFantasyGameData($todayBlock->tournamentId, $gameIds);
 
-            echo "DONE";
+            echo Match::where('isLive', true)->first()->matchName;
         }
         else
         {
