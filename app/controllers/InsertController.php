@@ -242,7 +242,7 @@ class InsertController extends BaseController {
         foreach($tournaments as $tournament)
         {
 
-            $programmingUrl = "http://na.lolesports.com/api/programming.json?parameters[method]=all&parameters[limit]=100&parameters[expand_matches]=1&timestamp=" . time() . "&parameters[tournament]=" . $tournament->tournamentId . "?" . md5(time());
+            $programmingUrl = "http://na.lolesports.com/api/programming.json?parameters[method]=all&parameters[limit]=100&parameters[expand_matches]=1&parameters[tournament]=" . $tournament->tournamentId . "&timestamp=" . time();
             $programming = json_decode(file_get_contents($programmingUrl));
 
             $this->insertBlocks($programming, true);
@@ -429,7 +429,7 @@ class InsertController extends BaseController {
 
         foreach($data as $tId)
         {
-            $fGameURL = "http://na.lolesports.com:80/api/gameStatsFantasy.json?timestamp=" . time() . "&tournamentId=" . $tId->tournamentId;
+            $fGameURL = "http://na.lolesports.com:80/api/gameStatsFantasy.json?tournamentId=" . $tId->tournamentId . "&timestamp=" . time();
             $fGameData = json_decode(file_get_contents($fGameURL));
 
             foreach($fGameData->teamStats as $tKey => $tStats)
@@ -587,7 +587,7 @@ class InsertController extends BaseController {
     public function today()
     {
         $timezone = 'America/Los_Angeles';
-        Cookie::queue('timezone', 'America/Louisville', (60 * 24));
+        Cookie::queue('timezone', 'America/Los_Angeles', (60 * 24));
 
         if(Cookie::get('timezone'))
         {
@@ -603,6 +603,7 @@ class InsertController extends BaseController {
         {
             $programmingUrl = "http://na.lolesports.com:80/api/programming/{$todayBlock->blockId}.json?expand_matches=1&timestamp=" . time();
             $programming = json_decode(file_get_contents($programmingUrl));
+            //dd($http_response_header);
             $this->insertBlocks([$programming]);
 
             $matches = Match::where('blockId', $todayBlock->blockId)->finished()->get();
