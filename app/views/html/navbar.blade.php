@@ -4,7 +4,7 @@
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
           <span class="fa fa-gear"></span>
         </button>
-        <a class="navbar-brand" href="#"><span>LCShub.tv</span></a>
+        <a class="navbar-brand" href="#"><span>lcshub.tv</span></a>
       </div>
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
@@ -13,7 +13,7 @@
           <li><a href="#contact">Contact</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right not-nav">
-          <li class="button"><a href="javascript:;" style="width:90px;"><i class="fa fa-cog">&nbsp;&nbsp;Settings</i></a></li>
+          <li class="button"><a href="javascript:;" style="width:96px;"><i class="fa fa-cog">&nbsp;&nbsp;Settings</i></a></li>
         </ul>
 
       </div><!--/.nav-collapse -->

@@ -10,11 +10,13 @@
 <script src="js/jquery.select2/select2.min.js" type="text/javascript"></script>
 <script src="js/bootstrap.slider/js/bootstrap-slider.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/jquery.gritter/js/jquery.gritter.js"></script>
+<script type="text/javascript" src="http://rawgithub.com/davatron5000/FitVids.js/master/jquery.fitvids.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function(){
         //initialize the javascript
         App.init();
+        $("#streamContainer").fitVids();
     });
 </script>
 
