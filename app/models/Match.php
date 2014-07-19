@@ -46,4 +46,27 @@ class Match extends Eloquent {
         }
     }
 
+    public function color()
+    {
+         if($this->isLive)
+        {
+            return '#ED5B56';
+        }
+
+        if(!$this->isLive && !$this->isFinished)
+        {
+            return '#5DC4EA';
+        }
+
+        if($this->isFinished && !$this->isLive)
+        {
+            return '#60C060';
+        }
+    }
+
+    public function game()
+    {
+        return Game::where('matchId', $this->matchId)->first();
+    }
+
 }

@@ -30,7 +30,7 @@ class Block extends Eloquent {
             }
         }
 
-        return null;
+        return $matches[0];
     }
 
     public function isLiveMatch()

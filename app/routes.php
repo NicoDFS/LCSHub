@@ -28,14 +28,12 @@ Route::get('/home', function()
     $query = "dateTime >= '" . $datetime->format('Y-m-d') . " 00:00:00' AND dateTime <= '" . $datetime->format('Y-m-d') . " 23:59:59'";
     $todayBlock = Block::whereRaw($query)->first();
 
-    if(!is_null($todayBlock))
+    if(is_null($todayBlock))
     {
-        return View::make('html.home')->with('block', $todayBlock);
+        $todayBlock = Block::where('dateTime', '<=',  $datetime->format('Y-m-d') . " 23:59:59")->orderBy('dateTime', 'desc')->get()[0];
     }
-    else
-    {
-        return View::make('none');
-    }
+
+    return View::make('html.home')->with('block', $todayBlock);
 });
 
 Route::get('/block/{id}', function($id)

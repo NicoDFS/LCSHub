@@ -23,11 +23,7 @@
                 </div>
                 <div class="cl-mcont">
                     <div id="streamContainer">
-                        @if($block->isLiveMatch())
-                            <iframe width="1280" height="720" src="//www.youtube-nocookie.com/embed/{{ $block->leagueYoutubeId() }}?autoplay=1" frameborder="0" allowfullscreen></iframe>
-                        @else
-                            <iframe width="1280" height="720" src="//www.youtube-nocookie.com/embed/{{ $block->leagueYoutubeId() }}?autoplay=1" frameborder="0" allowfullscreen></iframe>
-                        @endif
+                        @include('html.stream', array('block' => $block))
                     </div>
 
                     <div class="row">
@@ -54,7 +50,9 @@
                         $("#scheduleBlock").html(obj.scheduleBlock);
                         $('body').scrollTop(scrl);
                         $("#pageHeader").html(obj.pageHeader);
+                        //$("#streamContainer").html(obj.streamContainer);
                         $('.ttip, [data-toggle="tooltip"]').tooltip();
+                        //$("#streamContainer").fitVids();
 
                     });
 

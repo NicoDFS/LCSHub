@@ -23,10 +23,17 @@ class AjaxController extends BaseController {
         $query = "dateTime >= '" . $datetime->format('Y-m-d') . " 00:00:00' AND dateTime <= '" . $datetime->format('Y-m-d') . " 23:59:59'";
         $todayBlock = Block::whereRaw($query)->first();
 
-        if(!is_null($todayBlock))
+        if(is_null($todayBlock))
         {
-            return json_encode(['pageHeader' => (View::make('html.titlebar')->with('block', $todayBlock)->render()), 'scheduleBlock' => (View::make('html.schedule')->with('block', $todayBlock)->render()) ]);
+            $todayBlock = Block::where('dateTime', '<=',  $datetime->format('Y-m-d') . " 23:59:59")->orderBy('dateTime', 'desc')->get()[0];
         }
+
+        $pageHeader = View::make('html.titlebar')->with('block', $todayBlock);
+        $scheduleBlock = View::make('html.schedule')->with('block', $todayBlock);
+        $streamContainer = View::make('html.stream')->with('block', $todayBlock);
+
+        return json_encode( ['pageHeader' => $pageHeader->render(), 'scheduleBlock' => $scheduleBlock->render(), 'streamContainer' => $streamContainer->render()] );
+
 
     }
 
