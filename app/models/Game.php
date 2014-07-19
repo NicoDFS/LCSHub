@@ -18,5 +18,11 @@ class Game extends Eloquent {
         return FTeamGame::where('gameId', $this->gameId)->get();
     }
 
+    public function youtubeId()
+    {
+        $yt = $this->vodURL;
+        return substr($yt, strpos($yt, "?v=") + 3);
+    }
+
 
 }

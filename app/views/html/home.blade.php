@@ -23,7 +23,11 @@
                 </div>
                 <div class="cl-mcont">
                     <div id="streamContainer">
-                        <iframe width="1280" height="720" src="//www.youtube-nocookie.com/embed/MiIh5cSOMSE?autoplay=1" frameborder="0" allowfullscreen></iframe>
+                        @if($block->isLiveMatch())
+                            <iframe width="1280" height="720" src="//www.youtube-nocookie.com/embed/{{ $block->leagueYoutubeId() }}?autoplay=1" frameborder="0" allowfullscreen></iframe>
+                        @else
+                            <iframe width="1280" height="720" src="//www.youtube-nocookie.com/embed/{{ $block->leagueYoutubeId() }}?autoplay=1" frameborder="0" allowfullscreen></iframe>
+                        @endif
                     </div>
 
                     <div class="row">
@@ -50,6 +54,7 @@
                         $("#scheduleBlock").html(obj.scheduleBlock);
                         $('body').scrollTop(scrl);
                         $("#pageHeader").html(obj.pageHeader);
+                        $('.ttip, [data-toggle="tooltip"]').tooltip();
 
                     });
 

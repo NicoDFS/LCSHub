@@ -33,4 +33,20 @@ class Block extends Eloquent {
         return null;
     }
 
+    public function isLiveMatch()
+    {
+        return (Match::where('blockId', $this->blockId)->where('isLive', true)->get()->count() > 0 ? true : false);
+    }
+
+    public function leagueYoutubeId()
+    {
+        $yt = League::where('leagueId', $this->leagueId)->first()->youtube;
+        return substr($yt, strpos($yt, "?v=") + 3);
+    }
+
+    public function firstMatch()
+    {
+        return Match::where('blockId', $this->blockId)->get()[0];
+    }
+
 }

@@ -242,7 +242,7 @@ class InsertController extends BaseController {
         foreach($tournaments as $tournament)
         {
 
-            $programmingUrl = "http://na.lolesports.com/api/programming.json?parameters[method]=all&parameters[limit]=100&parameters[expand_matches]=1&timestamp= " . time() . "&parameters[tournament]=" . $tournament->tournamentId;
+            $programmingUrl = "http://na.lolesports.com/api/programming.json?parameters[method]=all&parameters[limit]=100&parameters[expand_matches]=1&timestamp=" . time() . "&parameters[tournament]=" . $tournament->tournamentId;
             $programming = json_decode(file_get_contents($programmingUrl));
 
             $this->insertBlocks($programming, true);

@@ -28,4 +28,22 @@ class Match extends Eloquent {
 
     }
 
+    public function status()
+    {
+        if($this->isLive)
+        {
+            return 'Live';
+        }
+
+        if(!$this->isLive && !$this->isFinished)
+        {
+            return 'Scheduled';
+        }
+
+        if($this->isFinished && !$this->isLive)
+        {
+            return 'Finished';
+        }
+    }
+
 }
