@@ -25,7 +25,7 @@ class AjaxController extends BaseController {
 
         if(!is_null($todayBlock))
         {
-            return View::make('html.home')->with('block', $todayBlock);
+            return json_encode(['pageHeader' => (View::make('html.titlebar')->with('block', $todayBlock)->render()), 'scheduleBlock' => (View::make('html.schedule')->with('block', $todayBlock)->render()) ]);
         }
 
     }

@@ -4,7 +4,7 @@
         {{ $activeMatch->matchName }}
         <img src="http://na.lolesports.com{{ $activeMatch->redLogoURL }}" width='50' height='50'>
     @else
-        Currently No Live Games
+        No Live Games
     @endif
 </h2>
 

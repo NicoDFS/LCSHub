@@ -13,5 +13,19 @@ class Match extends Eloquent {
         return $query->where('isFinished', true);
     }
 
+    public function cssClass()
+    {
+        if($this->isLive)
+        return 'label-danger';
+
+
+        if(!$this->isLive && !$this->isFinished)
+        return 'label-info';
+
+
+        if($this->isFinished)
+        return 'label-success';
+
+    }
 
 }
