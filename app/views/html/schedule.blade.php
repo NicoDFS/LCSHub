@@ -4,12 +4,11 @@
         <div class="list-group">
             @foreach($block->matches as $tempCntr => $match)
                 <?php $tempZone = new DateTime($match->dateTime); $tempZone->setTimezone(new DateTimeZone(Cookie::get('timezone'))); ?>
-                <li href="#" class="list-group-item" style="font-size: 20px; {{ ($tempCntr % 2 == 0 ? ' background: #F8F8F8; ' : '' ) }}"><img src="http://na.lolesports.com{{ $match->blueLogoURL }}" width='50' height='50'> {{ $match->matchName }}  <img src="http://na.lolesports.com{{ $match->redLogoURL }}" width='50' height='50'> <span class="pull-right {{ $match->cssClass() }}" data-toggle="tooltip" data-placement="left" title="{{ $match->status() }}" style="padding:inherit; color:white;">
+                <li href="#" class="list-group-item" style="font-size: 20px; {{ ($tempCntr % 2 == 0 ? ' background: #F8F8F8; ' : '' ) }}"><img src="http://na.lolesports.com{{ $match->blueLogoURL }}" width='50' height='50'> {{ $match->matchName }}  <img src="http://na.lolesports.com{{ $match->redLogoURL }}" width='50' height='50'>
 
-                {{ $tempZone->format('g:i A') }}
-                <!--<div class="btn-group">
-                <button type="button" class="btn btn-success btn-lg ">{{ $tempZone->format('g:i A') }}</button>
-                <button type="button" class="btn btn-success btn-lg dropdown-toggle" data-toggle="dropdown">
+                <div class="btn-group pull-right">
+                <button type="button" class="btn btn-{{ $match->cssClass() }} btn-lg ">{{ $tempZone->format('g:i A') }}</button>
+                <button type="button" class="btn btn-{{ $match->cssClass() }} btn-lg dropdown-toggle" data-toggle="dropdown">
                   <span class="caret"></span>
                   <span class="sr-only">Toggle Dropdown</span>
                 </button>
@@ -17,10 +16,8 @@
                   <li><a href="#">Action</a></li>
                   <li><a href="#">Another action</a></li>
                   <li><a href="#">Something else here</a></li>
-                  <li class="divider"></li>
-                  <li><a href="#">Separated link</a></li>
                 </ul>
-              </div>-->
+              </div>
                 </span></li>
             @endforeach
         </div>

@@ -40,23 +40,37 @@
 
         <script type="text/javascript">
             $(function() {
-                setInterval(function()
+                //setInterval(function()
+                //{
+                //    $.get("/ajax/refresh", function(data)
+                //    {
+                //        var obj = jQuery.parseJSON(data);
+                //        var scrl = $(document).scrollTop();
+                //
+                //        $("#scheduleBlock").html(obj.scheduleBlock);
+                //        $('body').scrollTop(scrl);
+                //        $("#pageHeader").html(obj.pageHeader);
+                //        //$("#streamContainer").html(obj.streamContainer);
+                //        $('.ttip, [data-toggle="tooltip"]').tooltip();
+                //        //$("#streamContainer").fitVids();
+                //
+                //    });
+                //
+                //}, 3000);
+
+                $.get("/ajax/match/2515", function(data)
                 {
-                    $.get("/ajax/refresh", function(data)
-                    {
-                        var obj = jQuery.parseJSON(data);
-                        var scrl = $(document).scrollTop();
+                    var obj = jQuery.parseJSON(data);
+                    var scrl = $(document).scrollTop();
 
-                        $("#scheduleBlock").html(obj.scheduleBlock);
-                        $('body').scrollTop(scrl);
-                        $("#pageHeader").html(obj.pageHeader);
-                        //$("#streamContainer").html(obj.streamContainer);
-                        $('.ttip, [data-toggle="tooltip"]').tooltip();
-                        //$("#streamContainer").fitVids();
+                    $("#scheduleBlock").html(obj.scheduleBlock);
+                    $('body').scrollTop(scrl);
+                    $("#pageHeader").html(obj.pageHeader);
+                    $("#streamContainer").html(obj.streamContainer);
+                    $('.ttip, [data-toggle="tooltip"]').tooltip();
+                    $("#streamContainer").fitVids();
 
-                    });
-
-                }, 3000);
+                });
             });
         </script>
 

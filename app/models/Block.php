@@ -22,15 +22,76 @@ class Block extends Eloquent {
     {
         $matches = Match::where('blockId', $this->blockId)->get();
 
-        foreach($matches as $match)
+        if($this->isCurrentBlock())
         {
-            if($match->isLive)
+            foreach($matches as $match)
             {
-                return $match;
+                if($match->isLive)
+                {
+                    return $match;
+                }
             }
+
+        }
+        else
+        {
+            return $matches[$this->gRequestedMatchIndex()];
         }
 
-        return $matches[0];
+        return null;
+
+    }
+
+    public function requestedMatch($matchId)
+    {
+        $this->newMatchId = $matchId;
+    }
+
+    public function gRequestedMatchIndex()
+    {
+        foreach($this->matches as $ind => $match)
+        {
+            if($match->matchId == $this->newMatchId)
+            {
+                return $ind;
+            }
+        }
+    }
+
+    public function isFutureBlock()
+    {
+        if($this->dateTime > date('Y-m-d H:i:s'))
+        return true;
+
+        return false;
+    }
+
+    public function isCurrentBlock()
+    {
+        $timezone = 'America/Los_Angeles';
+        Cookie::queue('timezone', 'America/Los_Angeles', (60 * 24));
+
+        if(Cookie::get('timezone'))
+        {
+            $timezone = Cookie::get('timezone');
+        }
+
+        $datetime = new DateTime('now', new DateTimeZone($timezone));
+
+        $query = "dateTime >= '" . $datetime->format('Y-m-d') . " 00:00:00' AND dateTime <= '" . $datetime->format('Y-m-d') . " 23:59:59'";
+        $todayBlock = Block::whereRaw($query)->first();
+
+        if(is_null($todayBlock))
+        {
+            $todayBlock = Block::where('dateTime', '<=',  $datetime->format('Y-m-d') . " 23:59:59")->orderBy('dateTime', 'desc')->get()[0];
+        }
+
+        if($todayBlock->id == $this->id)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     public function isLiveMatch()

@@ -16,15 +16,15 @@ class Match extends Eloquent {
     public function cssClass()
     {
         if($this->isLive)
-        return 'label-danger';
+        return 'danger';
 
 
         if(!$this->isLive && !$this->isFinished)
-        return 'label-info';
+        return 'info';
 
 
         if($this->isFinished)
-        return 'label-success';
+        return 'success';
 
     }
 

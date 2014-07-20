@@ -617,7 +617,15 @@ class InsertController extends BaseController {
 
             $this->insertSpecificFantasyGameData($todayBlock->tournamentId, $gameIds);
 
-            echo Match::where('isLive', true)->first()->matchName;
+            $curMatch = Match::where('isLive', true)->first();
+            if($curMatch == null)
+            {
+                echo "No Live Games";
+            }
+            else
+            {
+                echo $curMatch->matchName;
+            }
         }
         else
         {

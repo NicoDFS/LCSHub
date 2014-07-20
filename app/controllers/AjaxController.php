@@ -32,9 +32,20 @@ class AjaxController extends BaseController {
         $scheduleBlock = View::make('html.schedule')->with('block', $todayBlock);
         $streamContainer = View::make('html.stream')->with('block', $todayBlock);
 
+        return json_encode( ['pageHeader' => $pageHeader->render(), 'scheduleBlock' => $scheduleBlock->render()] );
+    }
+
+    public function getMatch($id)
+    {
+
+        $block = Match::where('matchId', $id)->first()->block;
+        $block->requestedMatch($id);
+
+        $pageHeader = View::make('html.titlebar')->with('block', $block);
+        $scheduleBlock = View::make('html.schedule')->with('block', $block);
+        $streamContainer = View::make('html.stream')->with('block', $block);
+
         return json_encode( ['pageHeader' => $pageHeader->render(), 'scheduleBlock' => $scheduleBlock->render(), 'streamContainer' => $streamContainer->render()] );
-
-
     }
 
 
