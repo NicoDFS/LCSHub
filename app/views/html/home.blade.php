@@ -58,7 +58,7 @@
                 //
                 //}, 3000);
 
-                setTimeout( function() { $.get("/ajax/match/2515", function(data)
+                $.get("/ajax/match/2515", function(data)
                 {
                     var obj = jQuery.parseJSON(data);
                     var scrl = $(document).scrollTop();
@@ -70,8 +70,7 @@
                     $('.ttip, [data-toggle="tooltip"]').tooltip();
                     $("#streamContainer").fitVids();
 
-                })
-                }, 10000);
+                });
             });
         </script>
 
