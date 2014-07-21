@@ -4303,6 +4303,14 @@ a.list-group-item:hover {
 a.list-group-item:hover + a.list-group-item {
   border-top-color: #4D90FD;
 }
+li.list-group-item:hover {
+  border-left: 5px solid #4D90FD;
+  border-color: #4D90FD;
+  padding-left: 11px;
+}
+li.list-group-item:hover + li.list-group-item {
+  border-top-color: #4D90FD;
+}
 .list-group .active:hover {
   padding-left: 15px;
   border-left: 1px solid #428BCA;

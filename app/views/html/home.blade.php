@@ -22,7 +22,7 @@
 
                 </div>
                 <div class="cl-mcont">
-                    <div id="streamContainer">
+                    <div id="streamContainer" style="border: solid 2px #4D90FD;">
                         @include('html.stream', array('block' => $block))
                     </div>
 
