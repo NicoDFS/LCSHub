@@ -58,19 +58,19 @@
                 //
                 //}, 3000);
 
-                //$.get("/ajax/match/2515", function(data)
-                //{
-                //    var obj = jQuery.parseJSON(data);
-                //    var scrl = $(document).scrollTop();
-                //
-                //    $("#scheduleBlock").html(obj.scheduleBlock);
-                //    $('body').scrollTop(scrl);
-                //    $("#pageHeader").html(obj.pageHeader);
-                //    $("#streamContainer").html(obj.streamContainer);
-                //    $('.ttip, [data-toggle="tooltip"]').tooltip();
-                //    $("#streamContainer").fitVids();
-                //
-                //});
+                $.get("/ajax/match/2515", function(data)
+                {
+                    var obj = jQuery.parseJSON(data);
+                    var scrl = $(document).scrollTop();
+
+                    $("#scheduleBlock").html(obj.scheduleBlock);
+                    $('body').scrollTop(scrl);
+                    $("#pageHeader").html(obj.pageHeader);
+                    $("#streamContainer").html(obj.streamContainer);
+                    $('.ttip, [data-toggle="tooltip"]').tooltip();
+                    $("#streamContainer").fitVids();
+
+                });
             });
         </script>
 
