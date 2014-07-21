@@ -22,10 +22,12 @@ class AjaxController extends BaseController {
 
         $query = "dateTime >= '" . $datetime->format('Y-m-d') . " 00:00:00' AND dateTime <= '" . $datetime->format('Y-m-d') . " 23:59:59'";
         $todayBlock = Block::whereRaw($query)->first();
+        $todayBlock->currBlock = true;
 
         if(is_null($todayBlock))
         {
             $todayBlock = Block::where('dateTime', '<=',  $datetime->format('Y-m-d') . " 23:59:59")->orderBy('dateTime', 'desc')->get()[0];
+            $todayBlock->currBlock = false;
         }
 
         $pageHeader = View::make('html.titlebar')->with('block', $todayBlock);
@@ -38,7 +40,7 @@ class AjaxController extends BaseController {
     public function getMatch($id)
     {
 
-        $block = Match::where('matchId', $id)->first()->block;
+        $block = Block::select('blocks.*')->join('matches', 'matches.blockId', '=', 'blocks.blockId')->where('matches.matchId', $id)->first();
         $block->requestedMatch($id);
 
         $pageHeader = View::make('html.titlebar')->with('block', $block);

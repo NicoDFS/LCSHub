@@ -31,6 +31,11 @@ Route::get('/home', function()
     if(is_null($todayBlock))
     {
         $todayBlock = Block::where('dateTime', '<=',  $datetime->format('Y-m-d') . " 23:59:59")->orderBy('dateTime', 'desc')->get()[0];
+        $todayBlock->currBlock = false;
+    }
+    else
+    {
+        $todayBlock->currBlock = true;
     }
 
     return View::make('html.home')->with('block', $todayBlock);

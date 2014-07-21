@@ -2,7 +2,7 @@
     <div class="content">
         <h3 class="text-center" style="margin-top:-15px; padding-bottom:10px;">{{ substr($block->tournamentName, 0, 2) }} LCS {{ substr($block->label, strpos($block->label, " - ") + 3) }} - {{ date('M j Y', strtotime($block->dateTime)) }}</h3>
         <div class="list-group">
-            @foreach($block->matches as $tempCntr => $match)
+            @foreach($block->getMatches() as $tempCntr => $match)
                 <?php $tempZone = new DateTime($match->dateTime); $tempZone->setTimezone(new DateTimeZone(Cookie::get('timezone'))); ?>
                 <li href="#" class="list-group-item" style="font-size: 20px; {{ ($tempCntr % 2 == 0 ? ' background: #F8F8F8; ' : '' ) }}"><img src="http://na.lolesports.com{{ $match->blueLogoURL }}" width='45' height='45' style="border-radius: 10%; background: #1A1A1A; padding:5px;"> {{ $match->matchName }}  <img src="http://na.lolesports.com{{ $match->redLogoURL }}" width='45' height='45' style="border-radius: 10%; background: #1A1A1A; padding:5px;">
 

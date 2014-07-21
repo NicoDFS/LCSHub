@@ -10,7 +10,12 @@ class Block extends Eloquent {
 
     public function getLeague()
     {
-        return League::where('leagueId', $this->leagueId)->first();
+        if(!isset($this->gotLeague))
+        {
+            $this->gotLeague = League::where('leagueId', $this->leagueId)->first();
+        }
+
+        return $this->gotLeague;
     }
 
     public function getTournament()
@@ -18,9 +23,20 @@ class Block extends Eloquent {
         return Tournament::where('tournamentId', $this->tournamentId)->first();
     }
 
+    public function getMatches()
+    {
+        if(!isset($this->gotMatches))
+        {
+            $this->gotMatches = Match::where('blockId', $this->blockId)->get();
+        }
+
+        return $this->gotMatches;
+    }
+
     public function activeMatch()
     {
-        $matches = Match::where('blockId', $this->blockId)->get();
+
+        $matches = $this->getMatches();
 
         if($this->isCurrentBlock())
         {
@@ -35,7 +51,14 @@ class Block extends Eloquent {
         }
         else
         {
-            return $matches[$this->gRequestedMatchIndex()];
+            if(isset($this->newMatchId))
+            {
+                return $matches[$this->gRequestedMatchIndex()];
+            }
+            else
+            {
+                return $matches[0];
+            }
         }
 
         return null;
@@ -49,7 +72,7 @@ class Block extends Eloquent {
 
     public function gRequestedMatchIndex()
     {
-        foreach($this->matches as $ind => $match)
+        foreach($this->getMatches() as $ind => $match)
         {
             if($match->matchId == $this->newMatchId)
             {
@@ -68,6 +91,11 @@ class Block extends Eloquent {
 
     public function isCurrentBlock()
     {
+        if(isset($this->currBlock))
+        {
+            return $this->currBlock;
+        }
+
         $timezone = 'America/Los_Angeles';
         Cookie::queue('timezone', 'America/Los_Angeles', (60 * 24));
 
@@ -77,21 +105,27 @@ class Block extends Eloquent {
         }
 
         $datetime = new DateTime('now', new DateTimeZone($timezone));
-
-        $query = "dateTime >= '" . $datetime->format('Y-m-d') . " 00:00:00' AND dateTime <= '" . $datetime->format('Y-m-d') . " 23:59:59'";
-        $todayBlock = Block::whereRaw($query)->first();
-
-        if(is_null($todayBlock))
-        {
-            $todayBlock = Block::where('dateTime', '<=',  $datetime->format('Y-m-d') . " 23:59:59")->orderBy('dateTime', 'desc')->get()[0];
-        }
-
-        if($todayBlock->id == $this->id)
+        if($this->dateTime > ($datetime->format('Y-m-d') . " 00:00:00") && $this->dateTime < ($datetime->format('Y-m-d') . " 23:59:59"))
         {
             return true;
         }
 
         return false;
+
+        //$query = "dateTime >= '" . $datetime->format('Y-m-d') . " 00:00:00' AND dateTime <= '" . $datetime->format('Y-m-d') . " 23:59:59'";
+        //$todayBlock = Block::whereRaw($query)->first();
+        //
+        //if(is_null($todayBlock))
+        //{
+        //    $todayBlock = Block::where('dateTime', '<=',  $datetime->format('Y-m-d') . " 23:59:59")->orderBy('dateTime', 'desc')->get()[0];
+        //}
+        //
+        //if($todayBlock->id == $this->id)
+        //{
+        //    return true;
+        //}
+        //
+        //return false;
     }
 
     public function isLiveMatch()
@@ -101,7 +135,7 @@ class Block extends Eloquent {
 
     public function leagueYoutubeId()
     {
-        $yt = League::where('leagueId', $this->leagueId)->first()->youtube;
+        $yt = $this->getLeague()->youtube;
         return substr($yt, strpos($yt, "?v=") + 3);
     }
 
