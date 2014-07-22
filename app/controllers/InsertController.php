@@ -226,6 +226,7 @@ class InsertController extends BaseController {
         foreach($data as $program)
         {
             $block = Block::firstOrCreate(["blockId" => $program->blockId]);
+            if($program->tickets == " ") $program->tickets = null;
 
             $block->update([
                 "dateTime"          => date("Y-m-d H:i:s", strtotime($program->dateTime)),
@@ -552,6 +553,8 @@ class InsertController extends BaseController {
 
     public function insertLeagues($data)
     {
+        Eloquent::unguard();
+
         $leagueData = $data;
         $streams = array();
 
@@ -629,8 +632,6 @@ class InsertController extends BaseController {
 
     public function todayLeague()
     {
-        Eloquent::unguard();
-
         $timezone = 'America/Los_Angeles';
         $datetime = new DateTime('now', new DateTimeZone($timezone));
 

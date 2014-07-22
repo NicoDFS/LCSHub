@@ -85,4 +85,14 @@ class Match extends Eloquent {
         return Game::where('matchId', $this->matchId)->first();
     }
 
+    public function getGame()
+    {
+        if(!isset($this->_game))
+        {
+            $this->_game = Game::where('matchId', $this->matchId)->first();
+        }
+
+        return $this->_game;
+    }
+
 }

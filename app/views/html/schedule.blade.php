@@ -16,14 +16,21 @@
                         </button>
                         <ul class="dropdown-menu" role="menu">
                             @if($match->status() == 'Finished')
-                                <li><a href="#">View VOD</a></li>
-                                <li><a href="#">View game stats</a></li>
-                                <li><a href="#">View stats and VOD</a></li>
+                                @if($match->getGame()->vodURL !== null)
+                                    <li><a href="#">View VOD</a></li>
+                                @endif
+                                @if($match->getGame()->fullPlayers())
+                                    <li><a href="#">View game stats</a></li>
+                                @endif
+                                @if(($match->getGame()->vodURL !== null) && ($match->getGame()->fullPlayers()))
+                                    <li><a href="#">View stats and VOD</a></li>
+                                @endif
                             @elseif($match->status() == 'Live')
-                                <li><a href="#">View VOD</a></li>
-                                <li><a href="#">View game stats</a></li>
-                                <li><a href="#">View stats and VOD</a></li>
+                                <li><a href="#">View {{ $match->blueAcronym }}'s games</a></li>
+                                <li><a href="#">View {{ $match->redAcronym }}'s games</a></li>
                             @elseif($match->status() == 'Scheduled')
+                                <li><a href="#">View {{ $match->blueAcronym }}'s games</a></li>
+                                <li><a href="#">View {{ $match->redAcronym }}'s games</a></li>
                                 @if($block->tickets !== null)
                                     <li><a href="{{ $block->tickets }}">Buy tickets</a></li>
                                 @endif
