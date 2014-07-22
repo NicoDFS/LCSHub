@@ -12,3 +12,4 @@
 */
 
 Artisan::add(new Update);
+Artisan::add(new TodayLeague);

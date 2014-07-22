@@ -6,21 +6,21 @@ use Indatus\Dispatcher\Drivers\Cron\Scheduler;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class Update extends ScheduledCommand {
+class TodayLeague extends ScheduledCommand {
 
 	/**
 	 * The console command name.
 	 *
 	 * @var string
 	 */
-	protected $name = 'command:update';
+	protected $name = 'command:todayleague';
 
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
-	protected $description = 'Updates LCS data at intervals to keep data current.';
+	protected $description = 'Updates the current block\'s league row.';
 
 	/**
 	 * Create a new command instance.
@@ -40,7 +40,7 @@ class Update extends ScheduledCommand {
 	 */
 	public function schedule(Schedulable $scheduler)
 	{
-		return $scheduler->hourly()->everyMinutes(3);
+		return $scheduler->daily()->everyHours(4);
 	}
 
 	/**
@@ -50,10 +50,9 @@ class Update extends ScheduledCommand {
 	 */
 	public function fire()
 	{
-            Eloquent::unguard();
-
-            $insertController = new InsertController;
-            $insertController->today();
+	    $insertController = new InsertController;
+            $insertController->todayLeague();
 	}
+
 
 }

@@ -181,41 +181,7 @@ class InsertController extends BaseController {
                 continue;
             }
 
-            $streams = array();
-
-            if(isset($leagueData->internationalLiveStream))
-            {
-                foreach($leagueData->internationalLiveStream as $stream)
-                {
-                    if($stream->language == "English" && $stream->display_language == "English")
-                    {
-                        foreach($stream->streams as $lStream)
-                        {
-                            $streams[strtolower($lStream->title)] = $lStream->url;
-                        }
-                    }
-                }
-            }
-
-            $league = League::firstOrCreate(["leagueId" => $leagueData->id]);
-
-            $league->update([
-                "leagueId"              => $leagueData->id,
-                "color"                 => $leagueData->color,
-                "leagueImage"           => $leagueData->leagueImage,
-                "defaultTournamentId"   => $leagueData->defaultTournamentId,
-                "defaultSeriesId"       => $leagueData->defaultSeriesId,
-                "shortName"             => $leagueData->shortName,
-                "url"                   => $leagueData->url,
-                "label"                 => $leagueData->label,
-                "noVods"                => $leagueData->noVods,
-                "menuWeight"            => $leagueData->menuWeight,
-                "twitch"                => (isset($streams["twitch"]) ? $streams["twitch"] : null),
-                "youtube"               => (isset($streams["youtube"]) ? $streams["youtube"] : null),
-                "azubu"                 => (isset($streams["azubu"]) ? $streams["azubu"] : null),
-                "leagueTournaments"     => implode(", ", $leagueData->leagueTournaments)
-            ]);
-
+            $this->insertLeagues($leagueData);
         }
 
         if($returnCount)
@@ -584,16 +550,48 @@ class InsertController extends BaseController {
         }
     }
 
+    public function insertLeagues($data)
+    {
+        $leagueData = $data;
+        $streams = array();
+
+        if(isset($leagueData->internationalLiveStream))
+        {
+            foreach($leagueData->internationalLiveStream as $stream)
+            {
+                if($stream->language == "English" && $stream->display_language == "English")
+                {
+                    foreach($stream->streams as $lStream)
+                    {
+                        $streams[strtolower($lStream->title)] = $lStream->url;
+                    }
+                }
+            }
+        }
+
+        $league = League::firstOrCreate(["leagueId" => $leagueData->id]);
+
+        $league->update([
+            "leagueId"              => $leagueData->id,
+            "color"                 => $leagueData->color,
+            "leagueImage"           => $leagueData->leagueImage,
+            "defaultTournamentId"   => $leagueData->defaultTournamentId,
+            "defaultSeriesId"       => $leagueData->defaultSeriesId,
+            "shortName"             => $leagueData->shortName,
+            "url"                   => $leagueData->url,
+            "label"                 => $leagueData->label,
+            "noVods"                => $leagueData->noVods,
+            "menuWeight"            => $leagueData->menuWeight,
+            "twitch"                => (isset($streams["twitch"]) ? $streams["twitch"] : null),
+            "youtube"               => (isset($streams["youtube"]) ? $streams["youtube"] : null),
+            "azubu"                 => (isset($streams["azubu"]) ? $streams["azubu"] : null),
+            "leagueTournaments"     => implode(", ", $leagueData->leagueTournaments)
+        ]);
+    }
+
     public function today()
     {
         $timezone = 'America/Los_Angeles';
-        Cookie::queue('timezone', 'America/Los_Angeles', (60 * 24));
-
-        if(Cookie::get('timezone'))
-        {
-            $timezone = Cookie::get('timezone');
-        }
-
         $datetime = new DateTime('now', new DateTimeZone($timezone));
 
         $query = "dateTime >= '" . $datetime->format('Y-m-d') . " 00:00:00' AND dateTime <= '" . $datetime->format('Y-m-d') . " 23:59:59'";
@@ -626,10 +624,28 @@ class InsertController extends BaseController {
                 echo $curMatch->matchName;
             }
         }
-        else
-        {
 
+    }
+
+    public function todayLeague()
+    {
+        Eloquent::unguard();
+
+        $timezone = 'America/Los_Angeles';
+        $datetime = new DateTime('now', new DateTimeZone($timezone));
+
+        $query = "blocks.dateTime >= '" . $datetime->format('Y-m-d') . " 00:00:00' AND blocks.dateTime <= '" . $datetime->format('Y-m-d') . " 23:59:59'";
+        $league = League::select('leagues.*')->from('leagues')->join('blocks', 'blocks.leagueId', '=', 'leagues.leagueId')->whereRaw($query)->first();
+
+        if($league !== null)
+        {
+            $leagueURL = "http://na.lolesports.com:80/api/league/" . $league->leagueId . ".json?timestamp=" . time();
+            $leagueData = json_decode(file_get_contents($leagueURL));
+
+            $this->insertLeagues($leagueData);
+            echo "Inserted League: " . $league->leagueId;
         }
+
     }
 
 }

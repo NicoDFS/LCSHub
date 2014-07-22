@@ -141,6 +141,8 @@ Route::get('/reset', function()
 
 });
 
+Route::get('/inserttodayleague', 'InsertController@todayLeague');
+
 Route::get('/inserttoday', 'InsertController@today');
 
 Route::get('/insertall', 'InsertController@all');
