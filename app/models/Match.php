@@ -28,6 +28,22 @@ class Match extends Eloquent {
 
     }
 
+    public function isLiveActive()
+    {
+        if($this->status() == 'Live')
+        {
+            return "active";
+        }
+    }
+
+    public function isLiveText()
+    {
+        if($this->status() == 'Live')
+        {
+            return "color: white;";
+        }
+    }
+
     public function status()
     {
         if($this->isLive)

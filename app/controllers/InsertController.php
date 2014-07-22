@@ -603,7 +603,6 @@ class InsertController extends BaseController {
         {
             $programmingUrl = "http://na.lolesports.com:80/api/programming/{$todayBlock->blockId}.json?expand_matches=1&timestamp=" . time();
             $programming = json_decode(file_get_contents($programmingUrl));
-            //dd($http_response_header);
             $this->insertBlocks([$programming]);
 
             $matches = Match::where('blockId', $todayBlock->blockId)->finished()->get();

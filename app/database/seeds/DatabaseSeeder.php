@@ -11,6 +11,19 @@ class DatabaseSeeder extends Seeder {
 	{
 		Eloquent::unguard();
 
+                Block::truncate();
+                FPlayer::truncate();
+                FPlayerGame::truncate();
+                FTeam::truncate();
+                FTeamGame::truncate();
+                Game::truncate();
+                GamePlayer::truncate();
+                League::truncate();
+                Match::truncate();
+                Player::truncate();
+                Team::truncate();
+                Tournament::truncate();
+
                 $insertController = new InsertController;
                 $insertController->all();
 

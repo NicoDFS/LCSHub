@@ -1,7 +1,7 @@
 <h2>
     @if(($activeMatch = $block->activeMatch()) !== null)
         <img src="http://na.lolesports.com{{ $activeMatch->blueLogoURL }}" width='50' height='50' style="border-radius: 10%; background: #1A1A1A; padding:5px;">
-        <span data-toggle="tooltip" data-placement="top" title="{{ $activeMatch->status() }}" style="color:{{ $activeMatch->color() }};">{{ $activeMatch->matchName }}</span>
+        <span data-toggle="tooltip" data-placement="top" data-viewport="#pageHeader" title="{{ $activeMatch->status() }}" style="color:{{ $activeMatch->color() }};">{{ $activeMatch->matchName }}</span>
         <img src="http://na.lolesports.com{{ $activeMatch->redLogoURL }}" width='50' height='50' style="border-radius: 10%; background: #1A1A1A; padding:5px;">
     @else
         No Live Games
