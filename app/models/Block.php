@@ -167,7 +167,7 @@ class Block extends Eloquent {
     {
         $html = "<span class='label-$class' style='
             color: white;
-            padding-left: 8px;
+            padding-left: 9px;
             padding-right: 8px;
             padding-bottom: 4px;
             padding-top: 3px;
