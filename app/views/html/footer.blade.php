@@ -10,6 +10,7 @@
 <script src="js/jquery.select2/select2.min.js" type="text/javascript"></script>
 <script src="js/bootstrap.slider/js/bootstrap-slider.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/jquery.gritter/js/jquery.gritter.js"></script>
+<script type="text/javascript" src="js/jquery.niftymodals/js/jquery.modalEffects.js"></script>
 <script type="text/javascript" src="http://cdn.rawgit.com/davatron5000/FitVids.js/master/jquery.fitvids.js"></script>
 
 <script type="text/javascript">
@@ -17,6 +18,12 @@
         //initialize the javascript
         App.init();
         $("#streamContainer").fitVids();
+        $('.md-trigger').modalEffects();
+        $("#easySelect").select2({
+            placeholder: 'Select a timezone'
+        });
+        $("#spoilersRadio").bootstrapSwitch();
+        $("#autoupdateRadio").bootstrapSwitch();
     });
 </script>
 

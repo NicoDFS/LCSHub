@@ -3,8 +3,10 @@
         <img src="http://na.lolesports.com{{ $activeMatch->blueLogoURL }}" width='50' height='50' style="border-radius: 10%; background: #1A1A1A; padding:5px;">
         <span data-toggle="tooltip" data-placement="top" data-viewport="#pageHeader" title="{{ $activeMatch->status() }}" style="color:{{ $activeMatch->color() }};">{{ $activeMatch->matchName }}</span>
         <img src="http://na.lolesports.com{{ $activeMatch->redLogoURL }}" width='50' height='50' style="border-radius: 10%; background: #1A1A1A; padding:5px;">
+    @elseif($activeMatch == null && $block->isCurrentBlock())
+        Live Games Soon
     @else
-        No Live Games
+        No More Live Games
     @endif
 </h2>
 
@@ -15,8 +17,10 @@
     <li class="active">
         @if($activeMatch !== null)
             <a href="#">{{ $activeMatch->matchName }}</a>
+        @elseif($activeMatch == null && $block->isCurrentBlock())
+            Soon
         @else
-            None
+            Finished
         @endif
     </li>
 </ol>
