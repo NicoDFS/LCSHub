@@ -144,4 +144,36 @@ class Block extends Eloquent {
         return Match::where('blockId', $this->blockId)->get()[0];
     }
 
+    public function blockLabelDay()
+    {
+        $str = substr($this->label, strpos($this->label, " - ") + 3);
+        $pos = strpos($str, ' ', strpos($str, ' ') + 1);
+        return substr($str, $pos + 1);
+    }
+
+    public function blockLabelWeek()
+    {
+        $str = substr($this->label, strpos($this->label, " - ") + 3);
+        $pos = strpos($str, ' ', strpos($str, ' ') + 1);
+        return substr($str, 0, $pos);
+    }
+
+    public function blockTournamentName()
+    {
+        return substr($this->tournamentName, 0, 2);
+    }
+
+    public function putBackground($text, $class)
+    {
+        $html = "<span class='label-$class' style='
+            color: white;
+            padding-left: 8px;
+            padding-right: 8px;
+            padding-bottom: 4px;
+            padding-top: 3px;
+        '>$text</span>";
+
+        return $html;
+    }
+
 }

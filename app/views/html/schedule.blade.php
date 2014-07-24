@@ -1,6 +1,6 @@
 <div class="block-flat" style="border: 1px solid #DDD;">
     <div class="content">
-        <h3 class="text-center" style="margin-top:-15px; padding-bottom:10px;">{{ substr($block->tournamentName, 0, 2) }} LCS {{ substr($block->label, strpos($block->label, " - ") + 3) }} - {{ date('M j Y', strtotime($block->dateTime)) }}</h3>
+        <h3 class="text-center" style="margin-top:-15px; padding-bottom:10px;">{{ $block->putBackground($block->blockTournamentName() . " LCS", 'warning') }} {{ $block->putBackground($block->blockLabelWeek(), 'success') }} {{ $block->putBackground($block->blockLabelDay(), 'info') }} {{ $block->putBackground(date('M j, Y', strtotime($block->dateTime)), 'primary') }}</h3>
         <div class="list-group">
             @foreach($block->getMatches() as $tempCntr => $match)
                 <?php $tempZone = new DateTime($match->dateTime); $tempZone->setTimezone(new DateTimeZone(Cookie::get('timezone'))); ?>
