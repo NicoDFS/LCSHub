@@ -176,4 +176,41 @@ class Block extends Eloquent {
         return $html;
     }
 
+    public function timeFuture($ptime)
+    {
+        $etime = strtotime($ptime) - time();
+
+        if ($etime < 1)
+        {
+            return '0 seconds';
+        }
+
+        $a = array( 12 * 30 * 24 * 60 * 60  =>  'Year',
+                    30 * 24 * 60 * 60       =>  'Month',
+                    24 * 60 * 60            =>  'Day',
+                    60 * 60                 =>  'Hour',
+                    60                      =>  'Minute',
+                    1                       =>  'Second'
+                    );
+
+        foreach ($a as $secs => $str)
+        {
+            $d = $etime / $secs;
+            if ($d >= 1)
+            {
+                $r = round($d);
+                return $r . ' ' . $str . ($r > 1 ? 's' : '');
+            }
+        }
+    }
+
+    public function lcsTime()
+    {
+        $timezone = 'America/Los_Angeles';
+
+        $datetime = new DateTime($this->dateTime);
+        $datetime->setTimezone(new DateTimeZone($timezone));
+        return $datetime->format('g:i A');
+    }
+
 }

@@ -4,7 +4,7 @@
         <span data-toggle="tooltip" data-placement="top" data-viewport="#pageHeader" title="{{ $activeMatch->status() }}" style="color:{{ $activeMatch->color() }};">{{ $activeMatch->matchName }}</span>
         <img src="http://na.lolesports.com{{ $activeMatch->redLogoURL }}" width='50' height='50' style="border-radius: 10%; background: #1A1A1A; padding:5px;">
     @elseif($activeMatch == null && $block->isCurrentBlock())
-        Live Games Soon
+        Live Games in {{ $block->timeFuture($block->dateTime) }} ({{ $block->lcsTime() }})
     @else
         No More Live Games
     @endif
