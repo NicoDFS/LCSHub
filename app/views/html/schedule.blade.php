@@ -4,7 +4,7 @@
         <div class="list-group">
             @foreach($block->getMatches() as $tempCntr => $match)
                 <?php $tempZone = new DateTime($match->dateTime); $tempZone->setTimezone(new DateTimeZone(Cookie::get('timezone'))); ?>
-                <li href="#" class="list-group-item {{ $match->isLiveActive() }}" style="font-size: 20px; {{ ($tempCntr % 2 == 0 ? ' background: #F8F8F8; ' : '' ) }} {{ $match->isLiveText() }}">
+                <li href="#" class="list-group-item {{ $match->isLiveActive() }}" style="font-size: 20px; {{ ( (($tempCntr % 2 == 0) && ($match->status() !== "Live")) ? ' background: #F8F8F8; ' : '' ) }} {{ $match->isLiveText() }}">
                     <img src="http://na.lolesports.com{{ $match->blueLogoURL }}" width='45' height='45' style="border-radius: 10%; background: #1A1A1A; padding:5px;">
                     {{ $match->matchName }}
                     <img src="http://na.lolesports.com{{ $match->redLogoURL }}" width='45' height='45' style="border-radius: 10%; background: #1A1A1A; padding:5px;">
