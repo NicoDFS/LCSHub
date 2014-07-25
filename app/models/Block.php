@@ -65,6 +65,22 @@ class Block extends Eloquent {
 
     }
 
+    public function matchesFinished()
+    {
+        $matches = $this->getMatches();
+        $finished = true;
+        foreach($matches as $match)
+        {
+            if($match->isFinished == false)
+            {
+                $finished = false;
+            }
+        }
+
+        return $finished;
+
+    }
+
     public function requestedMatch($matchId)
     {
         $this->newMatchId = $matchId;

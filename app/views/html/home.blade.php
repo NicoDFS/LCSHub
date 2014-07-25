@@ -22,7 +22,7 @@
 
                 </div>
                 <div class="cl-mcont">
-                    <div id="streamContainer" class="embed-responsive embed-responsive-16by9" style="border: solid 2px #4D90FD;">
+                    <div id="streamContainer" class="embed-responsive embed-responsive-16by9">
                         @include('html.stream', array('block' => $block))
                     </div>
 
@@ -40,23 +40,23 @@
 
         <script type="text/javascript">
             $(function() {
-                setInterval(function()
-                {
-                    $.get("/ajax/refresh", function(data)
-                    {
-                        var obj = jQuery.parseJSON(data);
-                        var scrl = $(document).scrollTop();
-
-                        $("#scheduleBlock").html(obj.scheduleBlock);
-                        $('body').scrollTop(scrl);
-                        $("#pageHeader").html(obj.pageHeader);
-                        //$("#streamContainer").html(obj.streamContainer);
-                        $('.ttip, [data-toggle="tooltip"]').tooltip();
-                        //$("#streamContainer").fitVids();
-
-                    });
-
-                }, 15000);
+                //setInterval(function()
+                //{
+                //    $.get("/ajax/refresh", function(data)
+                //    {
+                //        var obj = jQuery.parseJSON(data);
+                //        var scrl = $(document).scrollTop();
+                //
+                //        $("#scheduleBlock").html(obj.scheduleBlock);
+                //        $('body').scrollTop(scrl);
+                //        $("#pageHeader").html(obj.pageHeader);
+                //        //$("#streamContainer").html(obj.streamContainer);
+                //        $('.ttip, [data-toggle="tooltip"]').tooltip();
+                //        //$("#streamContainer").fitVids();
+                //
+                //    });
+                //
+                //}, 15000);
 
                 //
                 //$.get("/ajax/match/2515", function(data)

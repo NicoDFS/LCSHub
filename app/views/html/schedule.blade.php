@@ -1,6 +1,6 @@
 <div class="block-flat" style="border: 1px solid #DDD;">
     <div class="content">
-        <h3 class="text-center" style="margin-top:-15px; padding-bottom:10px;">{{ $block->putBackground($block->blockTournamentName() . " LCS", 'warning') }} {{ $block->putBackground($block->blockLabelWeek(), 'success') }} {{ $block->putBackground($block->blockLabelDay(), 'info') }} {{ $block->putBackground(date('M j, Y', strtotime($block->dateTime)), 'primary') }}</h3>
+        <h3 class="text-center" style="margin-top:-15px; padding-bottom:10px;">{{ $block->blockTournamentName() . " LCS" }} | {{ $block->blockLabelWeek() }} | {{ $block->blockLabelDay() }} | {{ date('M j, Y', strtotime($block->dateTime)) }}</h3>
         <div class="list-group">
             @foreach($block->getMatches() as $tempCntr => $match)
                 <?php $tempZone = new DateTime($match->dateTime); $tempZone->setTimezone(new DateTimeZone(Cookie::get('timezone'))); ?>
@@ -16,14 +16,18 @@
                         </button>
                         <ul class="dropdown-menu" role="menu">
                             @if($match->status() == 'Finished')
-                                @if($match->getGame()->vodURL !== null)
+                                @if($match->getGame() !== null)
+                                    @if($match->getGame()->vodURL !== null)
                                     <li><a href="#">View VOD</a></li>
-                                @endif
-                                @if($match->getGame()->fullPlayers())
-                                    <li><a href="#">View game stats</a></li>
-                                @endif
-                                @if(($match->getGame()->vodURL !== null) && ($match->getGame()->fullPlayers()))
-                                    <li><a href="#">View stats and VOD</a></li>
+                                    @endif
+                                    @if($match->getGame()->fullPlayers())
+                                        <li><a href="#">View game stats</a></li>
+                                    @endif
+                                    @if(($match->getGame()->vodURL !== null) && ($match->getGame()->fullPlayers()))
+                                        <li><a href="#">View stats and VOD</a></li>
+                                    @endif
+                                @else
+                                    <li><a href="#">Still Processing...</a></li>
                                 @endif
                             @elseif($match->status() == 'Live')
                                 <li><a href="#">View {{ $match->blueAcronym }}'s games</a></li>

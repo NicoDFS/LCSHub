@@ -495,7 +495,27 @@ class InsertController extends BaseController {
 
             foreach($teamArray as $teamId)
             {
-                if(FTeamGame::whereRaw("matchId = " . $tStats->matchId . " AND teamId = " . $tStats->$teamId->teamId)->count() == 0)
+                $fTeamGame = FTeamGame::whereRaw("matchId = " . $tStats->matchId . " AND teamId = " . $tStats->$teamId->teamId)->get();
+
+                if(count($fTeamGame) > 0)
+                {
+                    $fTeamGame[0]->update([
+                        "dateTime"          => date("Y-m-d H:i:s", strtotime($tStats->dateTime)),
+                        "gameId"            => $gameId,
+                        "matchId"           => $tStats->matchId,
+                        "teamId"            => $tStats->$teamId->teamId,
+                        "teamName"          => $tStats->$teamId->teamName,
+                        "matchVictory"      => $tStats->$teamId->matchVictory,
+                        "matchDefeat"       => $tStats->$teamId->matchDefeat,
+                        "baronsKilled"      => $tStats->$teamId->baronsKilled,
+                        "dragonsKilled"     => $tStats->$teamId->dragonsKilled,
+                        "firstBlood"        => $tStats->$teamId->firstBlood,
+                        "firstTower"        => $tStats->$teamId->firstTower,
+                        "firstInhibitor"    => $tStats->$teamId->firstInhibitor,
+                        "towersKilled"      => $tStats->$teamId->towersKilled
+                    ]);
+                }
+                else
                 {
                     $fTeamGame = FTeamGame::create([
                         "dateTime"          => date("Y-m-d H:i:s", strtotime($tStats->dateTime)),
@@ -513,6 +533,7 @@ class InsertController extends BaseController {
                         "towersKilled"      => $tStats->$teamId->towersKilled
                     ]);
                 }
+
             }
 
             $pStats = $fGameData->playerStats->{'game' . $gameId};
@@ -528,7 +549,28 @@ class InsertController extends BaseController {
 
             foreach($playerArray as $playerId)
             {
-                if(FPlayerGame::whereRaw("matchId = " . $pStats->matchId . " AND fId = " . $pStats->$playerId->playerId)->count() == 0)
+                $fPlayerGame = FPlayerGame::whereRaw("matchId = " . $pStats->matchId . " AND fId = " . $pStats->$playerId->playerId)->get();
+
+                if(count($fPlayerGame) > 0)
+                {
+                    $fPlayerGame[0]->update([
+                        "dateTime"          => date("Y-m-d H:i:s", strtotime($pStats->dateTime)),
+                        "matchId"           => $pStats->matchId,
+                        "gameId"            => $gameId,
+                        "fId"               => $pStats->$playerId->playerId,
+                        "kills"             => $pStats->$playerId->kills,
+                        "deaths"            => $pStats->$playerId->deaths,
+                        "assists"           => $pStats->$playerId->assists,
+                        "minionKills"       => $pStats->$playerId->minionKills,
+                        "doubleKills"       => $pStats->$playerId->doubleKills,
+                        "tripleKills"       => $pStats->$playerId->tripleKills,
+                        "quadraKills"       => $pStats->$playerId->quadraKills,
+                        "pentaKills"        => $pStats->$playerId->pentaKills,
+                        "playerName"        => $pStats->$playerId->playerName,
+                        "role"              => $pStats->$playerId->role
+                    ]);
+                }
+                else
                 {
                     $fPlayerGame = FPlayerGame::create([
                         "dateTime"          => date("Y-m-d H:i:s", strtotime($pStats->dateTime)),
@@ -547,6 +589,7 @@ class InsertController extends BaseController {
                         "role"              => $pStats->$playerId->role
                     ]);
                 }
+
             }
         }
     }
