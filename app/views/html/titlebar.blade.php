@@ -25,7 +25,7 @@
             @if($block->matchesFinished())
                 Finished
             @else
-                Soon
+                Scheduled
             @endif
         @else
             Finished
