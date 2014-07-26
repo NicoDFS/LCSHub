@@ -20,26 +20,6 @@
     </div>
 </div>
 
-<?php
-function formatOffset($offset) {
-        $hours = $offset / 3600;
-        $remainder = $offset % 3600;
-        $sign = $hours > 0 ? '+' : '-';
-        $hour = (int) abs($hours);
-        $minutes = (int) abs($remainder / 60);
-
-        if ($hour == 0 AND $minutes == 0) {
-            $sign = ' ';
-        }
-        return $sign . str_pad($hour, 2, '0', STR_PAD_LEFT) .':'. str_pad($minutes,2, '0');
-
-}
-
-$utc = new DateTimeZone('UTC');
-$dt = new DateTime('now', $utc);
-?>
-
-
 <div class="md-modal colored-header custom-width" id="settingsModal" style="display:none;">
     <div class="md-content">
       <div class="modal-header">
@@ -47,6 +27,55 @@ $dt = new DateTime('now', $utc);
         <button type="button" class="close md-close" data-dismiss="modal" aria-hidden="true">&times;</button>
       </div>
       <div class="modal-body form">
+      <div class="tab-container">
+        <ul class="nav nav-tabs">
+          <li class=""><a href="#home" data-toggle="tab">Master Baiterz</a></li>
+          <li class="active"><a href="#profile" data-toggle="tab">Profile</a></li>
+          <li><a href="#messages" data-toggle="tab">Messages</a></li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane cont" id="home">
+                        <h3 class="hthin">Edit Team</h3>
+                        <div class="input-group" style="margin-top:15px;">
+                            <span class="input-group-addon" style="width:120px;">Team Name</span>
+                            <input type="text" class="form-control" placeholder="My Fantasy Team" data-emoji_font="true" style="font-family: 'Open Sans', sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol', Symbola, EmojiSymbols !important;">
+                        </div>
+                        <div class="input-group" style="margin-top:15px;">
+                            <span class="input-group-addon" style="width:120px;">Top</span>
+                            <input type="text" class="form-control" placeholder="Dyrus" data-emoji_font="true" style="font-family: 'Open Sans', sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol', Symbola, EmojiSymbols !important;">
+                        </div>
+                        <div class="input-group" style="margin-top:15px;">
+                            <span class="input-group-addon" style="width:100px;">Jungle</span>
+                            <input type="text" class="form-control" placeholder="Amazing" data-emoji_font="true" style="font-family: 'Open Sans', sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol', Symbola, EmojiSymbols !important;">
+                        </div>
+                        <div class="input-group" style="margin-top:15px;">
+                            <span class="input-group-addon" style="width:100px;">Mid</span>
+                            <input type="text" class="form-control" placeholder="Bjergsen" data-emoji_font="true" style="font-family: 'Open Sans', sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol', Symbola, EmojiSymbols !important;">
+                        </div>
+                        <div class="input-group" style="margin-top:15px;">
+                            <span class="input-group-addon" style="width:100px;">AD</span>
+                            <input type="text" class="form-control" placeholder="Wildturtle" data-emoji_font="true" style="font-family: 'Open Sans', sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol', Symbola, EmojiSymbols !important;">
+                        </div>
+                        <div class="input-group" style="margin-top:15px;">
+                            <span class="input-group-addon" style="width:100px;">Support</span>
+                            <input type="text" class="form-control" placeholder="Lustboy" data-emoji_font="true" style="font-family: 'Open Sans', sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol', Symbola, EmojiSymbols !important;">
+                        </div>
+                        <div class="input-group" style="margin-top:15px;">
+                            <span class="input-group-addon" style="width:100px;">Flex</span>
+                            <input type="text" class="form-control" placeholder="Vasili" data-emoji_font="true" style="font-family: 'Open Sans', sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol', Symbola, EmojiSymbols !important;">
+                        </div>
+                        <div class="input-group" style="margin-top:15px;">
+                            <span class="input-group-addon" style="width:100px;">Team</span>
+                            <input type="text" class="form-control" placeholder="TSM" data-emoji_font="true" style="font-family: 'Open Sans', sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol', Symbola, EmojiSymbols !important;">
+                        </div>
+          </div>
+          <div class="tab-pane cont active" id="profile">
+                        <h2>Typography</h2>
+                        <p>This is just an example of content writen by <b>Jeff Hanneman</b>, as you can see it is a clean design with large
+          </p></div>
+          <div class="tab-pane" id="messages">..sdfsdfsfsdf.</div>
+        </div>
+      </div>
         <div class="form-group" style="margin-top:0px;">
             <label style="margin-right:89px;">Timezone</label>
             <select id="easySelect" style="width:350px;">

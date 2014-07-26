@@ -16,7 +16,7 @@
 
 <ol class="breadcrumb">
     <li><a href="#">{{ $block->getLeague()->shortName }}</a></li>
-    <li><a href="#">{{ $block->tournamentName }}</a></li>
+    <li><a href="#">{{ substr($block->tournamentName, 3) }}</a></li>
     <li><a href="#">{{ substr($block->label, strpos($block->label, " - ") + 3) }}</a></li>
     <li class="active">
         @if($activeMatch !== null)
