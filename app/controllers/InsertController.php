@@ -298,26 +298,56 @@ class InsertController extends BaseController {
 
             foreach($gameData->players as $playerData)
             {
-                if( ($playaId = GamePlayer::whereRaw("gameId = " . $match->gameId . " AND playerId = " . $playerData->id)->first()) === null)
+                $itemArray = array();
+                foreach($playerData as $key => $value)
                 {
-                    $itemArray = array();
-                    foreach($playerData as $key => $value)
+                    if(strpos($key, "item") !== false)
                     {
-                        if(strpos($key, "item") !== false)
-                        {
-                            $itemArray[] = $key;
-                        }
+                        $itemArray[] = $key;
                     }
+                }
 
-                    $spellArray = array();
-                    foreach($playerData as $key => $value)
+                $spellArray = array();
+                foreach($playerData as $key => $value)
+                {
+                    if(strpos($key, "spell") !== false)
                     {
-                        if(strpos($key, "spell") !== false)
-                        {
-                            $spellArray[] = $key;
-                        }
+                        $spellArray[] = $key;
                     }
+                }
 
+                $playerRow = GamePlayer::whereRaw("gameId = " . $match->gameId . " AND playerId = " . $playerData->id)->get();
+
+                if(count($playerRow) > 0)
+                {
+                    $playerRow[0]->update([
+                        "gameId"            => $match->gameId,
+                        "playerId"          => $playerData->id,
+                        "teamId"            => $playerData->teamId,
+                        "name"              => $playerData->name,
+                        "photoURL"          => $playerData->photoURL,
+                        "championId"        => $playerData->championId,
+                        "endLevel"          => $playerData->endLevel,
+                        "kills"             => $playerData->kills,
+                        "deaths"            => $playerData->deaths,
+                        "assists"           => $playerData->assists,
+                        "kda"               => $playerData->kda,
+                        "item0Id"           => (isset($itemArray[0]) ? $playerData->$itemArray[0] : null),
+                        "item1Id"           => (isset($itemArray[1]) ? $playerData->$itemArray[1] : null),
+                        "item2Id"           => (isset($itemArray[2]) ? $playerData->$itemArray[2] : null),
+                        "item3Id"           => (isset($itemArray[3]) ? $playerData->$itemArray[3] : null),
+                        "item4Id"           => (isset($itemArray[4]) ? $playerData->$itemArray[4] : null),
+                        "item5Id"           => (isset($itemArray[5]) ? $playerData->$itemArray[5] : null),
+                        "spell0Id"          => (isset($spellArray[0]) ? $playerData->$spellArray[0] : null),
+                        "spell1Id"          => (isset($spellArray[1]) ? $playerData->$spellArray[1] : null),
+                        "totalGold"         => $playerData->totalGold,
+                        "minionsKilled"     => $playerData->minionsKilled
+                    ]);
+
+                    $playersInserted[] = $playerRow[0]->id;
+                }
+                else
+                {
                     $gamePlayer = GamePlayer::create([
                         "gameId"            => $match->gameId,
                         "playerId"          => $playerData->id,
@@ -344,10 +374,7 @@ class InsertController extends BaseController {
 
                     $playersInserted[] = $gamePlayer->id;
                 }
-                else
-                {
-                    $playersInserted[] = $playaId->id;
-                }
+
             }
 
 
@@ -413,7 +440,28 @@ class InsertController extends BaseController {
 
                 foreach($teamArray as $teamId)
                 {
-                    if(FTeamGame::whereRaw("matchId = " . $tStats->matchId . " AND teamId = " . $tStats->$teamId->teamId)->count() == 0)
+
+                    $fTeamGame = FTeamGame::whereRaw("matchId = " . $tStats->matchId . " AND teamId = " . $tStats->$teamId->teamId)->get();
+
+                    if(count($fTeamGame) > 0)
+                    {
+                        $fTeamGame[0]->update([
+                            "dateTime"          => date("Y-m-d H:i:s", strtotime($tStats->dateTime)),
+                            "gameId"            => (int) substr($tKey, 4),
+                            "matchId"           => $tStats->matchId,
+                            "teamId"            => $tStats->$teamId->teamId,
+                            "teamName"          => $tStats->$teamId->teamName,
+                            "matchVictory"      => $tStats->$teamId->matchVictory,
+                            "matchDefeat"       => $tStats->$teamId->matchDefeat,
+                            "baronsKilled"      => $tStats->$teamId->baronsKilled,
+                            "dragonsKilled"     => $tStats->$teamId->dragonsKilled,
+                            "firstBlood"        => $tStats->$teamId->firstBlood,
+                            "firstTower"        => $tStats->$teamId->firstTower,
+                            "firstInhibitor"    => $tStats->$teamId->firstInhibitor,
+                            "towersKilled"      => $tStats->$teamId->towersKilled
+                        ]);
+                    }
+                    else
                     {
                         $fTeamGame = FTeamGame::create([
                             "dateTime"          => date("Y-m-d H:i:s", strtotime($tStats->dateTime)),
@@ -447,7 +495,29 @@ class InsertController extends BaseController {
 
                 foreach($playerArray as $playerId)
                 {
-                    if(FPlayerGame::whereRaw("matchId = " . $pStats->matchId . " AND fId = " . $pStats->$playerId->playerId)->count() == 0)
+
+                    $fPlayerGame = FPlayerGame::whereRaw("matchId = " . $pStats->matchId . " AND fId = " . $pStats->$playerId->playerId)->get();
+
+                    if(count($fPlayerGame) > 0)
+                    {
+                        $fPlayerGame[0]->update([
+                            "dateTime"          => date("Y-m-d H:i:s", strtotime($pStats->dateTime)),
+                            "matchId"           => $pStats->matchId,
+                            "gameId"            => substr($pKey, 4),
+                            "fId"               => $pStats->$playerId->playerId,
+                            "kills"             => $pStats->$playerId->kills,
+                            "deaths"            => $pStats->$playerId->deaths,
+                            "assists"           => $pStats->$playerId->assists,
+                            "minionKills"       => $pStats->$playerId->minionKills,
+                            "doubleKills"       => $pStats->$playerId->doubleKills,
+                            "tripleKills"       => $pStats->$playerId->tripleKills,
+                            "quadraKills"       => $pStats->$playerId->quadraKills,
+                            "pentaKills"        => $pStats->$playerId->pentaKills,
+                            "playerName"        => $pStats->$playerId->playerName,
+                            "role"              => $pStats->$playerId->role
+                        ]);
+                    }
+                    else
                     {
                         $fPlayerGame = FPlayerGame::create([
                             "dateTime"          => date("Y-m-d H:i:s", strtotime($pStats->dateTime)),
