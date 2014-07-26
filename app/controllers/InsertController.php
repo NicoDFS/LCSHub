@@ -245,6 +245,7 @@ class InsertController extends BaseController {
             foreach($program->matches as $matchData)
             {
                 $match = Match::firstOrCreate(["matchId" => $matchData->matchId]);
+                if($matchData->winnerId == "") $matchData->winnerId = null;
 
                 $match->update([
                     "dateTime"          => date("Y-m-d H:i:s", strtotime($matchData->dateTime)),
