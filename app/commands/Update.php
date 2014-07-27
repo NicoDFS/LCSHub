@@ -40,7 +40,7 @@ class Update extends ScheduledCommand {
 	 */
 	public function schedule(Schedulable $scheduler)
 	{
-		return $scheduler->hourly()->everyMinutes(3);
+		return $scheduler->hourly()->everyMinutes(1);
 	}
 
 	/**

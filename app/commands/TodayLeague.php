@@ -40,7 +40,7 @@ class TodayLeague extends ScheduledCommand {
 	 */
 	public function schedule(Schedulable $scheduler)
 	{
-		return $scheduler->daily()->everyHours(4);
+		return $scheduler->daily()->everyHours(1);
 	}
 
 	/**
