@@ -95,4 +95,12 @@ class Match extends Eloquent {
         return $this->_game;
     }
 
+    public function winner($id)
+    {
+        if($this->winnerId == $id)
+        {
+            return "font-style: italic;";
+        }
+    }
+
 }

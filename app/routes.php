@@ -38,6 +38,8 @@ Route::get('/home', function()
         $todayBlock->currBlock = true;
     }
 
+    //$todayBlock->sortPlaces();
+
     return View::make('html.home')->with('block', $todayBlock);
 });
 

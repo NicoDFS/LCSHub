@@ -229,4 +229,67 @@ class Block extends Eloquent {
         return $datetime->format('g:i A');
     }
 
+    public function sortPlaces()
+    {
+        $tempArray = array();
+        $placesArray = array();
+
+        $matches = $this->getMatches();
+        foreach($matches as $key => $match)
+        {
+            if(!isset($tempArray[$match->blueAcronym]))
+            {
+                $tempArray[$match->blueAcronym] = $match->blueWins;
+            }
+
+            if(!isset($tempArray[$match->redAcronym]))
+            {
+                $tempArray[$match->redAcronym] = $match->redWins;
+            }
+
+        }
+
+
+        arsort($tempArray);
+        $counter = 1;
+        $prevKey = null;
+        $prevPlace = null;
+
+        $ends = array('th','st','nd','rd','th','th','th','th','th','th');
+
+        foreach($tempArray as $key => $value)
+        {
+            if(!is_null($prevKey) && $tempArray[$key] == $tempArray[$prevKey])
+            {
+                if (($prevPlace % 100) >= 11 && ($prevPlace % 100) <= 13)
+                {
+                    $placesArray[$key] = $prevPlace . 'th';
+                }
+                else
+                {
+                    $placesArray[$key] = $prevPlace . $ends[$prevPlace % 10];
+                }
+
+            }
+            else
+            {
+                if (($counter % 100) >= 11 && ($counter % 100) <= 13)
+                {
+                    $placesArray[$key] = $counter . 'th';
+                }
+                else
+                {
+                    $placesArray[$key] = $counter . $ends[$counter % 10];
+                }
+
+                $prevPlace = $counter;
+            }
+
+            $counter++;
+            $prevKey = $key;
+        }
+
+        $this->_places = $placesArray;
+    }
+
 }
