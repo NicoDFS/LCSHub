@@ -103,4 +103,12 @@ class Match extends Eloquent {
         }
     }
 
+    public function winnerImg($id)
+    {
+        if($this->winnerId == $id)
+        {
+            return "border: 3px solid #60C060;";
+        }
+    }
+
 }

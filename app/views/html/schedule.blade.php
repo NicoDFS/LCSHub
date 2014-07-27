@@ -6,7 +6,7 @@
             @foreach($block->getMatches() as $tempCntr => $match)
                 <?php $tempZone = new DateTime($match->dateTime); $tempZone->setTimezone(new DateTimeZone(Cookie::get('timezone'))); ?>
                 <li href="#" class="list-group-item {{ $match->isLiveActive() }}" style="padding-top: 0px; height:76px; font-size: 20px; {{ ( (($tempCntr % 2 == 0) && ($match->status() !== "Live")) ? ' background: #F8F8F8; ' : '' ) }} {{ $match->isLiveText() }}">
-                    <img src="http://na.lolesports.com{{ $match->blueLogoURL }}" width='55' height='55' style="border-radius: 10%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:8px;">
+                    <img src="http://na.lolesports.com{{ $match->blueLogoURL }}" width='55' height='55' style="border-radius: 10%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:8px; {{ $match->winnerImg($match->blueId) }}">
 
                     <div style="display: inline-table; margin-right:10px; width:80px; {{ $match->winner($match->blueId) }}">
                         {{ $match->blueAcronym }}
@@ -25,7 +25,7 @@
                         </span>
                     </div>
 
-                    <img src="http://na.lolesports.com{{ $match->redLogoURL }}" width='55' height='55' style="border-radius: 10%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:10px;">
+                    <img src="http://na.lolesports.com{{ $match->redLogoURL }}" width='55' height='55' style="border-radius: 10%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:10px; {{ $match->winnerImg($match->redId) }}">
 
                     <div class="btn-group pull-right" style="margin-top:15px;">
                         <button type="button" style="width:96px;" class="btn btn-{{ $match->cssClass() }} btn-lg" title="{{ $match->status() }}" data-toggle="tooltip" data-placement="left" data-container="body">{{ $tempZone->format('g:i A') }}</button>
