@@ -1,8 +1,24 @@
 <h2>
+
     @if(($activeMatch = $block->activeMatch()) !== null)
-        <img src="http://na.lolesports.com{{ $activeMatch->blueLogoURL }}" width='50' height='50' style="border-radius: 10%; background: #1A1A1A; padding:5px;">
-        <span data-toggle="tooltip" data-placement="top" data-viewport="#pageHeader" title="{{ $activeMatch->status() }}" style="color:{{ $activeMatch->color() }};">{{ $activeMatch->matchName }}</span>
-        <img src="http://na.lolesports.com{{ $activeMatch->redLogoURL }}" width='50' height='50' style="border-radius: 10%; background: #1A1A1A; padding:5px;">
+        <?php $block->sortPlaces(); ?>
+       <img src="http://na.lolesports.com{{ $activeMatch->blueLogoURL }}" width='55' height='55' style="border-radius: 10%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:8px; {{ $activeMatch->winnerImg($activeMatch->blueId) }}">
+
+        <div style="display: inline-table; width:90px; {{ $activeMatch->winner($activeMatch->blueId) }}">
+            <span style="float:left;">{{ $activeMatch->blueAcronym }}</span>
+            <br>
+            <span style="font-size: 14px; float:left;">
+            {{ $block->_places[$activeMatch->blueAcronym] }} ({{ $activeMatch->blueWins }}-{{ $activeMatch->blueLosses }})
+            </span>
+        </div><span>vs</span><div style="display: inline-table; text-align:right; width:90px; {{ $activeMatch->winner($activeMatch->redId) }}">
+            <span style="float:right;">{{ $activeMatch->redAcronym }}</span>
+            <br>
+            <span style="font-size: 14px; float:right;">
+                {{ $block->_places[$activeMatch->redAcronym] }} ({{ $activeMatch->redWins }}-{{ $activeMatch->redLosses }})
+            </span>
+        </div>
+
+        <img src="http://na.lolesports.com{{ $activeMatch->redLogoURL }}" width='55' height='55' style="border-radius: 10%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:10px; {{ $activeMatch->winnerImg($activeMatch->redId) }}">
     @elseif($activeMatch == null && $block->isCurrentBlock())
         @if($block->matchesFinished())
             No More Live Games

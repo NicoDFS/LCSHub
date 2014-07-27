@@ -231,6 +231,11 @@ class Block extends Eloquent {
 
     public function sortPlaces()
     {
+        if(isset($this->_places))
+        {
+            return $this->_places;
+        }
+
         $tempArray = array();
         $placesArray = array();
 
