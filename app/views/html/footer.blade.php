@@ -41,14 +41,14 @@
             }, 350);
 
             $('#twitchBlock').animate({
-                height: 480
+                height: 484
             }, 350);
 
             $('#twitchChatEmbed').slideToggle();
         }
         else
         {
-            $('#twitchChatEmbed').slideToggle();
+            $('#twitchChatEmbed').slideToggle(250);
 
             $('#twitchCol').animate({
                 height: 66
