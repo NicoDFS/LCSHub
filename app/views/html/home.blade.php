@@ -26,6 +26,15 @@
                         @include('html.stream', array('block' => $block))
                     </div>
 
+                    <div class="row" style="margin-bottom: -20px;margin-top: 8px;">
+                        <div class="col-md-12" style="height: 66px;" id="twitchCol">
+                            <div class="block-flat" id="twitchBlock" style="border: 1px solid #DDD;padding-top: 10px;text-align: center;height: 60px;">
+                                <button type="button" class="btn btn-primary btn-rad" style="margin-top:2px;" onclick="twitchToggle();">Toggle Twitch Chat</button>
+                                <iframe frameborder="0" scrolling="no" id="twitchChatEmbed" src="http://twitch.tv/chat/embed?channel=riotgames&amp;popout_chat=true" height="400" width="100%" style="display:none; margin-top:5px;"></iframe>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-12" id="scheduleBlock">
                             @include('html.schedule', array('block' => $block))

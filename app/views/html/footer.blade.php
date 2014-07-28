@@ -29,6 +29,38 @@
         $("#spoilersRadio").bootstrapSwitch();
         $("#autoupdateRadio").bootstrapSwitch();
     });
+
+    function twitchToggle()
+    {
+
+
+        if( $("#twitchChatEmbed").css('display') == 'none')
+        {
+            $('#twitchCol').animate({
+                height: 490
+            }, 350);
+
+            $('#twitchBlock').animate({
+                height: 480
+            }, 350);
+
+            $('#twitchChatEmbed').slideToggle();
+        }
+        else
+        {
+            $('#twitchChatEmbed').slideToggle();
+
+            $('#twitchCol').animate({
+                height: 66
+            }, 350);
+
+            $('#twitchBlock').animate({
+                height: 60
+            }, 350);
+        }
+
+
+    }
 </script>
 
 <!-- Bootstrap core JavaScript
