@@ -33,7 +33,7 @@
           <li class="active"><a href="#tab3-1" data-toggle="tab"><i class="fa fa-edit"></i></a></li>
           <li class=""><a href="#tab3-2" data-toggle="tab"><i class="fa fa-users"></i></a></li>
         </ul>
-        <div class="tab-content" style="padding-bottom: 0px;margin-bottom: 10px;">
+        <div class="tab-content" style="padding-bottom: 0px; margin-bottom: 10px; padding-top:0px;">
 
           <div class="tab-pane cont fade active in" id="tab3-1">
                 <div class="form-group" style="margin-top:15px;">
@@ -78,10 +78,10 @@
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label" style="margin-top:-8px;">Fantasy Team</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect" style="width:100%;" placeholder="Select a fantasy team">
+                        <select class="fancySelect" style="width:50%;" placeholder="Select a fantasy team">
                             <option></option>
-                            <option value="1">Master Baiterz</option>
                         </select>
+                        <button type="button" class="btn btn-primary btn-rad" style="float:right;"><i class="fa fa-plus-circle"></i> &nbsp;New Team</button>
                     </div>
                 </div>
                 <div class="form-group">

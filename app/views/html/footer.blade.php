@@ -44,7 +44,7 @@
                 height: 484
             }, 350);
 
-            $('#twitchChatEmbed').slideToggle();
+            $('#twitchChatEmbed').slideToggle(250);
         }
         else
         {
