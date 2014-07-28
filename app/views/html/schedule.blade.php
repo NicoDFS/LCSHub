@@ -1,4 +1,4 @@
-<div class="block-flat" style="border: 1px solid #DDD;">
+<div class="block-flat" style="border: 1px solid #DDD; margin-bottom:-15px;">
     <div class="content">
         <h3 class="text-center" style="margin-top:-15px; padding-bottom:10px;">{{ $block->blockTournamentName() . " LCS" }} - {{ $block->blockLabelWeek() }} {{ $block->blockLabelDay() }} - {{ date('M j, Y', strtotime($block->dateTime)) }}</h3>
         <div class="list-group">
