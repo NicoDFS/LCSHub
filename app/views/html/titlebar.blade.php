@@ -30,7 +30,7 @@
     @endif
 </h2>
 
-<ol class="breadcrumb">
+<ol class="breadcrumb" style="{{ ($activeMatch !== null ? 'margin-top:14px;' : '') }} margin-bottom:-14px;">
     <li><a href="#">{{ $block->getLeague()->shortName }}</a></li>
     <li><a href="#">{{ substr($block->tournamentName, 3) }}</a></li>
     <li><a href="#">{{ substr($block->label, strpos($block->label, " - ") + 3) }}</a></li>

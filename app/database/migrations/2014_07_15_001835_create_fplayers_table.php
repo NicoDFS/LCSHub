@@ -23,7 +23,7 @@ class CreateFplayersTable extends Migration {
                 $table->integer('proTeamId');
                 $table->string('name');
                 $table->text('flavorText')->nullable();
-                $table->string('positions');
+                $table->string('positions')->index();
 
                 $table->timestamps();
 

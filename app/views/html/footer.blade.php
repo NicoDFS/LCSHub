@@ -19,9 +19,13 @@
         App.init();
         $("#streamContainer").fitVids();
         $('.md-trigger').modalEffects();
-        $("#easySelect").select2({
-            placeholder: 'Select a timezone'
+
+        $(".fancySelect").select2({
+            matcher: function(term, text, opt){
+                return text.toUpperCase().indexOf(term.toUpperCase())>=0 || opt.parent("optgroup").attr("label").toUpperCase().indexOf(term.toUpperCase())>=0
+            }
         });
+
         $("#spoilersRadio").bootstrapSwitch();
         $("#autoupdateRadio").bootstrapSwitch();
     });

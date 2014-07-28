@@ -39,6 +39,7 @@ Route::get('/home', function()
     }
 
     //$todayBlock->sortPlaces();
+    //dd(FPlayer::allOptions());
 
     return View::make('html.home')->with('block', $todayBlock);
 });
