@@ -64,17 +64,17 @@ class Match extends Eloquent {
 
     public function color()
     {
-         if($this->isLive)
+         if($this->status() == 'Live')
         {
             return '#ED5B56';
         }
 
-        if(!$this->isLive && !$this->isFinished)
+        if($this->status() == 'Scheduled')
         {
             return '#5DC4EA';
         }
 
-        if($this->isFinished && !$this->isLive)
+        if($this->status() == 'Finished')
         {
             return '#60C060';
         }

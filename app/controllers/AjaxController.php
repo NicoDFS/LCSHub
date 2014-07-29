@@ -50,5 +50,27 @@ class AjaxController extends BaseController {
         return json_encode( ['pageHeader' => $pageHeader->render(), 'scheduleBlock' => $scheduleBlock->render(), 'streamContainer' => $streamContainer->render()] );
     }
 
+    public function getBlock($id, $dir = null)
+    {
+        if($dir == null)
+        {
+            $block = Block::where('id', $id)->first();
+            $scheduleBlock = View::make('html.schedule')->with('block', $block);
+
+            return json_encode(['scheduleBlock' => $scheduleBlock->render()]);
+        }
+        else
+        {
+            $prevBlock = Block::where('id', $id)->first();
+            $operator = ($dir == 'next' ? '>' : '<');
+            $order = ($dir == 'next' ? 'asc' : 'desc');
+
+            $block = Block::where('dateTime', $operator, $prevBlock->dateTime)->orderBy('dateTime', $order)->first();
+
+            $scheduleBlock = View::make('html.schedule')->with('block', $block);
+            return json_encode(['scheduleBlock' => $scheduleBlock->render()]);
+        }
+    }
+
 
 }

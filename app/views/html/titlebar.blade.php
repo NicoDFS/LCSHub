@@ -1,6 +1,8 @@
-<h2>
+<?php $activeMatch = $block->activeMatch(); ?>
 
-    @if(($activeMatch = $block->activeMatch()) !== null)
+<h2 style="color: {{ ($activeMatch !== null ? $activeMatch->color() : '') }}" title="{{ ($activeMatch !== null ? $activeMatch->status() : '') }}" data-toggle="tooltip">
+
+    @if($activeMatch !== null)
         <?php $block->sortPlaces(); ?>
        <img src="http://na.lolesports.com{{ $activeMatch->blueLogoURL }}" width='55' height='55' style="border-radius: 10%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:8px; {{ $activeMatch->winnerImg($activeMatch->blueId) }}">
 

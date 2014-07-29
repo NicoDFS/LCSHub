@@ -297,4 +297,24 @@ class Block extends Eloquent {
         $this->_places = $placesArray;
     }
 
+    public function futureBlocks()
+    {
+        if(Block::where('dateTime', '>', $this->dateTime)->get()->count() > 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function previousBlocks()
+    {
+        if(Block::where('dateTime', '<', $this->dateTime)->get()->count() > 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
 }

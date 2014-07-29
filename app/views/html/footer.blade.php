@@ -61,6 +61,22 @@
 
 
     }
+
+    function getBlock(id, dir)
+    {
+
+        $.get("/ajax/block/" + id + "/" + dir, function(data) {
+
+            var obj = jQuery.parseJSON(data);
+            var scrl = $(document).scrollTop();
+
+            $("#scheduleBlock").html(obj.scheduleBlock);
+            $('body').scrollTop(scrl);
+            $('.ttip, [data-toggle="tooltip"]').tooltip();
+
+        });
+
+    }
 </script>
 
 <!-- Bootstrap core JavaScript

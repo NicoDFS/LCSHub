@@ -33,49 +33,62 @@
           <li class="active"><a href="#tab3-1" data-toggle="tab"><i class="fa fa-edit"></i></a></li>
           <li class=""><a href="#tab3-2" data-toggle="tab"><i class="fa fa-users"></i></a></li>
         </ul>
-        <div class="tab-content" style="padding-bottom: 0px; margin-bottom: 10px; padding-top:0px;">
+        <div class="tab-content" style="padding-bottom: 0px; margin-bottom: 10px; padding-top:0px; border-top: 1px solid #E2E2E2;">
 
-          <div class="tab-pane cont fade active in" id="tab3-1">
-                <div class="form-group" style="margin-top:15px;">
-                 <label style="margin-right:89px;">Timezone</label>
-                 <select class="fancySelect" style="width:250px;" placeholder="Select a timezone">
-                 <option></option>
-                 <?php
-                     $opt = '';
+        <div class="tab-pane cont fade active in" id="tab3-1">
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label for="inputPassword3" class="col-sm-2 control-label">Timezone</label>
+                    <div class="col-sm-10">
+                        <select class="fancySelect" style="width:50%;" name='settings[timezone]' placeholder="Select a timezone">
+                            <option></option>
+                            <?php
+                                $opt = '';
 
-                     $regions = array('America', 'Australia', 'Europe');
-                     $tzs = timezone_identifiers_list();
-                     $optgroup = '';
-                     sort($tzs);
-                     foreach ($tzs as $tz) {
-                         $z = explode('/', $tz, 2);
-                         if (count($z) != 2 || !in_array($z[0], $regions)) continue;
-                         if ($optgroup != $z[0]) {
-                             if ($optgroup !== '') $opt .= '</optgroup>';
-                             $optgroup = $z[0];
-                             $opt .= '<optgroup label="' . htmlentities($z[0]) . '">';
-                         }
-                         $opt .= '<option value="' . htmlentities($tz) . '" label="' . htmlentities(str_replace('_', ' ', $z[1])) . '">' . htmlentities(str_replace('_', ' ', $tz)) . '</option>';
-                     }
-                     if ($optgroup !== '') $opt .= '</optgroup>';
+                                $regions = array('America', 'Australia', 'Europe');
+                                $tzs = timezone_identifiers_list();
+                                $optgroup = '';
+                                sort($tzs);
+                                foreach ($tzs as $tz) {
+                                    $z = explode('/', $tz, 2);
+                                    if (count($z) != 2 || !in_array($z[0], $regions)) continue;
+                                    if ($optgroup != $z[0]) {
+                                        if ($optgroup !== '') $opt .= '</optgroup>';
+                                        $optgroup = $z[0];
+                                        $opt .= '<optgroup label="' . htmlentities($z[0]) . '">';
+                                    }
+                                    $opt .= '<option value="' . htmlentities($tz) . '" label="' . htmlentities(str_replace('_', ' ', $z[1])) . '">' . htmlentities(str_replace('_', ' ', $tz)) . '</option>';
+                                }
+                                if ($optgroup !== '') $opt .= '</optgroup>';
 
-                     echo $opt;
-                 ?>
-                 </select>
-             </div>
-             <div class="form-group" style="margin-top:17px;">
-                 <label style="margin-right:100px;">Spoilers </label> <input type="radio" name="spoilers" id="spoilersRadio" checked>
-             </div>
-             <div class="form-group" style="margin-top:14px;">
-                 <label style="margin-right:70px;">Auto Update </label> <input type="radio" name="autoupdate" id="autoupdateRadio" checked>
-             </div>
+                                echo $opt;
+                            ?>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">Spoilers</label>
+                    <div class="col-sm-10">
+                        <input type="radio" name='settings[spoilers]' id="spoilersRadio" checked>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">Updates</label>
+                    <div class="col-sm-10">
+                        <input type="radio" name='settings[updates]' id="autoupdateRadio" checked>
+                    </div>
+                </div>
+            </form>
           </div>
 
 
           <div class="tab-pane cont fade" id="tab3-2">
 
             <form class="form-horizontal" role="form">
-                <div class="form-group">
+                <div class="form-group" style="margin-top:18px;">
                     <label for="inputEmail3" class="col-sm-2 control-label" style="margin-top:-8px;">Fantasy Team</label>
                     <div class="col-sm-10">
                         <select class="fancySelect" style="width:50%;" placeholder="Select a fantasy team">

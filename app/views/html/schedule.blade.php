@@ -1,6 +1,14 @@
 <div class="block-flat" style="border: 1px solid #DDD; margin-bottom:-15px;">
     <div class="content">
-        <h3 class="text-center" style="margin-top:-15px; padding-bottom:10px;">{{ $block->blockTournamentName() . " LCS" }} - {{ $block->blockLabelWeek() }} {{ $block->blockLabelDay() }} - {{ date('M j, Y', strtotime($block->dateTime)) }}</h3>
+        <h3 class="text-center" style="margin-top:-15px; padding-bottom:10px;">
+        @if($block->previousBlocks())
+            <i onclick="getBlock('{{ $block->id }}','prev')" class="fa  fa-angle-double-left" style="cursor: pointer; font-size: 26px;float: left;opacity: .9;" title="Previous" data-toggle='tooltip'></i>
+        @endif
+        {{ $block->blockTournamentName() . " LCS" }} - {{ $block->blockLabelWeek() }} {{ $block->blockLabelDay() }} - {{ date('M j, Y', strtotime($block->dateTime)) }}
+        @if($block->futureBlocks())
+            <i onclick="getBlock('{{ $block->id }}','next')" class="fa  fa-angle-double-right" style="cursor: pointer; font-size: 26px;float: right;opacity: .9;" title="Next" data-toggle='tooltip'></i>
+        @endif
+        </h3>
         <div class="list-group">
         <?php if(count($block->getMatches()) > 0) $block->sortPlaces(); ?>
             @foreach($block->getMatches() as $tempCntr => $match)

@@ -3191,6 +3191,7 @@ div.dataTables_length label select {
   margin-right: 2px;
 }
 .nav-tabs > li.active {
+  border-top: 1px solid #E2E2E2;
   position: relative;
 }
 .nav-tabs > li > a {
@@ -5756,4 +5757,19 @@ ul.timeline li > .date {
   .cl-sidebar .collapse-button {
     display: none;
   }
+}
+
+a.select2-choice.select2-default:hover {
+    border-color: #2598F9;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+}
+
+i.fa.fa-angle-double-left:hover {
+border-bottom: 2px solid #4D90FD;
+border-color: #4D90FD;
+}
+
+i.fa.fa-angle-double-right:hover {
+border-bottom: 2px solid #4D90FD;
+border-color: #4D90FD;
 }
