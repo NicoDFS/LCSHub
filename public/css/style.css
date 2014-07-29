@@ -5773,3 +5773,8 @@ i.fa.fa-angle-double-right:hover {
 border-bottom: 2px solid #4D90FD;
 border-color: #4D90FD;
 }
+
+.blueHover:hover {
+    border-bottom: 2px solid #4D90FD;
+border-color: #4D90FD;
+}

@@ -54,10 +54,30 @@ class AjaxController extends BaseController {
     {
         if($dir == null)
         {
-            $block = Block::where('id', $id)->first();
-            $scheduleBlock = View::make('html.schedule')->with('block', $block);
+            if($id == 'current')
+            {
+                $timezone = 'sAmerica/Los_Angeles';
+                if(Cookie::has('timezone'))
+                {
+                    $timezone = Cookie::get('timezone');
+                }
 
-            return json_encode(['scheduleBlock' => $scheduleBlock->render()]);
+                $datetime = new DateTime('now', new DateTimeZone($timezone));
+
+                $query = "dateTime >= '" . $datetime->format('Y-m-d') . " 00:00:00' AND dateTime <= '" . $datetime->format('Y-m-d') . " 23:59:59'";
+                $todayBlock = Block::whereRaw($query)->first();
+                $todayBlock->currBlock = true;
+
+                if(is_null($todayBlock))
+                {
+                    $todayBlock = Block::where('dateTime', '<=',  $datetime->format('Y-m-d') . " 23:59:59")->orderBy('dateTime', 'desc')->get()[0];
+                    $todayBlock->currBlock = false;
+                }
+
+                $scheduleBlock = View::make('html.schedule')->with('block', $todayBlock);
+
+                return json_encode(['scheduleBlock' => $scheduleBlock->render()]);
+            }
         }
         else
         {

@@ -4,10 +4,22 @@
         @if($block->previousBlocks())
             <i onclick="getBlock('{{ $block->id }}','prev')" class="fa  fa-angle-double-left" style="cursor: pointer; font-size: 26px;float: left;opacity: .9;" title="Previous" data-toggle='tooltip'></i>
         @endif
+
+        @if(!$block->isCurrentBlock() && $block->isFutureBlock())
+             <i onclick="getBlock('current')" class="fa fa-reply blueHover" style="float: left;margin-left: 25px;margin-top: 6px;font-size: 15px; cursor: pointer;" title="Jump to Current" data-toggle='tooltip'></i>
+        @endif
+
+
         {{ $block->blockTournamentName() . " LCS" }} - {{ $block->blockLabelWeek() }} {{ $block->blockLabelDay() }} - {{ date('M j, Y', strtotime($block->dateTime)) }}
+
         @if($block->futureBlocks())
             <i onclick="getBlock('{{ $block->id }}','next')" class="fa  fa-angle-double-right" style="cursor: pointer; font-size: 26px;float: right;opacity: .9;" title="Next" data-toggle='tooltip'></i>
         @endif
+
+        @if(!$block->isCurrentBlock() && !$block->isFutureBlock())
+            <i onclick="getBlock('current')" class="fa fa-share blueHover" style="float: right;margin-right: 37px;margin-top: 6px;font-size: 15px; cursor: pointer;" title="Jump to Current" data-toggle='tooltip'></i>
+        @endif
+
         </h3>
         <div class="list-group">
         <?php if(count($block->getMatches()) > 0) $block->sortPlaces(); ?>

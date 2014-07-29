@@ -64,12 +64,13 @@
 
     function getBlock(id, dir)
     {
+        dir = typeof dir !== 'undefined' ? dir : '';
 
         $.get("/ajax/block/" + id + "/" + dir, function(data) {
 
             var obj = jQuery.parseJSON(data);
             var scrl = $(document).scrollTop();
-
+            $("#scheduleBlock button").tooltip('hide');
             $("#scheduleBlock").html(obj.scheduleBlock);
             $('body').scrollTop(scrl);
             $('.ttip, [data-toggle="tooltip"]').tooltip();
