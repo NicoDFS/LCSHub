@@ -317,4 +317,59 @@ class Block extends Eloquent {
         return false;
     }
 
+    public function spoilers()
+    {
+        $matches = $this->getMatches();
+        $wins = array();
+        $losses = array();
+
+        foreach($matches as $match)
+        {
+            if($match->isFinished)
+            {
+                $wins[$match->blueId] = 0;
+                $wins[$match->redId] = 0;
+                $losses[$match->blueId] = 0;
+                $losses[$match->redId] = 0;
+            }
+        }
+
+        foreach($matches as $match)
+        {
+            if($match->isFinished)
+            {
+                if($match->winnerId == $match->blueId)
+                {
+                    $wins[$match->blueId] += 1;
+                    $wins[$match->redId] += 0;
+                    $losses[$match->blueId] += 0;
+                    $losses[$match->redId] += 1;
+
+                }
+                elseif($match->winnerId == $match->redId)
+                {
+                    $wins[$match->blueId] += 0;
+                    $wins[$match->redId] += 1;
+                    $losses[$match->blueId] += 1;
+                    $losses[$match->redId] += 0;
+                }
+            }
+        }
+
+        foreach($matches as $match)
+        {
+            if($match->isFinished)
+            {
+                $match->blueWins = $match->blueWins - $wins[$match->blueId];
+                $match->blueLosses = $match->blueLosses - $losses[$match->blueId];
+
+                $match->redWins = $match->redWins - $wins[$match->redId];
+                $match->redLosses = $match->redLosses - $losses[$match->redId];
+            }
+        }
+
+
+        $this->gotMatches = $matches;
+    }
+
 }
