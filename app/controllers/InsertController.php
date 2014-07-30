@@ -282,6 +282,13 @@ class InsertController extends BaseController {
                     "gameHasVod"        => $matchData->gamesInfo->game0->hasVod,
                 ]);
 
+                Match::where('blueId', $matchData->contestants->blue->id)->update( ['blueWins' => $matchData->contestants->blue->wins, 'blueLosses' =>  $matchData->contestants->blue->losses] );
+                Match::where('redId', $matchData->contestants->blue->id)->update( ['redWins' => $matchData->contestants->blue->wins, 'redLosses' =>  $matchData->contestants->blue->losses] );
+
+                Match::where('blueId', $matchData->contestants->red->id)->update( ['blueWins' => $matchData->contestants->red->wins, 'blueLosses' =>  $matchData->contestants->red->losses] );
+                Match::where('redId', $matchData->contestants->red->id)->update( ['redWins' => $matchData->contestants->red->wins, 'redLosses' =>  $matchData->contestants->red->losses] );
+
+
             }
 
         }
@@ -402,16 +409,16 @@ class InsertController extends BaseController {
                 "redId"                 => $gameData->contestants->red->id,
                 "redName"               => $gameData->contestants->red->name,
                 "redLogoURL"            => $gameData->contestants->red->logoURL,
-                "player0"               => $playersInserted[0],
-                "player1"               => $playersInserted[1],
-                "player2"               => $playersInserted[2],
-                "player3"               => $playersInserted[3],
-                "player4"               => $playersInserted[4],
-                "player5"               => $playersInserted[5],
-                "player6"               => $playersInserted[6],
-                "player7"               => $playersInserted[7],
-                "player8"               => $playersInserted[8],
-                "player9"               => $playersInserted[9],
+                "player0"               => (isset($playersInserted[0]) ? $playersInserted[0] : null),
+                "player1"               => (isset($playersInserted[1]) ? $playersInserted[1] : null),
+                "player2"               => (isset($playersInserted[2]) ? $playersInserted[2] : null),
+                "player3"               => (isset($playersInserted[3]) ? $playersInserted[3] : null),
+                "player4"               => (isset($playersInserted[4]) ? $playersInserted[4] : null),
+                "player5"               => (isset($playersInserted[5]) ? $playersInserted[5] : null),
+                "player6"               => (isset($playersInserted[6]) ? $playersInserted[6] : null),
+                "player7"               => (isset($playersInserted[7]) ? $playersInserted[7] : null),
+                "player8"               => (isset($playersInserted[8]) ? $playersInserted[8] : null),
+                "player9"               => (isset($playersInserted[9]) ? $playersInserted[9] : null),
             ]);
         }
 
@@ -716,6 +723,7 @@ class InsertController extends BaseController {
 
         if(!is_null($todayBlock))
         {
+            //dd($todayBlock);
             $programmingUrl = "http://na.lolesports.com:80/api/programming/{$todayBlock->blockId}.json?expand_matches=1&timestamp=" . time();
             $programming = json_decode(file_get_contents($programmingUrl));
             $this->insertBlocks([$programming]);
