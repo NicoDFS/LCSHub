@@ -25,6 +25,6 @@
 <link rel="stylesheet" type="text/css" href="js/bootstrap.datetimepicker/css/bootstrap-datetimepicker.min.css" />
 <link rel="stylesheet" type="text/css" href="js/jquery.select2/select2.css" />
 <link rel="stylesheet" type="text/css" href="js/bootstrap.slider/css/slider.css" />
-<link rel="stylesheet" type="text/css" href="js/jquery.niftymodals/css/component.css">
+<link rel="stylesheet" type="text/css" href="js/jquery.niftymodals/css/component.css" />
 <!-- Custom styles for this template -->
 <link href="css/style.css" rel="stylesheet" />

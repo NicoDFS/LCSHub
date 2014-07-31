@@ -111,4 +111,16 @@ class Match extends Eloquent {
         }
     }
 
+    public function winnerImgURL()
+    {
+        if($this->winnerId == $this->blueId)
+        {
+            return $this->blueLogoURL;
+        }
+        elseif($this->winnerId == $this->redId)
+        {
+            return $this->redLogoURL;
+        }
+    }
+
 }

@@ -1,4 +1,4 @@
-<div class="block-flat" style="border: 1px solid #DDD; margin-bottom:-15px;">
+<div class="block-flat" style="border: 1px solid #DDD; margin-bottom:-15px; padding-bottom:5px;">
     <div class="content">
         <h3 class="text-center" style="margin-top:-15px; padding-bottom:10px;">
         @if($block->previousBlocks())
@@ -81,6 +81,12 @@
                         </ul>
                   </div>
                 </li>
+                @if($match->status() == 'Finished')
+                    <li class="list-group-item" style="margin-left:15px; margin-right:15px; {{ ( (($tempCntr % 2 == 0) && ($match->status() !== "Live")) ? ' background: #F8F8F8; ' : '' ) }}">
+                        <h2 class="text-center" style="font-size:21px;">Winner: {{ ($match->getGame()->winnerId == $match->getGame()->blueId ? $match->blueAcronym : $match->redAcronym) }} ({{ gmdate('i:s', $match->getGame()->gameLength) }})</h3>
+                        @include('html.gamedetail', array('game' => $match->getGame()))
+                    </li>
+                @endif
             @endforeach
 
         </div>

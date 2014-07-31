@@ -5,7 +5,7 @@ class FPlayerGame extends Eloquent {
 
     protected $table = 'fPlayerGames';
 
-    public function getFantasyPoints()
+    public function fantasyPoints()
     {
         $points = 0;
 
@@ -24,6 +24,7 @@ class FPlayerGame extends Eloquent {
 
         return $points;
     }
+
 
 
 }

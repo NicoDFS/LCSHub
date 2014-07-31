@@ -15,10 +15,16 @@
            perspectiveClass: 'md-perspective',
            perspectiveSetClass: 'md-setperspective',
            afterOpen: function(button, modal) {
-            //do your stuff
+              if(!$("body").hasClass("modal-open"))
+              {
+                $("body").addClass("modal-open");
+              }
            },
            afterClose: function(button, modal) {
-            //do your suff
+              if($("body").hasClass("modal-open"))
+              {
+                $("body").removeClass("modal-open");
+              }
            }
         };
         

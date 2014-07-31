@@ -5,7 +5,38 @@ class Game extends Eloquent {
 
     public function getPlayers()
     {
-        return GamePlayer::where('gameId', $this->gameId)->get();
+        if(!isset($this->_players))
+        {
+            $this->_players = GamePlayer::where('gameId', $this->gameId)->get();
+        }
+        return $this->_players;
+    }
+
+    public function teams()
+    {
+        if(!isset($this->_teams))
+        {
+            $teams = array();
+            $counter = 0;
+            $players = $this->getPlayers();
+            foreach($players as $player)
+            {
+                if($counter < 5)
+                {
+                    $teams[0][] = $player;
+                }
+                else
+                {
+                    $teams[1][] = $player;
+                }
+
+                $counter++;
+            }
+
+            $this->_teams = $teams;
+        }
+
+        return $this->_teams;
     }
 
     public function getFantasyPlayers()
@@ -32,6 +63,29 @@ class Game extends Eloquent {
         }
 
         return false;
+    }
+
+    public function winnerName()
+    {
+        if($this->winnerId == $this->blueId)
+        {
+            return $this->blueName;
+        }
+        else if($this->winnerId == $this->redId)
+        {
+            return $this->redName;
+        }
+    }
+
+    public function fantasyTeams()
+    {
+        if(!isset($this->_fantasyTeams))
+        {
+            $fTeams = FTeamGame::where('gameId', $this->gameId)->get();
+            $this->_fantasyTeams = $fTeams;
+        }
+
+        return $this->_fantasyTeams;
     }
 
 

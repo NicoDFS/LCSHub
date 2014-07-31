@@ -11,6 +11,9 @@
 |
 */
 
+
+
+
 Route::controller('ajax', 'AjaxController');
 
 Route::get('/home', function()
@@ -37,6 +40,8 @@ Route::get('/home', function()
     {
         $todayBlock->currBlock = true;
     }
+
+
 
     //$todayBlock->sortPlaces();
     //dd(FPlayer::allOptions());

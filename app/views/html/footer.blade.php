@@ -18,7 +18,6 @@
         //initialize the javascript
         App.init();
         $("#streamContainer").fitVids();
-        $('.md-trigger').modalEffects();
 
         $(".fancySelect").select2({
             matcher: function(term, text, opt){
