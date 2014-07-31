@@ -77,6 +77,69 @@
         });
 
     }
+
+    function getVod(id)
+    {
+        $.get('/ajax/vod/' + id + '/', function(data)
+        {
+            var obj = jQuery.parseJSON(data);
+            var scrl = $(document).scrollTop();
+            $("#streamContainer").html(obj.streamContainer);
+            $("#pageHeader").html(obj.pageHeader);
+            $('body').scrollTop(scrl);
+            $("#streamContainer").fitVids();
+            $('html, body').animate({
+                scrollTop: $("#streamContainer").offset().top - 50
+            }, 1000);
+
+        });
+    }
+
+    function getVodDetails(id, mid)
+    {
+        getVod(mid);
+        getMatchDetails(id);
+    }
+
+    function getMatchDetails(id)
+    {
+
+        if($("#match-" + id + "-details").length)
+        {
+            if($("#match-" + id + "-details").css('display') == 'none')
+            {
+                $("#match-" + id + "-details").slideDown();
+
+                $('html, body').animate({
+                    scrollTop: $("#match-" + id).offset().top - 50
+                }, 1000);
+
+                $("#match-" + id + "-button").text("Hide game stats");
+            }
+            else
+            {
+                $("#match-" + id + "-details").slideUp();
+                $("#match-" + id + "-button").text("View game stats");
+            }
+
+        }
+        else
+        {
+            $.get("/ajax/details/" + id + "/", function(data) {
+
+                var obj = jQuery.parseJSON(data);
+                $("#match-" + id).after(obj.match);
+                $("#match-" + id + "-details").hide();
+                $("#match-" + id + "-details").slideDown('slow');
+                $('html, body').animate({
+                    scrollTop: $("#match-" + id).offset().top - 50
+                }, 1000);
+                $("#match-" + id + "-button").text("Hide game stats");
+                $('.ttip, [data-toggle="tooltip"]').tooltip();
+
+            });
+        }
+    }
 </script>
 
 <!-- Bootstrap core JavaScript

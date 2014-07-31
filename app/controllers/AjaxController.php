@@ -50,6 +50,17 @@ class AjaxController extends BaseController {
         return json_encode( ['pageHeader' => $pageHeader->render(), 'scheduleBlock' => $scheduleBlock->render(), 'streamContainer' => $streamContainer->render()] );
     }
 
+    public function getVod($id)
+    {
+        $block = Block::select('blocks.*')->join('matches', 'matches.blockId', '=', 'blocks.blockId')->where('matches.matchId', $id)->first();
+        $block->requestedMatch($id);
+
+        $pageHeader = View::make('html.titlebar')->with('block', $block);
+        $streamContainer = View::make('html.stream')->with('block', $block);
+
+        return json_encode(['streamContainer' => $streamContainer->render(), 'pageHeader' => $pageHeader->render()]);
+    }
+
     public function getBlock($id, $dir = null)
     {
         if($dir == null)
@@ -90,6 +101,14 @@ class AjaxController extends BaseController {
             $scheduleBlock = View::make('html.schedule')->with('block', $block);
             return json_encode(['scheduleBlock' => $scheduleBlock->render()]);
         }
+    }
+
+    public function getDetails($id)
+    {
+        $match = Match::where('id', $id)->first();
+        $slideDown = View::make('html.game')->with('match', $match);
+
+        return json_encode(['match' => $slideDown->render()]);
     }
 
 

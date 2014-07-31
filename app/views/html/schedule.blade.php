@@ -25,7 +25,7 @@
         <?php if(count($block->getMatches()) > 0) $block->sortPlaces(); ?>
             @foreach($block->getMatches() as $tempCntr => $match)
                 <?php $tempZone = new DateTime($match->dateTime); $tempZone->setTimezone(new DateTimeZone(Cookie::get('timezone'))); ?>
-                <li href="#" class="list-group-item {{ $match->isLiveActive() }}" style="padding-top: 0px; height:76px; font-size: 20px; {{ ( (($tempCntr % 2 == 0) && ($match->status() !== "Live")) ? ' background: #F8F8F8; ' : '' ) }} {{ $match->isLiveText() }}">
+                <li href="#" id="match-{{ $match->id }}" class="list-group-item match blueHover {{ $match->isLiveActive() }}" style="padding-top: 0px; height:76px; font-size: 20px; {{ ( (($tempCntr % 2 == 0) && ($match->status() !== "Live")) ? ' background: #F8F8F8; ' : '' ) }} {{ $match->isLiveText() }}">
                     <img src="http://na.lolesports.com{{ $match->blueLogoURL }}" width='55' height='55' style="border-radius: 10%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:8px; {{ $match->winnerImg($match->blueId) }}">
 
                     <div style="display: inline-table; margin-right:10px; width:80px; {{ $match->winner($match->blueId) }}">
@@ -57,13 +57,13 @@
                             @if($match->status() == 'Finished')
                                 @if($match->getGame() !== null)
                                     @if($match->getGame()->vodURL !== null)
-                                    <li><a href="#">View VOD</a></li>
+                                    <li><a href="#" onclick="getVod('{{ $match->matchId }}'); return false;">View VOD</a></li>
                                     @endif
                                     @if($match->getGame()->fullPlayers())
-                                        <li><a href="#">View game stats</a></li>
+                                        <li><a href="#" id="match-{{ $match->id }}-button" onclick="getMatchDetails('{{ $match->id }}'); return false;">View game stats</a></li>
                                     @endif
                                     @if(($match->getGame()->vodURL !== null) && ($match->getGame()->fullPlayers()))
-                                        <li><a href="#">View stats and VOD</a></li>
+                                        <li><a href="#" onclick="getVodDetails('{{ $match->id }}', '{{ $match->matchId }}')" >View stats and VOD</a></li>
                                     @endif
                                 @else
                                     <li><a href="#">Still Processing...</a></li>
@@ -82,10 +82,7 @@
                   </div>
                 </li>
                 @if($match->status() == 'Finished')
-                    <li class="list-group-item" style="margin-left:15px; margin-right:15px; ">
-                        <h2 class="text-center" style="font-size:21px;">Winner: {{ ($match->getGame()->winnerId == $match->getGame()->blueId ? $match->blueAcronym : $match->redAcronym) }} ({{ gmdate('i:s', $match->getGame()->gameLength) }})</h3>
-                        @include('html.gamedetail', array('game' => $match->getGame()))
-                    </li>
+
                 @endif
             @endforeach
 

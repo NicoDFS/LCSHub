@@ -27,7 +27,7 @@
         <tbody>
         @foreach($team as $player)
                 <tr>
-                        <td> <img class="img-rounded" style="border:1px solid black; width:70px; height:50px;" src="{{ $player->photoURL }}"> <span data-toggle="tooltip" title="Position: {{ $player->getFantasyPlayer()->role }}">{{ $player->name }}</span></td>
+                        <td> <img class="img-rounded" style="border:1px solid black; width:70px; height:50px;" src="{{ $player->photoURL }}"> <span data-toggle="tooltip" title="Position: {{ $player->getFantasyPlayer()->role }}"> &nbsp;{{ $player->name }}</span></td>
                         <td class="text-center"> <img class="img-rounded" style="border:1px solid black;" src="http://lkimg.zamimg.com/shared/riot/images/champions/{{ $player->championId }}_32.png"> &nbsp;({{ $player->endLevel }})</td>
                         <td class="text-center"><span data-toggle="tooltip" title="{{ floatval((double)$player->kda) }}">{{ $player->kills }}/{{ $player->deaths }}/{{ $player->assists }}</span></td>
                         <td class="text-center">{{ GamePlayer::count_format($player->totalGold) }}</td>
