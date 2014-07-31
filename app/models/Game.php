@@ -16,21 +16,38 @@ class Game extends Eloquent {
     {
         if(!isset($this->_teams))
         {
+            //$teams = array();
+            //$counter = 0;
+            //$players = $this->getPlayers();
+            //foreach($players as $player)
+            //{
+            //    if($counter < 5)
+            //    {
+            //        $teams[0][] = $player;
+            //    }
+            //    else
+            //    {
+            //        $teams[1][] = $player;
+            //    }
+            //
+            //    $counter++;
+            //}
+            //
+            //$this->_teams = $teams;
+
             $teams = array();
-            $counter = 0;
+
             $players = $this->getPlayers();
             foreach($players as $player)
             {
-                if($counter < 5)
+                if($player->teamId == $this->blueId)
                 {
-                    $teams[0][] = $player;
+                    $teams[$this->blueId][] = $player;
                 }
-                else
+                elseif($player->teamId == $this->redId)
                 {
-                    $teams[1][] = $player;
+                    $teams[$this->redId][] = $player;
                 }
-
-                $counter++;
             }
 
             $this->_teams = $teams;

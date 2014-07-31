@@ -20,7 +20,7 @@
     </div>
 </div>
 
-<div class="md-modal colored-header custom-width md-effect-1" id="settingsModal">
+<div class="md-modal colored-header custom-width md-effect-1" id="settingsModal" style="display:none;">
     <div class="md-content">
       <div class="modal-header">
         <h3>My Settings</h3>

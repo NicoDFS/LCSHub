@@ -19,12 +19,16 @@
               {
                 $("body").addClass("modal-open");
               }
+
+              $(modal).show();
            },
            afterClose: function(button, modal) {
               if($("body").hasClass("modal-open"))
               {
                 $("body").removeClass("modal-open");
               }
+
+              $(modal).hide();
            }
         };
         

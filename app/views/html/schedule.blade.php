@@ -82,7 +82,7 @@
                   </div>
                 </li>
                 @if($match->status() == 'Finished')
-                    <li class="list-group-item" style="margin-left:15px; margin-right:15px; {{ ( (($tempCntr % 2 == 0) && ($match->status() !== "Live")) ? ' background: #F8F8F8; ' : '' ) }}">
+                    <li class="list-group-item" style="margin-left:15px; margin-right:15px; ">
                         <h2 class="text-center" style="font-size:21px;">Winner: {{ ($match->getGame()->winnerId == $match->getGame()->blueId ? $match->blueAcronym : $match->redAcronym) }} ({{ gmdate('i:s', $match->getGame()->gameLength) }})</h3>
                         @include('html.gamedetail', array('game' => $match->getGame()))
                     </li>

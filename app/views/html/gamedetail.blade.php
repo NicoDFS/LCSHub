@@ -1,9 +1,10 @@
 <?php $tblCount = 0; ?>
-@foreach($game->teams() as $team)
-<table style="{{ ($tblCount == 0 ? 'margin-bottom:20px' : '') }}">
+@foreach($game->teams() as $teamKey => $team)
+<div class="table-responsive">
+<table style="{{ ($tblCount == 0 ? 'margin-bottom:20px' : '') }}" class="hover">
         <thead>
                 <tr>
-                        <th>Team: {{ ($tblCount == 0 ? $game->blueName : $game->redName) }}</th>
+                        <th>Team: {{ ($teamKey == $game->blueId ? $game->blueName : $game->redName) }}</th>
                         <th class="text-center" style="border-left: none;"></th>
                         <th class="text-center" style="border-left: none;"></th>
                         <th class="text-center" style="border-left: none;"></th>
@@ -26,9 +27,9 @@
         <tbody>
         @foreach($team as $player)
                 <tr>
-                        <td> <img class="img-rounded" style="border:1px solid black; width:70px; height:50px;" src="{{ $player->photoURL }}"> {{ $player->name }}</td>
+                        <td> <img class="img-rounded" style="border:1px solid black; width:70px; height:50px;" src="{{ $player->photoURL }}"> <span data-toggle="tooltip" title="Position: {{ $player->getFantasyPlayer()->role }}">{{ $player->name }}</span></td>
                         <td class="text-center"> <img class="img-rounded" style="border:1px solid black;" src="http://lkimg.zamimg.com/shared/riot/images/champions/{{ $player->championId }}_32.png"> ({{ $player->endLevel }})</td>
-                        <td class="text-center">{{ $player->kills }}/{{ $player->deaths }}/{{ $player->assists }}</td>
+                        <td class="text-center"><span data-toggle="tooltip" title="{{ floatval((double)$player->kda) }}">{{ $player->kills }}/{{ $player->deaths }}/{{ $player->assists }}</span></td>
                         <td class="text-center">{{ GamePlayer::count_format($player->totalGold) }}</td>
                         <td class="text-center">{{ $player->minionsKilled }}</td>
                         <td class="text-center">{{ $player->getFantasyPlayer()->fantasyPoints() }}</td>
@@ -44,8 +45,10 @@
         </tbody>
 
 </table>
+</div>
 
-<table style="{{ ($tblCount == 0 ? 'margin-top: -10px; margin-bottom: 25px;' : ' margin-top:10px;') }}">
+<div class="table-responsive">
+<table style="{{ ($tblCount == 0 ? 'margin-top: -10px; margin-bottom: 35px;' : ' margin-top:10px; margin-bottom:10px;') }}" class="hover">
 
     <thead>
 
@@ -69,7 +72,7 @@
 
         <tr>
 
-            <td> <img class="img-rounded" style="border:1px solid black; width:32; height:32px; background: #1A1A1A;" src="{{ ($tblCount == 0 ? $game->blueLogoURL : $game->redLogoURL) }}"> {{ $game->fantasyTeams()[$tblCount]->teamName }}</td>
+            <td> <img class="img-rounded" style="border:1px solid black; width:32; height:32px; background: #1A1A1A;" src="{{ ($teamKey == $game->blueId ? $game->blueLogoURL : $game->redLogoURL) }}"> {{ $game->fantasyTeams()[$tblCount]->teamName }}</td>
             <td class="text-center">{{ ($game->fantasyTeams()[$tblCount]->matchVictory == 1 ? '<i class="fa fa-check"></i>' : '<i class="fa fa-times"></i>') }}</td>
             <td class="text-center">{{ $game->fantasyTeams()[$tblCount]->baronsKilled }}</td>
             <td class="text-center">{{ $game->fantasyTeams()[$tblCount]->dragonsKilled }}</td>
@@ -84,5 +87,6 @@
     </tbody>
 
 </table>
+</div>
 <?php $tblCount++; ?>
 @endforeach
