@@ -57,13 +57,13 @@
                             @if($match->status() == 'Finished')
                                 @if($match->getGame() !== null)
                                     @if($match->getGame()->vodURL !== null)
-                                    <li><a href="#" onclick="getVod('{{ $match->matchId }}'); return false;">View VOD</a></li>
+                                    <li><a href="#" onclick="getVod('{{ $match->matchId }}', true); return false;">View VOD</a></li>
                                     @endif
                                     @if($match->getGame()->fullPlayers())
                                         <li><a href="#" id="match-{{ $match->id }}-button" onclick="getMatchDetails('{{ $match->id }}'); return false;">View game stats</a></li>
                                     @endif
                                     @if(($match->getGame()->vodURL !== null) && ($match->getGame()->fullPlayers()))
-                                        <li><a href="#" onclick="getVodDetails('{{ $match->id }}', '{{ $match->matchId }}')" >View stats and VOD</a></li>
+                                        <li><a href="#" onclick="getVodDetails('{{ $match->id }}', '{{ $match->matchId }}'); return false;" >View stats and VOD</a></li>
                                     @endif
                                 @else
                                     <li><a href="#">Still Processing...</a></li>

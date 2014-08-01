@@ -48,6 +48,11 @@ class Block extends Eloquent {
                 }
             }
 
+            if(isset($this->newMatchId))
+            {
+                return $matches[$this->gRequestedMatchIndex()];
+            }
+
         }
         else
         {

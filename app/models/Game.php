@@ -105,5 +105,15 @@ class Game extends Eloquent {
         return $this->_fantasyTeams;
     }
 
+    public function getMatch()
+    {
+        if(!isset($this->_match))
+        {
+            $this->_match = Match::where('matchId', $this->matchId)->first();
+        }
+
+        return $this->_match;
+    }
+
 
 }

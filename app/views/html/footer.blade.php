@@ -78,7 +78,7 @@
 
     }
 
-    function getVod(id)
+    function getVod(id, scroll)
     {
         $.get('/ajax/vod/' + id + '/', function(data)
         {
@@ -88,6 +88,7 @@
             $("#pageHeader").html(obj.pageHeader);
             $('body').scrollTop(scrl);
             $("#streamContainer").fitVids();
+            if(scroll)
             $('html, body').animate({
                 scrollTop: $("#streamContainer").offset().top - 50
             }, 1000);
@@ -97,7 +98,7 @@
 
     function getVodDetails(id, mid)
     {
-        getVod(mid);
+        getVod(mid, false);
         getMatchDetails(id);
     }
 
@@ -138,6 +139,29 @@
                 $('.ttip, [data-toggle="tooltip"]').tooltip();
 
             });
+        }
+    }
+
+    function closeDetails(id)
+    {
+        if($("#match-" + id + "-details").length)
+        {
+            if($("#match-" + id + "-details").css('display') == 'none')
+            {
+                $("#match-" + id + "-details").slideDown();
+
+                $('html, body').animate({
+                    scrollTop: $("#match-" + id).offset().top - 50
+                }, 1000);
+
+                $("#match-" + id + "-button").text("Hide game stats");
+            }
+            else
+            {
+                $("#match-" + id + "-details").slideUp();
+                $("#match-" + id + "-button").text("View game stats");
+            }
+
         }
     }
 </script>

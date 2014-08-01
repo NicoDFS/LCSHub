@@ -90,3 +90,4 @@
 </div>
 <?php $tblCount++; ?>
 @endforeach
+<button type="button" class="btn btn-default btn-flat" style="width:100%" onclick="closeDetails('{{ $game->getMatch()->id }}');"><i class="fa fa-angle-double-up"></i> Hide stats</button>
