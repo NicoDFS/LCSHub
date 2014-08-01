@@ -19,7 +19,7 @@
                         <th class="text-center">KDA</th>
                         <th class="text-center">Gold</th>
                         <th class="text-center">CS</th>
-                        <th class="text-center">FPoints</th>
+                        <th class="text-center" style="font-weight:bold;">FPoints</th>
                         <th class="text-center">Spells</th>
                         <th class="text-center">Items</th>
                 </tr>
@@ -32,7 +32,7 @@
                         <td class="text-center"><span data-toggle="tooltip" title="{{ floatval((double)$player->kda) }}">{{ $player->kills }}/{{ $player->deaths }}/{{ $player->assists }}</span></td>
                         <td class="text-center">{{ GamePlayer::count_format($player->totalGold) }}</td>
                         <td class="text-center">{{ $player->minionsKilled }}</td>
-                        <td class="text-center" style="font-weight:bold;">{{ $player->getFantasyPlayer()->fantasyPoints() }}</td>
+                        <td class="text-center" style="font-weight:bold;"> <div style="border-bottom: 1px dashed #999;display: inline; cursor:pointer;" data-placement="left" data-template="<div class='popover' role='tooltip'><div class='arrow'></div><h3 class='popover-title text-center'></h3><div class='popover-content'></div></div>" data-toggle="popover" data-trigger='hover' data-html="true" data-content="{{ $player->getFantasyPlayer()->generatePopover() }}" title="Fantasy Points Breakdown">{{ $player->getFantasyPlayer()->fantasyPoints() }}</div></td>
                         <td class="text-center"> <img src="http://lkimg.zamimg.com/images/spells/{{ $player->spell0Id }}.png" style="width:32px; height:32px; border:1px solid black;" class="img-rounded"> <img src="http://lkimg.zamimg.com/images/spells/{{ $player->spell1Id }}.png" style="width:32px; height:32px; border:1px solid black;" class="img-rounded"> </td>
                         <td class="text-left">
                         @foreach($player->items() as $item)
@@ -62,7 +62,7 @@
             <th class="text-center">FTower</th>
             <th class="text-center">FInhib</th>
             <th class="text-center">Towers</th>
-            <th class="text-center">FPoints</th>
+            <th class="text-center" style="font-weight:bold;">FPoints</th>
 
         </tr>
 
@@ -72,7 +72,7 @@
 
         <tr>
 
-            <td> <img class="img-rounded" style="border:1px solid black; width:32; height:32px; background: #1A1A1A;" src="{{ ($teamKey == $game->blueId ? $game->blueLogoURL : $game->redLogoURL) }}"> {{ $game->fantasyTeams()[$tblCount]->teamName }}</td>
+            <td> <img class="img-rounded" style="padding:2px; border:1px solid black; width:32; height:32px; background: #1A1A1A;" src="{{ ($teamKey == $game->blueId ? $game->blueLogoURL : $game->redLogoURL) }}"> {{ $game->fantasyTeams()[$tblCount]->teamName }}</td>
             <td class="text-center">{{ ($game->fantasyTeams()[$tblCount]->matchVictory == 1 ? '<i class="fa fa-check"></i>' : '<i class="fa fa-times"></i>') }}</td>
             <td class="text-center">{{ $game->fantasyTeams()[$tblCount]->baronsKilled }}</td>
             <td class="text-center">{{ $game->fantasyTeams()[$tblCount]->dragonsKilled }}</td>
@@ -80,7 +80,9 @@
             <td class="text-center">{{ ($game->fantasyTeams()[$tblCount]->firstTower == 1 ? '<i class="fa fa-check"></i>' : '<i class="fa fa-times"></i>') }}</td>
             <td class="text-center">{{ ($game->fantasyTeams()[$tblCount]->firstInhibitor == 1 ? '<i class="fa fa-check"></i>' : '<i class="fa fa-times"></i>') }}</td>
             <td class="text-center">{{ $game->fantasyTeams()[$tblCount]->towersKilled }}</td>
-            <td class="text-center" style="font-weight:bold;">{{ $game->fantasyTeams()[$tblCount]->fantasyPoints() }}</td>
+            <td class="text-center" style="font-weight:bold;">
+                <div style="border-bottom: 1px dashed #999;display: inline; cursor:pointer;" data-placement="left" data-template="<div class='popover' role='tooltip'><div class='arrow'></div><h3 class='popover-title text-center'></h3><div class='popover-content'></div></div>" data-toggle="popover" data-trigger='hover' data-html="true" data-content="{{ $game->fantasyTeams()[$tblCount]->generatePopover() }}" title="Fantasy Points Breakdown">{{ $game->fantasyTeams()[$tblCount]->fantasyPoints() }}</div>
+            </td>
 
         </tr>
 

@@ -90,7 +90,7 @@
             $("#streamContainer").fitVids();
             if(scroll)
             $('html, body').animate({
-                scrollTop: $("#streamContainer").offset().top - 50
+                scrollTop: $("#streamContainer").offset().top - 60
             }, 1000);
 
         });
@@ -137,6 +137,8 @@
                 }, 1000);
                 $("#match-" + id + "-button").text("Hide game stats");
                 $('.ttip, [data-toggle="tooltip"]').tooltip();
+                $("[data-toggle=popover]").popover();
+
 
             });
         }
