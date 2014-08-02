@@ -29,6 +29,26 @@
         $("#autoupdateRadio").bootstrapSwitch();
     });
 
+    function refreshDetail(id)
+    {
+        //$("#refresh-match-" + id).addClass('fa-spin');
+        $("#refresh-match-" + id).attr('disabled', true);
+
+        $.get("/ajax/details/" + id + "/", function(data) {
+
+            var obj = jQuery.parseJSON(data);
+            var cnt = $(obj.match).contents();
+            $("#match-" + id + "-details").height($("#match-" + id + "-details").height());
+            obj.match = cnt;
+            $("#match-" + id + "-details").html(obj.match);
+            $("#refresh-match-" + id).attr('disabled', false);
+            $('.ttip, [data-toggle="tooltip"]').tooltip();
+            $("[data-toggle=popover]").popover();
+            //$("#refresh-match-" + id).removeClass('fa-spin');
+
+        });
+    }
+
     function twitchToggle()
     {
 
@@ -92,6 +112,7 @@
             $('html, body').animate({
                 scrollTop: $("#streamContainer").offset().top - 60
             }, 1000);
+            $('.ttip, [data-toggle="tooltip"]').tooltip();
 
         });
     }

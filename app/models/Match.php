@@ -64,7 +64,7 @@ class Match extends Eloquent {
 
     public function color()
     {
-         if($this->status() == 'Live')
+        if($this->status() == 'Live')
         {
             return '#ED5B56';
         }

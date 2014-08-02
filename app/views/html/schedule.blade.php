@@ -48,7 +48,15 @@
                     <img src="http://na.lolesports.com{{ $match->redLogoURL }}" width='55' height='55' style="border-radius: 10%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:10px; {{ $match->winnerImg($match->redId) }}">
 
                     <div class="btn-group pull-right" style="margin-top:15px;">
-                        <button type="button" style="width:96px;" class="btn btn-{{ $match->cssClass() }} btn-lg" title="{{ $match->status() }}" data-toggle="tooltip" data-placement="left" data-container="body">{{ $tempZone->format('g:i A') }}</button>
+                        <button type="button" style="width:96px;" class="btn btn-{{ $match->cssClass() }} btn-lg" title="{{ $match->status() }}" data-toggle="tooltip" data-placement="left" data-container="body" @if($match->status() == 'Finished')
+                                @if($match->getGame() !== null)
+                                    @if($match->getGame()->fullPlayers())
+                                        onclick="getMatchDetails('{{ $match->id }}');"
+                                    @endif
+                                @endif
+                        @endif
+
+                        >{{ $tempZone->format('g:i A') }}</button>
                         <button type="button" class="btn btn-{{ $match->cssClass() }} btn-lg dropdown-toggle" data-toggle="dropdown">
                             <span class="caret"></span>
                             <span class="sr-only">Toggle Dropdown</span>
@@ -56,11 +64,11 @@
                         <ul class="dropdown-menu" role="menu">
                             @if($match->status() == 'Finished')
                                 @if($match->getGame() !== null)
-                                    @if($match->getGame()->vodURL !== null)
-                                    <li><a href="#" onclick="getVod('{{ $match->matchId }}', true); return false;">View VOD</a></li>
-                                    @endif
                                     @if($match->getGame()->fullPlayers())
                                         <li><a href="#" id="match-{{ $match->id }}-button" onclick="getMatchDetails('{{ $match->id }}'); return false;">View game stats</a></li>
+                                    @endif
+                                    @if($match->getGame()->vodURL !== null)
+                                    <li><a href="#" onclick="getVod('{{ $match->matchId }}', true); return false;">View VOD</a></li>
                                     @endif
                                     @if(($match->getGame()->vodURL !== null) && ($match->getGame()->fullPlayers()))
                                         <li><a href="#" onclick="getVodDetails('{{ $match->id }}', '{{ $match->matchId }}'); return false;" >View stats and VOD</a></li>

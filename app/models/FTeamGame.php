@@ -22,7 +22,7 @@ class FTeamGame extends Eloquent {
     {
         $html =
         "<div class='table-responsive'>
-            <table class='table table-bordered' style='margin-bottom:0px;'>
+            <table class='table table-bordered' style='margin-bottom:0px; cursor: default; '>
                 <tr>
                     <td>Stat</td>
                     <td class='text-center'># * (Value)</td>
