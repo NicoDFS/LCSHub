@@ -212,7 +212,9 @@
 
                                 foreach($timezones as $tzk => $tzv)
                                 {
-                                    echo "<option value='$tzv'>$tzk</option>";
+                                    echo "<option value='$tzv'";
+                                    echo ( (Cookie::has('settings[timezone]') and Cookie::get('settings[timezone]') == $tzv) ? 'selected="selected"' : '' );
+                                    echo">$tzk</option>";
                                 }
                             ?>
                         </select>
