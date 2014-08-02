@@ -29,6 +29,8 @@ class AjaxController extends BaseController {
             $todayBlock->currBlock = false;
         }
 
+        $todayBlock->spoilers();
+
         $pageHeader = View::make('html.titlebar')->with('block', $todayBlock);
         $scheduleBlock = View::make('html.schedule')->with('block', $todayBlock);
         $streamContainer = View::make('html.stream')->with('block', $todayBlock);
@@ -41,6 +43,8 @@ class AjaxController extends BaseController {
 
         $block = Block::select('blocks.*')->join('matches', 'matches.blockId', '=', 'blocks.blockId')->where('matches.matchId', $id)->first();
         $block->requestedMatch($id);
+
+        $block->spoilers();
 
         $pageHeader = View::make('html.titlebar')->with('block', $block);
         $scheduleBlock = View::make('html.schedule')->with('block', $block);
@@ -65,6 +69,7 @@ class AjaxController extends BaseController {
     {
         $block = Block::select('blocks.*')->join('matches', 'matches.blockId', '=', 'blocks.blockId')->where('matches.matchId', $id)->first();
         $block->requestedMatch($id);
+        $block->spoilers();
 
         $pageHeader = View::make('html.titlebar')->with('block', $block);
         $streamContainer = View::make('html.stream')->with('block', $block);
@@ -97,6 +102,8 @@ class AjaxController extends BaseController {
                     $todayBlock->currBlock = false;
                 }
 
+                $todayBlock->spoilers();
+
                 $scheduleBlock = View::make('html.schedule')->with('block', $todayBlock);
 
                 return json_encode(['scheduleBlock' => $scheduleBlock->render()]);
@@ -109,6 +116,7 @@ class AjaxController extends BaseController {
             $order = ($dir == 'next' ? 'asc' : 'desc');
 
             $block = Block::where('dateTime', $operator, $prevBlock->dateTime)->orderBy('dateTime', $order)->first();
+            $block->spoilers();
 
             $scheduleBlock = View::make('html.schedule')->with('block', $block);
             return json_encode(['scheduleBlock' => $scheduleBlock->render()]);
@@ -137,12 +145,56 @@ class AjaxController extends BaseController {
                 Input::merge(array('timezone', Config::get('cookie.timezoneDefault')));
             }
 
-            if (in_array(Input::get('timezone'), DateTimeZone::listIdentifiers()))
+            if(in_array(Input::get('timezone'), DateTimeZone::listIdentifiers()))
             {
                 $foreverCookie = Cookie::forever(Config::get('cookie.timezone'), Input::get('timezone'));
                 $content = json_encode([ 'timezone' => Input::get('timezone') ]);
                 return Response::make($content)->withCookie($foreverCookie);
             }
+        }
+    }
+
+    public function postSettings()
+    {
+        if(Input::has('timezone') && Input::has('spoilers') && Input::has('updates'))
+        {
+            if(!is_null(Input::get('timezone')))
+            {
+                if(in_array(Input::get('timezone'), DateTimeZone::listIdentifiers()))
+                {
+                    Cookie::queue(Config::get('cookie.timezone'), Input::get('timezone'), (60 * 24 * 360));
+                }
+            }
+
+            if(!is_null(Input::has('spoilers')))
+            {
+                Cookie::queue(Config::get('cookie.spoilers'), Input::get('spoilers'), (60 * 24 * 360));
+            }
+
+            if(!is_null(Input::get('updates')))
+            {
+                Cookie::queue(Config::get('cookie.updates'), Input::get('updates'), (60 * 24 * 360));
+            }
+
+            if(Input::has('fantasyTeams') && !is_null(Input::get('fantasyTeams')))
+            {
+                $output = json_decode(Input::get('fantasyTeams'));
+                if(isset($output[0]))
+                {
+                    if(is_null($output[0]))
+                    {
+                        unset($output[0]);
+                    }
+                }
+
+                Cookie::queue(Config::get('cookie.fantasyTeams'), $output, (60 * 24 * 360));
+            }
+
+            return json_encode([ 'message' => 'success' ]);
+        }
+        else
+        {
+            return json_encode([ 'message' => 'failure']);
         }
     }
 

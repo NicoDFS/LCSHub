@@ -4,38 +4,40 @@
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
           <span class="fa fa-gear"></span>
         </button>
-        <a class="navbar-brand" href="#"><span>lcshub.tv</span></a>
+        <a class="navbar-brand" href="http://lcshub.tv"><span>lcshub.tv</span></a>
       </div>
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="#">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li class="active"><a href="http://lcshub.tv" >Home</a></li>
+          <!--<li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>-->
         </ul>
         <ul class="nav navbar-nav navbar-right not-nav">
-          <li class="button md-trigger" data-modal="settingsModal"><a href="#" onclick="return false;" style="width:96px; cursor:pointer;"><i class="fa fa-cog">&nbsp;&nbsp;Settings</i></a></li>
+          <li class="button md-trigger" data-modal="settingsModal"><a href="#" onclick="return false;" style="width:96px; cursor:pointer;"><i class="fa fa-cog"></i> &nbsp;&nbsp;Settings</a></li>
         </ul>
 
       </div><!--/.nav-collapse -->
     </div>
 </div>
 
-<div class="md-modal colored-header custom-width md-effect-1" id="settingsModal" style="display:none;">
+<div class="md-modal colored-header custom-width md-effect-1" id="settingsModal" style="display:none; top:32%;">
     <div class="md-content">
-      <div class="modal-header">
-        <h3>My Settings</h3>
-        <button type="button" class="close md-close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <div class="modal-header" style="height:40px;">
+        <div style="margin-top: -8px;">
+        <h3 style="font-size: 18px;">My Settings</h3>
+        </div>
+        <button type="button" class="close md-close" data-dismiss="modal" id="settingsModalClose" aria-hidden="true" style="margin-top: -23px;">&times;</button>
       </div>
       <div class="modal-body form" style="padding-bottom:0px;padding-left: 10px;padding-top: 15px;padding-right: 10px;">
 
       <div class="tab-container tab-left">
-        <ul class="nav nav-tabs flat-tabs">
-          <li class="active"><a href="#tab3-1" data-toggle="tab"><i class="fa fa-edit"></i></a></li>
-          <li class=""><a href="#tab3-2" data-toggle="tab"><i class="fa fa-users"></i></a></li>
+        <ul class="nav nav-tabs flat-tabs" id="tabContainer">
+          <li class="active" data-toggle='tooltip' title='General' onclick="$(this).tooltip('hide');" data-placement='right'><a href="#general" data-toggle="tab"><i class="fa fa-edit"></i></a></li>
+          <li class="" data-toggle='tooltip' title='Fantasy Teams' onclick="$(this).tooltip('hide');" data-placement='right'><a href="#fantasy" data-toggle="tab"><i class="fa fa-users"></i></a></li>
         </ul>
         <div class="tab-content" style="padding-bottom: 0px; margin-bottom: 10px; padding-top:0px; border-top: 1px solid #E2E2E2;">
 
-        <div class="tab-pane cont fade active in" id="tab3-1">
+        <div class="tab-pane cont fade active in" id="general">
             <form class="form-horizontal" role="form">
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Timezone</label>
@@ -204,36 +206,56 @@
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">Spoilers</label>
                     <div class="col-sm-10">
-                        <input type="radio" name='{{ Config::get('cookie.spoilers') }}' id="spoilersRadio" {{ ( (Cookie::has(Config::get('cookie.spoilers')) && Cookie::get(Config::get('cookie.spoilers')) == 1) ? 'checked' : Config::get('cookie.spoilersDefault')  ) }}>
+                        <input type="radio" name='{{ Config::get('cookie.spoilers') }}' value='1' id="{{ Config::get('cookie.spoilers') }}" {{ ( (Cookie::has(Config::get('cookie.spoilers')) && Cookie::get(Config::get('cookie.spoilers')) == 1) ? 'checked' : (Cookie::has(Config::get('cookie.spoilers'))  ? Cookie::get(Config::get('cookie.spoilers')) : Config::get('cookie.spoilersDefault'))) }}>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">Updates</label>
                     <div class="col-sm-10">
-                        <input type="radio" name='{{ Config::get('cookie.updates') }}' id="autoupdateRadio" {{ ( (Cookie::has(Config::get('cookie.updates')) && Cookie::get(Config::get('cookie.updates')) == 1) ? 'checked' : Config::get('cookie.updatesDefault')  ) }}>
+                        <input type="radio" name='{{ Config::get('cookie.updates') }}' value='1' id="{{ Config::get('cookie.updates') }}" {{ ( (Cookie::has(Config::get('cookie.updates')) && Cookie::get(Config::get('cookie.updates')) == 1) ? 'checked' : (Cookie::has(Config::get('cookie.updates'))  ? Cookie::get(Config::get('cookie.updates')) : Config::get('cookie.updatesDefault'))) }}>
                     </div>
                 </div>
+
+                <button type="button" class="btn btn-danger btn-flat" onclick="$('#tabContainer a:last').tab('show');" style="width:100%;margin-bottom: 18px !important;/* padding-bottom: inherit; */margin-top: 12px;">Edit My Fantasy Teams</button>
+
             </form>
           </div>
 
 
-          <div class="tab-pane cont fade" id="tab3-2">
+          <div class="tab-pane cont fade" id="fantasy">
 
-            <form class="form-horizontal" role="form">
+            <form class="form-horizontal" role="form" id='fantasyForm'>
                 <div class="form-group" style="margin-top:18px;">
                     <label for="inputEmail3" class="col-sm-2 control-label" style="margin-top:-8px;">Fantasy Team</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect" style="width:50%;" placeholder="Select a fantasy team">
+                        <select class="fancySelect" id='fantasyTeamSelect' style="width:50%;" placeholder="Select a fantasy team">
                             <option></option>
+                            <?php
+                                if( Cookie::has(Config::get('cookie.fantasyTeams')) )
+                                {
+                                    $dfTeams = Cookie::get(Config::get('cookie.fantasyTeams'));
+                                    foreach($dfTeams as $dfKey => $dfValue)
+                                    {
+                                        if($dfValue !== null)
+                                        foreach($dfValue as $pfKey => $pfValue)
+                                        {
+                                            if($pfKey == 'fantasyname')
+                                            {
+                                                echo "<option value='" . ($dfKey + 1) . "'>$pfValue</option>";
+                                            }
+                                        }
+                                    }
+                                }
+                            ?>
                         </select>
-                        <button type="button" class="btn btn-primary btn-rad" style="float:right;"><i class="fa fa-plus-circle"></i> &nbsp;New Team</button>
+                        <button type="button" onclick="addFantasyTeam();" class="btn btn-primary btn-rad" style="float:right;"><i class="fa fa-plus-circle"></i> &nbsp;New Team</button>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Top</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect" style="width:100%;" placeholder="Dyrus">
+                        <select class="fancySelect positionSelect" id='topSelect' style="width:100%;" placeholder="Dyrus" disabled="disabled">
                             <option></option>
                             {{ FPlayer::selectOptions('Top Lane') }}
                         </select>
@@ -242,7 +264,7 @@
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Jungle</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect" style="width:100%;" placeholder="Amazing">
+                        <select class="fancySelect positionSelect" id='jungleSelect' style="width:100%;" placeholder="Amazing" disabled="disabled">
                             <option></option>
                             {{ FPlayer::selectOptions('Jungler') }}
                         </select>
@@ -251,7 +273,7 @@
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Mid</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect" style="width:100%;" placeholder="Bjergsen">
+                        <select class="fancySelect positionSelect" id='midSelect' style="width:100%;" placeholder="Bjergsen" disabled="disabled">
                             <option></option>
                             {{ FPlayer::selectOptions('Mid Lane') }}
                         </select>
@@ -260,7 +282,7 @@
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">ADC</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect" style="width:100%;" placeholder="WildTurtle">
+                        <select class="fancySelect positionSelect" id='adcSelect' style="width:100%;" placeholder="WildTurtle" disabled="disabled">
                             <option></option>
                             {{ FPlayer::selectOptions('AD Carry') }}
                         </select>
@@ -269,7 +291,7 @@
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Support</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect" style="width:100%;" placeholder="Lustboy">
+                        <select class="fancySelect positionSelect" id='supportSelect' style="width:100%;" placeholder="Lustboy" disabled="disabled">
                             <option></option>
                             {{ FPlayer::selectOptions('Support') }}
                         </select>
@@ -278,7 +300,7 @@
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Flex</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect" style="width:100%;" placeholder="HotshotGG">
+                        <select class="fancySelect positionSelect" id='flexSelect' style="width:100%;" placeholder="HotshotGG" disabled="disabled">
                             <option></option>
                             {{ FPlayer::allOptions() }}
                         </select>
@@ -287,7 +309,7 @@
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Team</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect" style="width:100%;" placeholder="Fnatic">
+                        <select class="fancySelect positionSelect" id='teamSelect' style="width:100%;" placeholder="Fnatic" disabled="disabled">
                             <option></option>
                             {{ FTeam::allOptions() }}
                         </select>
@@ -303,7 +325,7 @@
       </div>
       <div class="modal-footer" style="margin-top: 0px;padding-top: 5px;padding-bottom: 10px;border:none;">
         <button type="button" class="btn btn-default btn-flat md-close" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary btn-flat md-close" data-dismiss="modal">Save</button>
+        <button type="button" class="btn btn-primary btn-flat" onclick="saveSettings(); return false;">Save</button>
       </div>
     </div>
 </div>

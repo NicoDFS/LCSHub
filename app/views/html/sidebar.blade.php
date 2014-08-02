@@ -1,6 +1,25 @@
 <div class="cl-sidebar">
     <div class="cl-toggle"><i class="fa fa-bars"></i></div>
         <div class="cl-navblock">
+            <div class="menu-space nano nscroller has-scrollbar" style="height: 504px;">
+              <div class="content" tabindex="0" style="right: -15px;">
+                <div class="side-user">
+
+                  <div class="info">
+                    <a href="#">Fantasy Stats Coming Soon</a>
+                     <span>Soon (tm)</span>
+                  </div>
+                </div>
+
+              </div>
+            <div class="pane"><div class="slider" style="height: 266px; top: 238px;"></div></div></div>
+
+    </div>
+</div>
+
+<!--<div class="cl-sidebar">
+    <div class="cl-toggle"><i class="fa fa-bars"></i></div>
+        <div class="cl-navblock">
             <div class="menu-space">
               <div class="content">
                 <div class="side-user">
@@ -89,3 +108,4 @@
         </div>
     </div>
 </div>
+-->

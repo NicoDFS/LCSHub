@@ -83,13 +83,13 @@
                                 @endif
                             @elseif($match->status() == 'Live')
                                 <li><a href="#" onclick="getLiveGame('{{ $match->matchId }}'); return false;">View LIVE game</a></li>
-                                <li><a href="#">View {{ $match->blueAcronym }}'s games</a></li>
-                                <li><a href="#">View {{ $match->redAcronym }}'s games</a></li>
+                                <li><a href="#" onclick="return false;">View {{ $match->blueAcronym }}'s games</a></li>
+                                <li><a href="#" onclick="return false;">View {{ $match->redAcronym }}'s games</a></li>
                             @elseif($match->status() == 'Scheduled')
-                                <li><a href="#">View {{ $match->blueAcronym }}'s games</a></li>
-                                <li><a href="#">View {{ $match->redAcronym }}'s games</a></li>
+                                <li><a href="#" onclick="return false;">View {{ $match->blueAcronym }}'s games</a></li>
+                                <li><a href="#" onclick="return false;">View {{ $match->redAcronym }}'s games</a></li>
                                 @if($block->tickets !== null)
-                                    <li><a href="{{ $block->tickets }}">Buy tickets</a></li>
+                                    <li><a href="{{ $block->tickets }}" target="_blank">Buy tickets</a></li>
                                 @endif
                             @endif
                         </ul>

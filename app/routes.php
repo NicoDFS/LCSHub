@@ -16,10 +16,10 @@
 
 Route::controller('ajax', 'AjaxController');
 
-Route::get('/home', function()
+Route::get('/', function()
 {
+    //dd(Cookie::get('settings[fantasyTeams]'));
     $timezone = Config::get('cookie.timezoneDefault');
-    //Cookie::queue(Config::get('cookie.timezone'), 'America/Los_Angeles', (60 * 24));
 
     if(Cookie::has(Config::get('cookie.timezone')))
     {
@@ -41,7 +41,7 @@ Route::get('/home', function()
         $todayBlock->currBlock = true;
     }
 
-    $todayBlock->timezone = $timezone;
+    $todayBlock->spoilers();
 
     return View::make('html.home')->with('block', $todayBlock);
 });

@@ -15,7 +15,7 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
-        //initialize the javascript
+
         App.init();
         $("#streamContainer").fitVids({ customSelector: "object[data^='http://www.twitch.tv/widgets/live_embed_player.swf?channel=riotgames']"});
 
@@ -25,9 +25,74 @@
             }
         });
 
+        window.fantasyPositions = ['top', 'jungle', 'mid', 'adc', 'support', 'flex', 'team'];
 
-        $("#spoilersRadio").bootstrapSwitch();
-        $("#autoupdateRadio").bootstrapSwitch();
+        $("#fantasyTeamSelect").on("change", function() {
+            var $this = $(this);
+
+            if($this.val() in window.fantasyTeams)
+            {
+                $.each(window.fantasyPositions, function(index, value) {
+
+                    $("#" + value + "Select").select2('val', window.fantasyTeams[$this.val()][value]);
+
+                });
+
+                $(".positionSelect").attr('disabled', false);
+
+                if($("#fantasyDelete").length <= 0)
+                {
+                    $("#fantasyForm").append('<button type="button" class="btn btn-danger btn-flat" style="width:100%;margin-bottom: 18px !important;margin-top: 12px;" id="fantasyDelete" >Delete Fantasy Team</button>');
+                }
+
+                $("#fantasyDelete").unbind( "click" );
+                $("#fantasyDelete").click(function()
+                {
+
+                    deleteFantasyTeam($this.val());
+
+                });
+
+            }
+        });
+
+        $(".positionSelect").on("change", function() {
+            var $this = $(this);
+            var $fIndex = $("#fantasyTeamSelect").select2('val');
+
+            if($fIndex !== null)
+            {
+                if($fIndex in window.fantasyTeams)
+                {
+
+                    $.each(window.fantasyPositions, function(index, value) {
+
+                        window.fantasyTeams[$fIndex][value] = $("#" + value + "Select").select2('val');
+
+                    });
+
+                }
+            }
+
+        });
+
+        window.fantasyTeams = [];
+
+        @if(Cookie::has(Config::get('cookie.fantasyTeams')))
+            <?php $fTeams = Cookie::get(Config::get('cookie.fantasyTeams'));  ?>
+            @foreach($fTeams as $fKey => $fValue)
+                @if($fValue !== null)
+                    window.fantasyTeams[{{ $fKey + 1}}] = new Object();
+                    @foreach($fValue as $pKey => $pValue)
+                        window.fantasyTeams[{{ $fKey + 1 }}].{{ $pKey }} = '{{ $pValue }}';
+                    @endforeach
+                @endif
+            @endforeach
+        @endif
+
+
+        $('[id="{{ Config::get('cookie.spoilers') }}"]').bootstrapSwitch();
+        $('[id="{{ Config::get('cookie.updates') }}"]').bootstrapSwitch();
     });
 
     function getMatch (id)
@@ -223,6 +288,7 @@
         });
     }
 
+
     function refreshInfo(id)
     {
         $.get("/ajax/refreshmatch/" + id, function(data) {
@@ -240,9 +306,125 @@
         });
     }
 
+    function refreshTitleSchedule(id)
+    {
+        $.get("/ajax/refreshmatch/" + id, function(data) {
+
+            var obj = jQuery.parseJSON(data);
+
+            $("#scheduleBlock").html(obj.scheduleBlock);
+            $("#pageHeader").html(obj.pageHeader);
+            $('.ttip, [data-toggle="tooltip"]').tooltip();
+
+        });
+    }
+
+    function resetSelects()
+    {
+        $(".positionSelect").select2('val', null);
+        $(".positionSelect").attr('disabled', true);
+    }
+
+    function addFantasyTeam()
+    {
+        var teamName = prompt('Fantasy Team Name?');
+        if(teamName)
+        {
+            var posX = window.fantasyTeams.length;
+            $("#fantasyTeamSelect").select2('destroy');
+
+            $("#fantasyTeamSelect").append("<option value='" + posX + "'>" + teamName + "</option>");
+            $("#fantasyTeamSelect").select2().select2('val', posX);
+            window.fantasyTeams[posX] = new Object();
+            window.fantasyTeams[posX].fantasyname = teamName;
+
+            $(".positionSelect").attr('disabled', false);
+            $(".positionSelect").select2('val', null);
+
+            if($("#fantasyDelete").length <= 0)
+            {
+                $("#fantasyForm").append('<button type="button" class="btn btn-danger btn-flat" style="width:100%;margin-bottom: 18px !important;margin-top: 12px;" id="fantasyDelete">Delete Fantasy Team</button>');
+            }
+
+            $("#fantasyDelete").unbind( "click" );
+            $("#fantasyDelete").click(function()
+            {
+
+                deleteFantasyTeam(posX);
+
+            });
+
+        }
+
+    }
+
+    function deleteFantasyTeam(id)
+    {
+        delete window.fantasyTeams[id];
+
+        $("#fantasyTeamSelect").select2('destroy');
+        $("#fantasyTeamSelect").find('option').remove();
+        $("#fantasyTeamSelect").append("<option></option>");
+
+        $.each(window.fantasyTeams, function(fKey, fValue) {
+        if(!(fValue == null))
+
+            $.each(fValue, function (qIndex, qValue) {
+
+                if(qIndex == 'fantasyname')
+                {
+                    $('#fantasyTeamSelect').append("<option value='" + fKey + "'>" + qValue + "</option>");
+                }
+
+            });
+
+        });
+
+        resetSelects();
+
+        $("#fantasyTeamSelect").select2();
+        $("#fantasyDelete").fadeOut(200, function() {
+            $(this).remove();
+        });
+    }
+
     function saveSettings()
     {
 
+        var updatesRes = ($('[id="{{ Config::get('cookie.updates') }}"]').is(':checked') ? 1 : 0);
+        var spoilersRes = ($('[id="{{ Config::get('cookie.spoilers') }}"]').is(':checked') ? 1 : 0);
+
+        if(0 in window.fantasyTeams)
+        {
+            if(window.fantasyTeams[0] == null)
+            {
+                window.fantasyTeams.shift();
+            }
+        }
+
+        $.post('/ajax/settings/',
+        {
+            timezone: $('[id="{{ Config::get('cookie.timezone') }}"]').select2('val'),
+            updates: updatesRes,
+            spoilers: spoilersRes,
+            fantasyTeams: JSON.stringify(window.fantasyTeams)
+        },
+        function(data)
+        {
+
+            if(data.message == 'success')
+            {
+                $.gritter.add({
+                    title: 'Settings Updated!',
+                    text: 'Your settings have been updated successfully.',
+                    class_name: 'success'
+                });
+
+                $("#settingsModalClose").click();
+                refreshTitleSchedule('{{ $block->getMatches()[0]->matchId }}');
+            }
+
+        }, "json");
     }
 </script>
 
@@ -267,16 +449,16 @@
         {
             if(data.timezone == timezone.name())
             {
-                $.gritter.add({
-                    title: 'Timezone Updated',
-                    text: 'Timezone: <code>' + data.timezone +'</code> If this is wrong, change it in your <a href="#" class="md-trigger" data-modal="settingsModal" onclick="return false;" style="color: yellow !important;text-decoration: underline;">settings</a>.',
+                window.stickyTimezone = $.gritter.add({
+                    title: 'Timezone Updated!',
+                    text: 'Your new timezone: <code>' + data.timezone +'</code>. If this is wrong, please change it now in your <a href="#" class="md-trigger" data-modal="settingsModal" onclick="$.gritter.remove(window.stickyTimezone); return false;" style="color: yellow !important;text-decoration: underline;">settings</a>.',
                     class_name: 'primary',
                     sticky: true
                 });
 
                 $(".md-trigger").modalEffects();
 
-                refreshInfo('{{ $block->getMatches()[0]->matchId }}');
+                refreshTitleSchedule('{{ $block->getMatches()[0]->matchId }}');
             }
 
         }, "json");

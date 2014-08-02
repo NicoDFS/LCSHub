@@ -126,6 +126,24 @@ class Block extends Eloquent {
         return false;
     }
 
+    public function retrieveCurrentBlock()
+    {
+        $datetime = new DateTime('now', new DateTimeZone($this->timezone()));
+
+        $query = "dateTime >= '" . $datetime->format('Y-m-d') . " 00:00:00' AND dateTime <= '" . $datetime->format('Y-m-d') . " 23:59:59'";
+        $todayBlock = Block::whereRaw($query)->first();
+
+        if(is_null($todayBlock))
+        {
+            $todayBlock = Block::where('dateTime', '<=',  $datetime->format('Y-m-d') . " 23:59:59")->orderBy('dateTime', 'desc')->get()[0];
+            $todayBlock->currBlock = false;
+        }
+        else
+        {
+            $todayBlock->currBlock = true;
+        }
+    }
+
     public function isLiveMatch()
     {
         return (Match::where('blockId', $this->blockId)->where('isLive', true)->get()->count() > 0 ? true : false);
@@ -301,57 +319,73 @@ class Block extends Eloquent {
 
     public function spoilers()
     {
-        $matches = $this->getMatches();
-        $wins = array();
-        $losses = array();
-
-        foreach($matches as $match)
+        if(Cookie::has(Config::get('cookie.spoilers')))
         {
-            if($match->isFinished)
+            if(Cookie::get(Config::get('cookie.spoilers')) == 1)
             {
-                $wins[$match->blueId] = 0;
-                $wins[$match->redId] = 0;
-                $losses[$match->blueId] = 0;
-                $losses[$match->redId] = 0;
-            }
-        }
-
-        foreach($matches as $match)
-        {
-            if($match->isFinished)
-            {
-                if($match->winnerId == $match->blueId)
+                if($this->isCurrentBlock())
                 {
-                    $wins[$match->blueId] += 1;
-                    $wins[$match->redId] += 0;
-                    $losses[$match->blueId] += 0;
-                    $losses[$match->redId] += 1;
-
+                    $matches = $this->getMatches();
                 }
-                elseif($match->winnerId == $match->redId)
+                else
                 {
-                    $wins[$match->blueId] += 0;
-                    $wins[$match->redId] += 1;
-                    $losses[$match->blueId] += 1;
-                    $losses[$match->redId] += 0;
+                    $matches = $this->retrieveCurrentBlock()->getMatches();
                 }
+
+
+                $wins = array();
+                $losses = array();
+
+                foreach($matches as $match)
+                {
+                    if($match->isFinished)
+                    {
+                        $wins[$match->blueId] = 0;
+                        $wins[$match->redId] = 0;
+                        $losses[$match->blueId] = 0;
+                        $losses[$match->redId] = 0;
+                    }
+                }
+
+                foreach($matches as $match)
+                {
+                    if($match->isFinished)
+                    {
+                        if($match->winnerId == $match->blueId)
+                        {
+                            $wins[$match->blueId] += 1;
+                            $wins[$match->redId] += 0;
+                            $losses[$match->blueId] += 0;
+                            $losses[$match->redId] += 1;
+
+                        }
+                        elseif($match->winnerId == $match->redId)
+                        {
+                            $wins[$match->blueId] += 0;
+                            $wins[$match->redId] += 1;
+                            $losses[$match->blueId] += 1;
+                            $losses[$match->redId] += 0;
+                        }
+                    }
+                }
+
+                $myMatches = $this->getMatches();
+                foreach($myMatches as $match)
+                {
+                    if($match->isFinished)
+                    {
+                        $match->blueWins = $match->blueWins - $wins[$match->blueId];
+                        $match->blueLosses = $match->blueLosses - $losses[$match->blueId];
+
+                        $match->redWins = $match->redWins - $wins[$match->redId];
+                        $match->redLosses = $match->redLosses - $losses[$match->redId];
+                    }
+                }
+
+
+                $this->gotMatches = $myMatches;
             }
         }
-
-        foreach($matches as $match)
-        {
-            if($match->isFinished)
-            {
-                $match->blueWins = $match->blueWins - $wins[$match->blueId];
-                $match->blueLosses = $match->blueLosses - $losses[$match->blueId];
-
-                $match->redWins = $match->redWins - $wins[$match->redId];
-                $match->redLosses = $match->redLosses - $losses[$match->redId];
-            }
-        }
-
-
-        $this->gotMatches = $matches;
     }
 
     public function timezone()
