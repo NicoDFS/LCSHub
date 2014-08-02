@@ -1,6 +1,6 @@
 <?php $tblCount = 0; ?>
 @foreach($game->teams() as $teamKey => $team)
-<div class="table-responsive" style="cursor: default; {{ ($game->winnerId == $teamKey ? 'border:2px solid #60C060;' : '') }} {{ ($tblCount == 0 ? 'margin-bottom:20px' : '') }}">
+<div class="table-responsive" style="cursor: default; {{ ($game->winnerId == $teamKey ? 'border:2px solid #60C060;' : '') }} {{ ($tblCount == 0 ? 'margin-bottom:20px; margin-top:16px;' : '') }}">
 <table style="" class="hover">
         <thead>
                 <tr>

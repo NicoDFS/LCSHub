@@ -377,4 +377,21 @@ class Block extends Eloquent {
         $this->gotMatches = $matches;
     }
 
+    public function timezone()
+    {
+        if(!isset($this->_timezone))
+        {
+            $timezone = Config::get('cookie.timezoneDefault');
+
+            if(Cookie::has(Config::get('cookie.timezone')))
+            {
+                $timezone = Cookie::get(Config::get('cookie.timezone'));
+            }
+
+            $this->_timezone = $timezone;
+        }
+
+        return $this->_timezone;
+    }
+
 }

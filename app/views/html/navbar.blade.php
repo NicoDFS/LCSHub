@@ -43,27 +43,6 @@
                         <select class="fancySelect" style="width:100%;" name='settings[timezone]' placeholder="Select a timezone">
                             <option></option>
                             <?php
-                                $opt = '';
-
-                                $regions = array('America', 'Australia', 'Europe');
-                                $tzs = timezone_identifiers_list();
-                                $optgroup = '';
-                                sort($tzs);
-                                foreach ($tzs as $tz) {
-                                    $z = explode('/', $tz, 2);
-                                    if (count($z) != 2 || !in_array($z[0], $regions)) continue;
-                                    if ($optgroup != $z[0]) {
-                                        if ($optgroup !== '') $opt .= '</optgroup>';
-                                        $optgroup = $z[0];
-                                        $opt .= '<optgroup label="' . htmlentities($z[0]) . '">';
-                                    }
-                                    $opt .= '<option value="' . htmlentities($tz) . '" label="' . htmlentities(str_replace('_', ' ', $z[1])) . '">' . htmlentities(str_replace('_', ' ', $tz)) . '</option>';
-                                }
-                                if ($optgroup !== '') $opt .= '</optgroup>';
-
-                                //echo $opt;
-                            ?>
-                            <?php
                                 $timezones = array (
                                     '(UTC -11:00) Midway Island' => 'Pacific/Midway',
                                     '(UTC -11:00) Samoa' => 'Pacific/Samoa',

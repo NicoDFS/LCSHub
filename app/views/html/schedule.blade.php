@@ -24,7 +24,7 @@
         <div class="list-group">
         <?php if(count($block->getMatches()) > 0) $block->sortPlaces(); ?>
             @foreach($block->getMatches() as $tempCntr => $match)
-                <?php $tempZone = new DateTime($match->dateTime); $tempZone->setTimezone(new DateTimeZone($block->timezone)); ?>
+                <?php $tempZone = new DateTime($match->dateTime); $tempZone->setTimezone(new DateTimeZone($block->timezone())); ?>
                 <li href="#" id="match-{{ $match->id }}" class="list-group-item match blueHover {{ $match->isLiveActive() }}" style="margin-bottom:0px; margin-top:0px; padding-top: 0px; height:76px; font-size: 20px; {{ ( (($tempCntr % 2 == 0) && ($match->status() !== "Live")) ? ' background: #F8F8F8; ' : '' ) }} {{ $match->isLiveText() }}">
                     <img src="http://na.lolesports.com{{ $match->blueLogoURL }}" width='55' height='55' style="border-radius: 10%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:8px; {{ $match->winnerImg($match->blueId) }}">
 
