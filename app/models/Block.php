@@ -323,14 +323,16 @@ class Block extends Eloquent {
         {
             if(Cookie::get(Config::get('cookie.spoilers')) == 1)
             {
-                if($this->isCurrentBlock())
-                {
-                    $matches = $this->getMatches();
-                }
-                else
-                {
-                    $matches = $this->retrieveCurrentBlock()->getMatches();
-                }
+                //if($this->isCurrentBlock())
+                //{
+                //    $matches = $this->getMatches();
+                //}
+                //else
+                //{
+                //    $matches = $this->retrieveCurrentBlock()->getMatches();
+                //}
+
+                $matches = $this->getMatches();
 
 
                 $wins = array();

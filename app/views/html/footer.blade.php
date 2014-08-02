@@ -17,7 +17,40 @@
     $(document).ready(function(){
 
         App.init();
+
         $("#streamContainer").fitVids({ customSelector: "object[data^='http://www.twitch.tv/widgets/live_embed_player.swf?channel=riotgames']"});
+
+        window.liveUpdates = {{ (Cookie::has(Config::get('cookie.updates')) ? Cookie::get(Config::get('cookie.updates')) : 0) }};
+
+        setInterval(function()
+        {
+            if(window.liveUpdates == 1)
+            {
+                $.get("/ajax/refresh/", function(data)
+                {
+                    var obj = jQuery.parseJSON(data);
+                    var scrl = $(document).scrollTop();
+
+                    $detailz = $(".match-detail");
+
+
+                    $("#scheduleBlock").html(obj.scheduleBlock);
+
+                    $.each($detailz, function(index, value) {
+
+                        $("#match-" + $(value).attr('matchid')).after($(value));
+
+                    });
+
+                    $('body').scrollTop(scrl);
+                    $("#pageHeader").html(obj.pageHeader);
+                    $('.ttip, [data-toggle="tooltip"]').tooltip();
+
+                });
+            }
+
+        }, 15000);
+
 
         $(".fancySelect").select2({
             matcher: function(term, text, opt){
@@ -177,6 +210,11 @@
             $('body').scrollTop(scrl);
             $('.ttip, [data-toggle="tooltip"]').tooltip();
 
+            if(id == 'current')
+            {
+                window.liveUpdates = 1;
+            }
+
         });
 
     }
@@ -284,6 +322,7 @@
             $('html, body').animate({
                 scrollTop: $("#streamContainer").offset().top - 60
             }, 1000);
+            window.liveUpdates = 1;
 
         });
     }
@@ -392,6 +431,7 @@
     {
 
         var updatesRes = ($('[id="{{ Config::get('cookie.updates') }}"]').is(':checked') ? 1 : 0);
+        window.liveUpdates = updatesRes;
         var spoilersRes = ($('[id="{{ Config::get('cookie.spoilers') }}"]').is(':checked') ? 1 : 0);
 
         if(0 in window.fantasyTeams)
