@@ -48,13 +48,18 @@
                     <img src="http://na.lolesports.com{{ $match->redLogoURL }}" width='55' height='55' style="border-radius: 10%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:10px; {{ $match->winnerImg($match->redId) }}">
 
                     <div class="btn-group pull-right" style="margin-top:15px;">
-                        <button type="button" style="width:96px;" class="btn btn-{{ $match->cssClass() }} btn-lg" title="{{ $match->status() }}" data-toggle="tooltip" data-placement="left" data-container="body" @if($match->status() == 'Finished')
-                                @if($match->getGame() !== null)
+                        <button type="button" style="width:96px;" class="btn btn-{{ $match->cssClass() }} btn-lg" title="{{ $match->status() }}" data-toggle="tooltip" data-placement="left" data-container="body"
+                            @if($match->status() == 'Finished')
+                                @if($match->getGame() !== null && $match->status() == 'Finished')
                                     @if($match->getGame()->fullPlayers())
                                         onclick="getMatchDetails('{{ $match->id }}');"
                                     @endif
                                 @endif
-                        @endif
+                            @endif
+
+                            @if($match->status() == 'Live')
+                                onclick="getLiveGame('{{ $match->matchId }}');"
+                            @endif
 
                         >{{ $tempZone->format('g:i A') }}</button>
                         <button type="button" class="btn btn-{{ $match->cssClass() }} btn-lg dropdown-toggle" data-toggle="dropdown">
@@ -77,6 +82,7 @@
                                     <li><a href="#">Still Processing...</a></li>
                                 @endif
                             @elseif($match->status() == 'Live')
+                                <li><a href="#" onclick="getLiveGame('{{ $match->matchId }}'); return false;">View LIVE game</a></li>
                                 <li><a href="#">View {{ $match->blueAcronym }}'s games</a></li>
                                 <li><a href="#">View {{ $match->redAcronym }}'s games</a></li>
                             @elseif($match->status() == 'Scheduled')

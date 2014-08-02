@@ -2,9 +2,9 @@
 
 return array(
     'timezone' => 'settings[timezone]',
-    'timezoneDefault' => 'America/Los_Angeles',
+    'timezoneDefault' => 'America/New_York',
     'spoilers' => 'settings[spoilers]',
-    'spoilersDefault' => true,
+    'spoilersDefault' => 'checked',
     'updates' => 'settings[updates]',
-    'updatesDefault' => true,
+    'updatesDefault' => 'checked',
 );

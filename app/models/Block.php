@@ -117,36 +117,13 @@ class Block extends Eloquent {
             return $this->currBlock;
         }
 
-        $timezone = 'America/Los_Angeles';
-        Cookie::queue('timezone', 'America/Los_Angeles', (60 * 24));
-
-        if(Cookie::get('timezone'))
-        {
-            $timezone = Cookie::get('timezone');
-        }
-
-        $datetime = new DateTime('now', new DateTimeZone($timezone));
+        $datetime = new DateTime('now', new DateTimeZone($this->timezone()));
         if($this->dateTime > ($datetime->format('Y-m-d') . " 00:00:00") && $this->dateTime < ($datetime->format('Y-m-d') . " 23:59:59"))
         {
             return true;
         }
 
         return false;
-
-        //$query = "dateTime >= '" . $datetime->format('Y-m-d') . " 00:00:00' AND dateTime <= '" . $datetime->format('Y-m-d') . " 23:59:59'";
-        //$todayBlock = Block::whereRaw($query)->first();
-        //
-        //if(is_null($todayBlock))
-        //{
-        //    $todayBlock = Block::where('dateTime', '<=',  $datetime->format('Y-m-d') . " 23:59:59")->orderBy('dateTime', 'desc')->get()[0];
-        //}
-        //
-        //if($todayBlock->id == $this->id)
-        //{
-        //    return true;
-        //}
-        //
-        //return false;
     }
 
     public function isLiveMatch()
@@ -227,7 +204,7 @@ class Block extends Eloquent {
 
     public function lcsTime()
     {
-        $timezone = 'America/Los_Angeles';
+        $timezone = $this->timezone();
 
         $datetime = new DateTime($this->dateTime);
         $datetime->setTimezone(new DateTimeZone($timezone));

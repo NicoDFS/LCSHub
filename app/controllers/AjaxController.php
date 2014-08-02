@@ -49,6 +49,18 @@ class AjaxController extends BaseController {
         return json_encode( ['pageHeader' => $pageHeader->render(), 'scheduleBlock' => $scheduleBlock->render(), 'streamContainer' => $streamContainer->render()] );
     }
 
+    public function getRefreshmatch($id)
+    {
+
+        $block = Block::select('blocks.*')->join('matches', 'matches.blockId', '=', 'blocks.blockId')->where('matches.matchId', $id)->first();
+
+        $pageHeader = View::make('html.titlebar')->with('block', $block);
+        $scheduleBlock = View::make('html.schedule')->with('block', $block);
+        $streamContainer = View::make('html.stream')->with('block', $block);
+
+        return json_encode( ['pageHeader' => $pageHeader->render(), 'scheduleBlock' => $scheduleBlock->render(), 'streamContainer' => $streamContainer->render()] );
+    }
+
     public function getVod($id)
     {
         $block = Block::select('blocks.*')->join('matches', 'matches.blockId', '=', 'blocks.blockId')->where('matches.matchId', $id)->first();
@@ -109,6 +121,29 @@ class AjaxController extends BaseController {
         $slideDown = View::make('html.game')->with('match', $match);
 
         return json_encode(['match' => $slideDown->render()]);
+    }
+
+    public function getLive($id)
+    {
+        return $this->getMatch($id);
+    }
+
+    public function postTimezone()
+    {
+        if(Input::has('timezone'))
+        {
+            if(!is_null(Input::get('timezone')))
+            {
+                Input::merge(array('timezone', Config::get('cookie.timezoneDefault')));
+            }
+
+            if (in_array(Input::get('timezone'), DateTimeZone::listIdentifiers()))
+            {
+                $foreverCookie = Cookie::forever(Config::get('cookie.timezone'), Input::get('timezone'));
+                $content = json_encode([ 'timezone' => Input::get('timezone') ]);
+                return Response::make($content)->withCookie($foreverCookie);
+            }
+        }
     }
 
 

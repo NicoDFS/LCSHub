@@ -17,7 +17,7 @@
     $(document).ready(function(){
         //initialize the javascript
         App.init();
-        $("#streamContainer").fitVids();
+        $("#streamContainer").fitVids({ customSelector: "object[data^='http://www.twitch.tv/widgets/live_embed_player.swf?channel=riotgames']"});
 
         $(".fancySelect").select2({
             matcher: function(term, text, opt){
@@ -25,9 +25,27 @@
             }
         });
 
+
         $("#spoilersRadio").bootstrapSwitch();
         $("#autoupdateRadio").bootstrapSwitch();
     });
+
+    function getMatch (id)
+    {
+        $.get("/ajax/match/" + id, function(data)
+        {
+            var obj = jQuery.parseJSON(data);
+            var scrl = $(document).scrollTop();
+
+            $("#scheduleBlock").html(obj.scheduleBlock);
+            $('body').scrollTop(scrl);
+            $("#pageHeader").html(obj.pageHeader);
+            $("#streamContainer").html(obj.streamContainer);
+            $('.ttip, [data-toggle="tooltip"]').tooltip();
+            $("#streamContainer").fitVids();
+
+        });
+    }
 
     function refreshDetail(id)
     {
@@ -188,6 +206,40 @@
         }
     }
 
+    function getLiveGame(id)
+    {
+        $.get("/ajax/match/" + id, function(data) {
+
+            var obj = jQuery.parseJSON(data);
+            $("#streamContainer").html(obj.streamContainer);
+            $("#scheduleBlock").html(obj.scheduleBlock);
+            $("#pageHeader").html(obj.pageHeader);
+            $("#streamContainer").fitVids();
+            $('.ttip, [data-toggle="tooltip"]').tooltip();
+            $('html, body').animate({
+                scrollTop: $("#streamContainer").offset().top - 60
+            }, 1000);
+
+        });
+    }
+
+    function refreshInfo(id)
+    {
+        $.get("/ajax/refreshmatch/" + id, function(data) {
+
+            var obj = jQuery.parseJSON(data);
+            var scrl = $(document).scrollTop();
+
+            $("#streamContainer").html(obj.streamContainer);
+            $("#scheduleBlock").html(obj.scheduleBlock);
+            $("#pageHeader").html(obj.pageHeader);
+            $("#streamContainer").fitVids();
+            $('.ttip, [data-toggle="tooltip"]').tooltip();
+            $('body').scrollTop(scrl);
+
+        });
+    }
+
     function saveSettings()
     {
 
@@ -203,3 +255,31 @@
 <script type="text/javascript" src="js/jquery.flot/jquery.flot.pie.js"></script>
 <script type="text/javascript" src="js/jquery.flot/jquery.flot.resize.js"></script>
 <script type="text/javascript" src="js/jquery.flot/jquery.flot.labels.js"></script>
+@if(!Cookie::has(Config::get('cookie.timezone')))
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.js"></script>
+<script type="text/javascript">
+    $(function() {
+
+        var timezone = jstz.determine();
+        $('[id="{{ Config::get('cookie.timezone') }}"]').select2('val', timezone.name());
+
+        $.post('/ajax/timezone/', { timezone: timezone.name() }, function(data)
+        {
+            if(data.timezone == timezone.name())
+            {
+                $.gritter.add({
+                    title: 'Timezone Updated',
+                    text: 'Timezone: <code>' + data.timezone +'</code> If this is wrong, change it in your <a href="#" class="md-trigger" data-modal="settingsModal" onclick="return false;" style="color: yellow !important;text-decoration: underline;">settings</a>.',
+                    class_name: 'primary',
+                    sticky: true
+                });
+
+                $(".md-trigger").modalEffects();
+
+                refreshInfo('{{ $block->getMatches()[0]->matchId }}');
+            }
+
+        }, "json");
+    });
+</script>
+@endif

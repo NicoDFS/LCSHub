@@ -50,7 +50,12 @@ class Game extends Eloquent {
                 }
             }
 
-            $this->_teams = $teams;
+            $reorder = array();
+            $reorder[$this->blueId] = $teams[$this->blueId];
+            $reorder[$this->redId] = $teams[$this->redId];
+
+
+            $this->_teams = $reorder;
         }
 
         return $this->_teams;

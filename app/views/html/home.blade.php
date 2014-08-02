@@ -45,7 +45,7 @@
 
         </div>
 
-        @include('html.footer')
+        @include('html.footer', array('block' => $block))
 
         <script type="text/javascript">
             $(function() {

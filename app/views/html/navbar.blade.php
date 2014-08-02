@@ -40,7 +40,7 @@
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Timezone</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect" style="width:100%;" name='settings[timezone]' placeholder="Select a timezone">
+                        <select class="fancySelect" style="width:100%;" name='{{ Config::get('cookie.timezone') }}' id='{{ Config::get('cookie.timezone') }}' placeholder="Select a timezone">
                             <option></option>
                             <?php
                                 $timezones = array (
@@ -192,7 +192,7 @@
                                 foreach($timezones as $tzk => $tzv)
                                 {
                                     echo "<option value='$tzv'";
-                                    echo ( (Cookie::has('settings[timezone]') and Cookie::get('settings[timezone]') == $tzv) ? 'selected="selected"' : '' );
+                                    echo ( (Cookie::has(Config::get('cookie.timezone')) and Cookie::get(Config::get('cookie.timezone')) == $tzv) ? 'selected="selected"' : '' );
                                     echo">$tzk</option>";
                                 }
                             ?>
@@ -204,14 +204,14 @@
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">Spoilers</label>
                     <div class="col-sm-10">
-                        <input type="radio" name='settings[spoilers]' id="spoilersRadio" checked>
+                        <input type="radio" name='{{ Config::get('cookie.spoilers') }}' id="spoilersRadio" {{ ( (Cookie::has(Config::get('cookie.spoilers')) && Cookie::get(Config::get('cookie.spoilers')) == 1) ? 'checked' : Config::get('cookie.spoilersDefault')  ) }}>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">Updates</label>
                     <div class="col-sm-10">
-                        <input type="radio" name='settings[updates]' id="autoupdateRadio" checked>
+                        <input type="radio" name='{{ Config::get('cookie.updates') }}' id="autoupdateRadio" {{ ( (Cookie::has(Config::get('cookie.updates')) && Cookie::get(Config::get('cookie.updates')) == 1) ? 'checked' : Config::get('cookie.updatesDefault')  ) }}>
                     </div>
                 </div>
             </form>
