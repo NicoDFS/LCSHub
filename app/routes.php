@@ -18,10 +18,10 @@ Route::controller('ajax', 'AjaxController');
 
 Route::get('/home', function()
 {
-    $timezone = 'America/Los_Angeles';
-    Cookie::queue(Config::get('cookie.timezone'), 'America/Los_Angeles', (60 * 24));
+    $timezone = Config::get('cookie.timezoneDefault');
+    //Cookie::queue(Config::get('cookie.timezone'), 'America/Los_Angeles', (60 * 24));
 
-    if(Cookie::get(Config::get('cookie.timezone')))
+    if(Cookie::has(Config::get('cookie.timezone')))
     {
         $timezone = Cookie::get(Config::get('cookie.timezone'));
     }
@@ -40,6 +40,8 @@ Route::get('/home', function()
     {
         $todayBlock->currBlock = true;
     }
+
+    $todayBlock->timezone = $timezone;
 
     return View::make('html.home')->with('block', $todayBlock);
 });

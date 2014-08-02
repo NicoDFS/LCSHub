@@ -10,12 +10,12 @@ class AjaxController extends BaseController {
 
     public function getRefresh()
     {
-        $timezone = 'America/Los_Angeles';
-        Cookie::queue('timezone', 'America/Los_Angeles', (60 * 24));
+        $timezone = Config::get('cookie.timezoneDefault');
+        //Cookie::queue(Config::get('cookie.timezone'), 'America/Los_Angeles', (60 * 24));
 
-        if(Cookie::get('timezone'))
+        if(Cookie::has(Config::get('cookie.timezone')))
         {
-            $timezone = Cookie::get('timezone');
+            $timezone = Cookie::get(Config::get('cookie.timezone'));
         }
 
         $datetime = new DateTime('now', new DateTimeZone($timezone));
@@ -29,6 +29,8 @@ class AjaxController extends BaseController {
             $todayBlock = Block::where('dateTime', '<=',  $datetime->format('Y-m-d') . " 23:59:59")->orderBy('dateTime', 'desc')->get()[0];
             $todayBlock->currBlock = false;
         }
+
+        $todayBlock->timezone = $timezone;
 
         $pageHeader = View::make('html.titlebar')->with('block', $todayBlock);
         $scheduleBlock = View::make('html.schedule')->with('block', $todayBlock);
@@ -67,10 +69,12 @@ class AjaxController extends BaseController {
         {
             if($id == 'current')
             {
-                $timezone = 'sAmerica/Los_Angeles';
-                if(Cookie::has('timezone'))
+                $timezone = Config::get('cookie.timezoneDefault');
+                //Cookie::queue(Config::get('cookie.timezone'), 'America/Los_Angeles', (60 * 24));
+
+                if(Cookie::has(Config::get('cookie.timezone')))
                 {
-                    $timezone = Cookie::get('timezone');
+                    $timezone = Cookie::get(Config::get('cookie.timezone'));
                 }
 
                 $datetime = new DateTime('now', new DateTimeZone($timezone));
@@ -85,6 +89,8 @@ class AjaxController extends BaseController {
                     $todayBlock->currBlock = false;
                 }
 
+
+                $todayBlock->timezone = $timezone;
                 $scheduleBlock = View::make('html.schedule')->with('block', $todayBlock);
 
                 return json_encode(['scheduleBlock' => $scheduleBlock->render()]);
@@ -92,11 +98,22 @@ class AjaxController extends BaseController {
         }
         else
         {
+            $timezone = Config::get('cookie.timezoneDefault');
+            //Cookie::queue(Config::get('cookie.timezone'), 'America/Los_Angeles', (60 * 24));
+
+            if(Cookie::has(Config::get('cookie.timezone')))
+            {
+                $timezone = Cookie::get(Config::get('cookie.timezone'));
+            }
+
+            $datetime = new DateTime('now', new DateTimeZone($timezone));
+
             $prevBlock = Block::where('id', $id)->first();
             $operator = ($dir == 'next' ? '>' : '<');
             $order = ($dir == 'next' ? 'asc' : 'desc');
 
             $block = Block::where('dateTime', $operator, $prevBlock->dateTime)->orderBy('dateTime', $order)->first();
+            $block->timezone = $timezone;
 
             $scheduleBlock = View::make('html.schedule')->with('block', $block);
             return json_encode(['scheduleBlock' => $scheduleBlock->render()]);

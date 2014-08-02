@@ -187,6 +187,11 @@
 
         }
     }
+
+    function saveSettings()
+    {
+
+    }
 </script>
 
 <!-- Bootstrap core JavaScript
