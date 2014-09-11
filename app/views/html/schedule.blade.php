@@ -1,4 +1,5 @@
 <?php $tempZone = new DateTime($block->dateTime); $tempZone->setTimezone(new DateTimeZone($block->timezone())); ?>
+
 <div class="col-md-12">
     <div class="block-flat" style="border: 1px solid #DDD; margin-bottom:-15px; padding-bottom:5px;">
         <div class="content">
