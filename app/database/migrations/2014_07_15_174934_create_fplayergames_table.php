@@ -18,7 +18,7 @@ class CreateFplayergamesTable extends Migration {
                 $table->engine = 'InnoDB';
 
                 $table->increments('id');
-                $table->datetime('dateTime');
+                $table->datetime('dateTime')->nullable();
                 $table->integer('matchId');
                 $table->integer('gameId')->index();
                 $table->integer('fId');

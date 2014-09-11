@@ -26,9 +26,13 @@ class CreateBlocksTable extends Migration {
                 $table->integer('significance');
                 $table->integer('tbdTime');
                 $table->string('leagueColor');
-                $table->integer('week');
+                $table->string('week');
                 $table->string('label');
-                $table->datetime('bodyTime');
+                $table->datetime('bodyTime')->nullable();
+                $table->string('body')->nullable();
+                $table->string('bodyTitle')->nullable();
+
+
                 $table->timestamps();
 
             });

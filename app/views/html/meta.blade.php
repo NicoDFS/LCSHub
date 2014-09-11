@@ -28,3 +28,5 @@
 <link rel="stylesheet" type="text/css" href="js/jquery.niftymodals/css/component.css" />
 <!-- Custom styles for this template -->
 <link href="css/style.css" rel="stylesheet" />
+
+<script src="js/jquery.js"></script>

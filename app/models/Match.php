@@ -13,6 +13,51 @@ class Match extends Eloquent {
         return $query->where('isFinished', true);
     }
 
+    public function seriesWinner()
+    {
+        $games = $this->getGames();
+        $blueWins = 0;
+        $redWins = 0;
+
+        foreach($games as $game)
+        {
+            if($game->winnerId == $game->redId) $redWins++;
+            if($game->winnerId == $game->blueId) $blueWins++;
+        }
+
+        if($blueWins > $redWins)
+        {
+            return $this->blueId;
+        }
+        else
+        {
+            return $this->redId;
+        }
+    }
+
+    public function seriesResult()
+    {
+        $games = $this->getGames();
+        $blueWins = 0;
+        $redWins = 0;
+
+        foreach($games as $game)
+        {
+            if($game->winnerId == $game->redId) $redWins++;
+            if($game->winnerId == $game->blueId) $blueWins++;
+        }
+
+        if($blueWins > $redWins)
+        {
+            return $blueWins . '-' . $redWins;
+        }
+        else
+        {
+            return $redWins  . '-' . $blueWins;
+        }
+
+    }
+
     public function cssClass()
     {
         if($this->isLive)
@@ -20,7 +65,7 @@ class Match extends Eloquent {
 
 
         if(!$this->isLive && !$this->isFinished)
-        return 'info';
+        return 'primary';
 
 
         if($this->isFinished)
@@ -71,12 +116,43 @@ class Match extends Eloquent {
 
         if($this->status() == 'Scheduled')
         {
-            return '#5DC4EA';
+            return '#4D90FD';
         }
 
         if($this->status() == 'Finished')
         {
             return '#60C060';
+        }
+    }
+
+    public function getGames()
+    {
+        if(!isset($this->_games))
+        {
+            $this->_games = Game::where('matchId', $this->matchId)->get();
+        }
+
+        return $this->_games;
+    }
+
+    public function liveGameCount()
+    {
+        $games = $this->getGames();
+        $last = null;
+
+        foreach($games as $key => $value)
+        {
+            if($key == count($games) - 1)
+            $last = $value;
+        }
+
+        if($last->winnerId == null)
+        {
+            return count($games);
+        }
+        else
+        {
+            return count($games) + 1;
         }
     }
 
@@ -97,17 +173,23 @@ class Match extends Eloquent {
 
     public function winner($id)
     {
+        if($id == null) return null;
+
         if($this->winnerId == $id)
         {
-            return "font-style: italic;";
+            return "font-weight: 600;";
         }
     }
 
     public function winnerImg($id)
     {
-        if($this->winnerId == $id)
+        if($this->winnerId == $id && $this->winnerId !== null)
         {
             return "border: 3px solid #60C060;";
+        }
+        elseif($this->winnerId !== null && $this->winnerId !== $id)
+        {
+            return "border: 3px solid rgb(0, 0, 0);";
         }
     }
 

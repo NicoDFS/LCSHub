@@ -4,16 +4,14 @@
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
           <span class="fa fa-gear"></span>
         </button>
-        <a class="navbar-brand" href="http://lcshub.tv"><span>lcshub.tv</span></a>
+        <a class="navbar-brand" href="http://lcshub.tv"><span style="font-size: 25px;">lcshub.tv</span></a>
       </div>
       <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
+        <!--<ul class="nav navbar-nav">
           <li class="active"><a href="http://lcshub.tv" >Home</a></li>
-          <!--<li><a href="#about">About</a></li>
-          <li><a href="#contact">Contact</a></li>-->
-        </ul>
+        </ul>-->
         <ul class="nav navbar-nav navbar-right not-nav">
-          <li class="button md-trigger" data-modal="settingsModal"><a href="#" onclick="return false;" style="width:96px; cursor:pointer;"><i class="fa fa-cog"></i> &nbsp;&nbsp;Settings</a></li>
+          <li class="button md-trigger" data-modal="settingsModal"><a href="#" onclick="return false;" style="width: 96px; font-weight: 300; letter-spacing: 0px; font-style: initial; font-size: 14px; cursor: pointer;"><i class="fa fa-wrench"></i> &nbsp;Settings</a></li>
         </ul>
 
       </div><!--/.nav-collapse -->
@@ -21,7 +19,7 @@
 </div>
 
 <div class="md-modal colored-header custom-width md-effect-1" id="settingsModal" style="display:none; top:32%;">
-    <div class="md-content">
+    <div class="md-content" style="margin-top:50%;">
       <div class="modal-header" style="height:40px;">
         <div style="margin-top: -8px;">
         <h3 style="font-size: 18px;">My Settings</h3>
@@ -39,6 +37,21 @@
 
         <div class="tab-pane cont fade active in" id="general">
             <form class="form-horizontal" role="form">
+
+                <div class="form-group">
+                    <label for="inputPassword3" class="col-sm-2 control-label">Player</label>
+                    <div class="col-sm-10">
+                        <select class="fancySelect" style="width:100%;" name='{{ Config::get('cookie.player') }}' id='{{ Config::get('cookie.player') }}' placeholder="Select a video player">
+                            <option></option>
+
+                            <option value="twitch" {{ ( (Cookie::has(Config::get('cookie.player')) and Cookie::get(Config::get('cookie.player')) == 'twitch') ? 'selected="selected"' : Config::get('cookie.playerDefault') == 'twitch' ? 'selected="selected"' : '' ) }}>Twitch</option>
+                            <option value="youtube" {{ ( (Cookie::has(Config::get('cookie.player')) and Cookie::get(Config::get('cookie.player')) == 'youtube') ? 'selected="selected"' : Config::get('cookie.playerDefault') == 'youtube' ? 'selected="selected"' : '' ) }}>YouTube</option>
+                            <option value="azubu" {{ ( (Cookie::has(Config::get('cookie.player')) and Cookie::get(Config::get('cookie.player')) == 'azubu') ? 'selected="selected"' : Config::get('cookie.playerDefault') == 'azubu' ? 'selected="selected"' : '' ) }}>Azubu</option>
+
+                        </select>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Timezone</label>
                     <div class="col-sm-10">
@@ -247,6 +260,12 @@
                                         }
                                     }
                                 }
+
+                                $fantasyPlayer = new FPlayer();
+                                $fantasyPlayer->playerOptions();
+
+                                $fantasyTeam = new FTeam();
+                                $fantasyTeam->teamOptions();
                             ?>
                         </select>
                         <button type="button" onclick="addFantasyTeam();" class="btn btn-primary btn-rad" style="float:right;"><i class="fa fa-plus-circle"></i> &nbsp;New Team</button>
@@ -255,63 +274,65 @@
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Top</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect positionSelect" id='topSelect' style="width:100%;" placeholder="Dyrus" disabled="disabled">
+                        <select class="fancySelect positionSelect" id='topSelect' style="width:100%;" placeholder="{{ $fantasyPlayer->playerRandom('Top Lane') }}" disabled="disabled">
                             <option></option>
-                            {{ FPlayer::selectOptions('Top Lane') }}
+                            {{ $fantasyPlayer->playerOptions('Top Lane') }}
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Jungle</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect positionSelect" id='jungleSelect' style="width:100%;" placeholder="Amazing" disabled="disabled">
+                        <select class="fancySelect positionSelect" id='jungleSelect' style="width:100%;" placeholder="{{ $fantasyPlayer->playerRandom('Jungler') }}" disabled="disabled">
                             <option></option>
-                            {{ FPlayer::selectOptions('Jungler') }}
+                            {{ $fantasyPlayer->playerOptions('Jungler') }}
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Mid</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect positionSelect" id='midSelect' style="width:100%;" placeholder="Bjergsen" disabled="disabled">
+                        <select class="fancySelect positionSelect" id='midSelect' style="width:100%;" placeholder="{{ $fantasyPlayer->playerRandom('Mid Lane') }}" disabled="disabled">
                             <option></option>
-                            {{ FPlayer::selectOptions('Mid Lane') }}
+                            {{ $fantasyPlayer->playerOptions('Mid Lane') }}
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">ADC</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect positionSelect" id='adcSelect' style="width:100%;" placeholder="WildTurtle" disabled="disabled">
+                        <select class="fancySelect positionSelect" id='adcSelect' style="width:100%;" placeholder="{{ $fantasyPlayer->playerRandom('AD Carry') }}" disabled="disabled">
                             <option></option>
-                            {{ FPlayer::selectOptions('AD Carry') }}
+                            {{ $fantasyPlayer->playerOptions('AD Carry') }}
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Support</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect positionSelect" id='supportSelect' style="width:100%;" placeholder="Lustboy" disabled="disabled">
+                        <select class="fancySelect positionSelect" id='supportSelect' style="width:100%;" placeholder="{{ $fantasyPlayer->playerRandom('Support') }}" disabled="disabled">
                             <option></option>
-                            {{ FPlayer::selectOptions('Support') }}
+                            {{ $fantasyPlayer->playerOptions('Support') }}
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Flex</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect positionSelect" id='flexSelect' style="width:100%;" placeholder="HotshotGG" disabled="disabled">
+                        <select class="fancySelect positionSelect" id='flexSelect' style="width:100%;" placeholder="{{ $fantasyPlayer->playerRandom() }}" disabled="disabled">
                             <option></option>
-                            {{ FPlayer::allOptions() }}
+                            @foreach($fantasyPlayer->playerOptions() as $key => $value)
+                                {{ $value }}
+                            @endforeach
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Team</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect positionSelect" id='teamSelect' style="width:100%;" placeholder="Fnatic" disabled="disabled">
+                        <select class="fancySelect positionSelect" id='teamSelect' style="width:100%;" placeholder="{{ $fantasyTeam->teamOptionsRandom() }}" disabled="disabled">
                             <option></option>
-                            {{ FTeam::allOptions() }}
+                            {{ $fantasyTeam->teamOptions() }}
                         </select>
                     </div>
                 </div>

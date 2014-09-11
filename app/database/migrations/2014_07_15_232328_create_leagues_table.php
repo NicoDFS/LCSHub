@@ -19,9 +19,9 @@ class CreateLeaguesTable extends Migration {
                 $table->increments('id');
                 $table->integer('leagueId')->unique();
                 $table->string('color');
-                $table->string('leagueImage');
-                $table->integer('defaultTournamentId');
-                $table->integer('defaultSeriesId');
+                $table->string('leagueImage')->nullable();
+                $table->integer('defaultTournamentId')->nullable();
+                $table->integer('defaultSeriesId')->nullable();
                 $table->string('shortName');
                 $table->string('url');
                 $table->string('label');
@@ -31,6 +31,7 @@ class CreateLeaguesTable extends Migration {
                 $table->string('youtube')->nullable();
                 $table->text('azubu')->nullable();
                 $table->string('leagueTournaments')->nullable();
+                $table->boolean('published');
 
                 $table->timestamps();
             });

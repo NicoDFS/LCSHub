@@ -26,26 +26,26 @@ class CreateMatchesTable extends Migration {
                 $table->boolean('isLive');
                 $table->boolean('isFinished');
                 $table->boolean('liveStreams');
-                $table->string('polldaddyId');
+                $table->string('polldaddyId')->nullable();
                 $table->integer('blockId')->index();
 
                 $table->integer('tournamentId');
                 $table->string('tournamentName');
                 $table->integer('tournamentRound');
 
-                $table->integer('blueId');
-                $table->string('blueName');
-                $table->string('blueLogoURL');
-                $table->string('blueAcronym');
-                $table->integer('blueWins');
-                $table->integer('blueLosses');
+                $table->integer('blueId')->nullable();
+                $table->string('blueName')->nullable();
+                $table->string('blueLogoURL')->nullable();
+                $table->string('blueAcronym')->nullable();
+                $table->integer('blueWins')->nullable();
+                $table->integer('blueLosses')->nullable();
 
-                $table->string('redId');
-                $table->string('redName');
-                $table->string('redLogoURL');
-                $table->string('redAcronym');
-                $table->integer('redWins');
-                $table->integer('redLosses');
+                $table->string('redId')->nullable();
+                $table->string('redName')->nullable();
+                $table->string('redLogoURL')->nullable();
+                $table->string('redAcronym')->nullable();
+                $table->integer('redWins')->nullable();
+                $table->integer('redLosses')->nullable();
 
                 $table->integer('gameId');
                 $table->boolean('gameNoVods');

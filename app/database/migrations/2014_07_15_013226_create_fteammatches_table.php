@@ -18,7 +18,7 @@ class CreateFteammatchesTable extends Migration {
                 $table->engine = 'InnoDB';
 
                 $table->increments('id');
-                $table->datetime('dateTime');
+                $table->datetime('dateTime')->nullable();
                 $table->integer('gameId')->index();
                 $table->integer('matchId');
                 $table->integer('teamId');

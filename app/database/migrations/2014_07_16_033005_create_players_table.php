@@ -19,17 +19,18 @@ class CreatePlayersTable extends Migration {
                 $table->increments('id');
                 $table->integer('playerId')->unique();
                 $table->string('name');
-                $table->text('bio');
-                $table->string('firstName');
-                $table->string('lastName');
-                $table->string('hometown');
+                $table->text('bio')->nullable();
+                $table->string('firstName')->nullable();
+                $table->string('lastName')->nullable();
+                $table->string('hometown')->nullable();
                 $table->string('facebookURL')->nullable();
                 $table->string('twitterURL')->nullable();
                 $table->integer('teamId');
                 $table->string('profileURL');
                 $table->string('role');
                 $table->integer('roleId');
-                $table->string('photoURL');
+                $table->string('photoURL')->nullable();
+                $table->boolean('isStarter');
 
                 $table->timestamps();
 

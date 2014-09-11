@@ -18,7 +18,7 @@ class CreateGamesTable extends Migration {
                 $table->engine = 'InnoDB';
 
                 $table->increments('id');
-                $table->datetime('dateTime');
+                $table->datetime('dateTime')->nullable();
                 $table->integer('gameId')->unique();
                 $table->integer('winnerId')->nullable();
                 $table->integer('gameNumber');
@@ -53,6 +53,9 @@ class CreateGamesTable extends Migration {
                 $table->integer('player7')->nullable();
                 $table->integer('player8')->nullable();
                 $table->integer('player9')->nullable();
+
+                $table->string('platformId')->nullable();
+                $table->integer('platformGameId')->nullable();
 
                 $table->timestamps();
 

@@ -25,6 +25,78 @@ class FPlayer extends Eloquent {
         return $output;
     }
 
+    public function playerRandom($position = null)
+    {
+        if(isset($this->_playersPositions))
+        {
+            if($position !== null)
+            {
+                return $this->_playersPositions[$position][ array_rand( $this->_playersPositions[$position] ) ];
+            }
+            else
+            {
+                $randPosition = array_rand($this->_playersPositions);
+                $playerKey = array_rand($this->_playersPositions[$randPosition]);
+                return $this->_playersPositions[$randPosition][$playerKey];
+            }
+        }
+
+        return null;
+    }
+
+    public function playerOptions($position = null)
+    {
+        if(!isset($this->_selects))
+        {
+            $selects = array();
+
+            $positions = array();
+            $output = null;
+            $lastPosition = null;
+
+            $fPlayers = FPlayer::orderBy('positions', 'asc')->get();
+
+            foreach($fPlayers as $key => $player)
+            {
+                if($lastPosition == null)
+                {
+                    $output .= "<optgroup label='{$player->positions}'>";
+                }
+
+                if($lastPosition !== null && $lastPosition !== $player->positions)
+                {
+                    $output .= "</optgroup>";
+
+                    $selects[$lastPosition] = $output;
+
+                    $output = "<optgroup label='{$player->positions}'>";
+                }
+
+                $output .= "<option value='{$player->riotId}'>{$player->name}</option>";
+                $lastPosition = $player->positions;
+
+                $positions[$player->positions][] = $player->name;
+            }
+
+            if($output !== null)
+            {
+                $output .= "</optgroup>";
+                $selects['Top Lane'] = $output;
+
+                $this->_playersPositions = $positions;
+            }
+
+            $this->_selects = $selects;
+        }
+
+        if($position !== null)
+        {
+            return $this->_selects[$position];
+        }
+
+        return array_values($this->_selects);
+    }
+
     public static function allOptions()
     {
         $output = "";

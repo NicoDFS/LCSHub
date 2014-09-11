@@ -10,32 +10,13 @@ class AjaxController extends BaseController {
 
     public function getRefresh()
     {
-        $timezone = Config::get('cookie.timezoneDefault');
-
-        if(Cookie::has(Config::get('cookie.timezone')))
-        {
-            $timezone = Cookie::get(Config::get('cookie.timezone'));
-        }
-
-        $datetime = new DateTime('now', new DateTimeZone($timezone));
-
-        $query = "dateTime >= '" . $datetime->format('Y-m-d') . " 00:00:00' AND dateTime <= '" . $datetime->format('Y-m-d') . " 23:59:59'";
-        $todayBlock = Block::whereRaw($query)->first();
-        $todayBlock->currBlock = true;
-
-        if(is_null($todayBlock))
-        {
-            $todayBlock = Block::where('dateTime', '<=',  $datetime->format('Y-m-d') . " 23:59:59")->orderBy('dateTime', 'desc')->get()[0];
-            $todayBlock->currBlock = false;
-        }
-
-        $todayBlock->spoilers();
+        $todayBlock = Block::currentBlock();
 
         $pageHeader = View::make('html.titlebar')->with('block', $todayBlock);
         $scheduleBlock = View::make('html.schedule')->with('block', $todayBlock);
         $streamContainer = View::make('html.stream')->with('block', $todayBlock);
 
-        return json_encode( ['pageHeader' => $pageHeader->render(), 'scheduleBlock' => $scheduleBlock->render()] );
+        return Response::json( ['pageHeader' => $pageHeader->render(), 'scheduleBlock' => $scheduleBlock->render()] );
     }
 
     public function getMatch($id)
@@ -44,13 +25,12 @@ class AjaxController extends BaseController {
         $block = Block::select('blocks.*')->join('matches', 'matches.blockId', '=', 'blocks.blockId')->where('matches.matchId', $id)->first();
         $block->requestedMatch($id);
 
-        $block->spoilers();
-
         $pageHeader = View::make('html.titlebar')->with('block', $block);
         $scheduleBlock = View::make('html.schedule')->with('block', $block);
         $streamContainer = View::make('html.stream')->with('block', $block);
+        $chatContainer = View::make('html.chat')->with('block', $block);
 
-        return json_encode( ['pageHeader' => $pageHeader->render(), 'scheduleBlock' => $scheduleBlock->render(), 'streamContainer' => $streamContainer->render()] );
+        return  Response::json( ['pageHeader' => $pageHeader->render(), 'scheduleBlock' => $scheduleBlock->render(), 'streamContainer' => $streamContainer->render(), 'chatContainer' => $chatContainer->render()] );
     }
 
     public function getRefreshmatch($id)
@@ -61,20 +41,35 @@ class AjaxController extends BaseController {
         $pageHeader = View::make('html.titlebar')->with('block', $block);
         $scheduleBlock = View::make('html.schedule')->with('block', $block);
         $streamContainer = View::make('html.stream')->with('block', $block);
+        $chatContainer = View::make('html.chat')->with('block', $block);
 
-        return json_encode( ['pageHeader' => $pageHeader->render(), 'scheduleBlock' => $scheduleBlock->render(), 'streamContainer' => $streamContainer->render()] );
+
+        return Response::json( ['pageHeader' => $pageHeader->render(), 'scheduleBlock' => $scheduleBlock->render(), 'streamContainer' => $streamContainer->render(), 'chatContainer' => $chatContainer->render()] );
+    }
+
+    public function getGamevod($id)
+    {
+        $block = Block::select('blocks.*', 'matches.matchId')->join('matches', 'matches.blockId', '=', 'blocks.blockId')->join('games', 'games.matchId', '=', 'matches.matchId')->where('games.gameId', $id)->first();
+        $block->requestedMatch($block->matchId);
+        $block->requestedGame($id);
+
+        $pageHeader = View::make('html.titlebar')->with('block', $block);
+        $streamContainer = View::make('html.stream')->with('block', $block);
+        $chatContainer = View::make('html.chat')->with('block', $block);
+
+        return Response::json( ['streamContainer' => $streamContainer->render(), 'pageHeader' => $pageHeader->render(), 'chatContainer' => $chatContainer->render()]);
     }
 
     public function getVod($id)
     {
         $block = Block::select('blocks.*')->join('matches', 'matches.blockId', '=', 'blocks.blockId')->where('matches.matchId', $id)->first();
         $block->requestedMatch($id);
-        $block->spoilers();
 
         $pageHeader = View::make('html.titlebar')->with('block', $block);
         $streamContainer = View::make('html.stream')->with('block', $block);
+        $chatContainer = View::make('html.chat')->with('block', $block);
 
-        return json_encode(['streamContainer' => $streamContainer->render(), 'pageHeader' => $pageHeader->render()]);
+        return Response::json( ['streamContainer' => $streamContainer->render(), 'pageHeader' => $pageHeader->render(), 'chatContainer' => $chatContainer->render()]);
     }
 
     public function getBlock($id, $dir = null)
@@ -83,52 +78,36 @@ class AjaxController extends BaseController {
         {
             if($id == 'current')
             {
-                $timezone = Config::get('cookie.timezoneDefault');
 
-                if(Cookie::has(Config::get('cookie.timezone')))
-                {
-                    $timezone = Cookie::get(Config::get('cookie.timezone'));
-                }
-
-                $datetime = new DateTime('now', new DateTimeZone($timezone));
-
-                $query = "dateTime >= '" . $datetime->format('Y-m-d') . " 00:00:00' AND dateTime <= '" . $datetime->format('Y-m-d') . " 23:59:59'";
-                $todayBlock = Block::whereRaw($query)->first();
-                $todayBlock->currBlock = true;
-
-                if(is_null($todayBlock))
-                {
-                    $todayBlock = Block::where('dateTime', '<=',  $datetime->format('Y-m-d') . " 23:59:59")->orderBy('dateTime', 'desc')->get()[0];
-                    $todayBlock->currBlock = false;
-                }
-
-                $todayBlock->spoilers();
+                $todayBlock = Block::currentBlock();
 
                 $scheduleBlock = View::make('html.schedule')->with('block', $todayBlock);
 
-                return json_encode(['scheduleBlock' => $scheduleBlock->render()]);
+                return Response::json( ['scheduleBlock' => $scheduleBlock->render()]);
             }
         }
         else
         {
             $prevBlock = Block::where('id', $id)->first();
+
             $operator = ($dir == 'next' ? '>' : '<');
             $order = ($dir == 'next' ? 'asc' : 'desc');
 
             $block = Block::where('dateTime', $operator, $prevBlock->dateTime)->orderBy('dateTime', $order)->first();
-            $block->spoilers();
 
             $scheduleBlock = View::make('html.schedule')->with('block', $block);
-            return json_encode(['scheduleBlock' => $scheduleBlock->render()]);
+
+            return Response::json(['scheduleBlock' => $scheduleBlock->render()]);
         }
     }
 
     public function getDetails($id)
     {
         $match = Match::where('id', $id)->first();
+
         $slideDown = View::make('html.game')->with('match', $match);
 
-        return json_encode(['match' => $slideDown->render()]);
+        return Response::json(['match' => $slideDown->render()]);
     }
 
     public function getLive($id)
@@ -148,15 +127,15 @@ class AjaxController extends BaseController {
             if(in_array(Input::get('timezone'), DateTimeZone::listIdentifiers()))
             {
                 $foreverCookie = Cookie::forever(Config::get('cookie.timezone'), Input::get('timezone'));
-                $content = json_encode([ 'timezone' => Input::get('timezone') ]);
-                return Response::make($content)->withCookie($foreverCookie);
+
+                return Response::json([ 'timezone' => Input::get('timezone') ])->withCookie($foreverCookie);
             }
         }
     }
 
     public function postSettings()
     {
-        if(Input::has('timezone') && Input::has('spoilers') && Input::has('updates'))
+        if(Input::has('timezone') && Input::has('spoilers') && Input::has('updates') && Input::has('player'))
         {
             if(!is_null(Input::get('timezone')))
             {
@@ -176,9 +155,15 @@ class AjaxController extends BaseController {
                 Cookie::queue(Config::get('cookie.updates'), Input::get('updates'), (60 * 24 * 360));
             }
 
+            if(!is_null(Input::get('player')))
+            {
+                Cookie::queue(Config::get('cookie.player'), Input::get('player'), (60 * 24 * 360));
+            }
+
             if(Input::has('fantasyTeams') && !is_null(Input::get('fantasyTeams')))
             {
                 $output = json_decode(Input::get('fantasyTeams'));
+
                 if(isset($output[0]))
                 {
                     if(is_null($output[0]))
@@ -190,11 +175,11 @@ class AjaxController extends BaseController {
                 Cookie::queue(Config::get('cookie.fantasyTeams'), $output, (60 * 24 * 360));
             }
 
-            return json_encode([ 'message' => 'success' ]);
+            return Response::json([ 'message' => 'success' ]);
         }
         else
         {
-            return json_encode([ 'message' => 'failure']);
+            return Response::json([ 'message' => 'failure']);
         }
     }
 

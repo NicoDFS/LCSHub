@@ -26,6 +26,8 @@ class CreateTournamentsTable extends Migration {
                 $table->datetime('dateEnd');
                 $table->integer('noVods');
                 $table->string('season');
+                $table->boolean('published');
+                $table->string('winner')->nullable();
 
                 $table->timestamps();
             });

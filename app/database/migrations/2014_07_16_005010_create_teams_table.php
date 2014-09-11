@@ -20,12 +20,12 @@ class CreateTeamsTable extends Migration {
                 $table->integer('tournamentId');
                 $table->integer('teamId')->unique();
                 $table->string('name');
-                $table->string('bio');
+                $table->string('bio')->nullable();
                 $table->string('noPlayers')->nullable();
                 $table->string('logoUrl');
                 $table->string('profileUrl')->nullable();
                 $table->string('teamPhotoUrl')->nullable();
-                $table->string('acronym');
+                $table->string('acronym')->nullable();
 
                 $table->timestamps();
             });

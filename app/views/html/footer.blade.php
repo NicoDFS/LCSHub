@@ -1,4 +1,3 @@
-<script src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery.nanoscroller/jquery.nanoscroller.js"></script>
 <script type="text/javascript" src="js/jquery.sparkline/jquery.sparkline.min.js"></script>
 <script type="text/javascript" src="js/jquery.easypiechart/jquery.easy-pie-chart.js"></script>
@@ -18,7 +17,7 @@
 
         App.init();
 
-        $("#streamContainer").fitVids({ customSelector: "object[data^='http://www.twitch.tv/widgets/live_embed_player.swf?channel=riotgames']"});
+        $("#streamContainer").fitVids({ customSelector: "object[data^='http://www.twitch.tv/widgets/live_embed_player.swf?channel=']"});
 
         window.liveUpdates = {{ (Cookie::has(Config::get('cookie.updates')) ? Cookie::get(Config::get('cookie.updates')) : 0) }};
 
@@ -26,31 +25,42 @@
         {
             if(window.liveUpdates == 1)
             {
-                $.get("/ajax/refresh/", function(data)
+                $.getJSON("/ajax/refresh/", function(data)
                 {
-                    var obj = jQuery.parseJSON(data);
                     var scrl = $(document).scrollTop();
 
                     $detailz = $(".match-detail");
 
-
-                    $("#scheduleBlock").html(obj.scheduleBlock);
+                    $('.ttip, [data-toggle="tooltip"]').tooltip('hide');
+                    $("[data-toggle=popover]").popover('hide');
+                    $("#scheduleBlock").height($("#scheduleBlock").height());
+                    $("#scheduleBlock").html(data.scheduleBlock);
+                    $("#scheduleBlock").css('height', 'auto');
 
                     $.each($detailz, function(index, value) {
 
                         $("#match-" + $(value).attr('matchid')).after($(value));
 
+                        if ( $("#refresh-match-" + $(value).attr('matchid')).length )
+                        {
+                            if ($(value).css('display') == 'block')
+                            {
+                                refreshDetail($(value).attr('matchid'));
+                            }
+                        }
+
                     });
 
-                    $('body').scrollTop(scrl);
-                    $("#pageHeader").html(obj.pageHeader);
+                    $("#pageHeader").height($("#pageHeader").height());
+                    $("#pageHeader").html(data.pageHeader);
+                    $("#pageHeader").css('height', 'auto');
                     $('.ttip, [data-toggle="tooltip"]').tooltip();
+                    $("[data-toggle=popover]").popover();
 
                 });
             }
 
         }, 15000);
-
 
         $(".fancySelect").select2({
             matcher: function(term, text, opt){
@@ -130,15 +140,15 @@
 
     function getMatch (id)
     {
-        $.get("/ajax/match/" + id, function(data)
+        $.getJSON("/ajax/match/" + id, function(data)
         {
-            var obj = jQuery.parseJSON(data);
             var scrl = $(document).scrollTop();
 
-            $("#scheduleBlock").html(obj.scheduleBlock);
+            $("#scheduleBlock").html(data.scheduleBlock);
             $('body').scrollTop(scrl);
-            $("#pageHeader").html(obj.pageHeader);
-            $("#streamContainer").html(obj.streamContainer);
+            $("#pageHeader").html(data.pageHeader);
+            $("#streamContainer").html(data.streamContainer);
+            $("#chatContainer").html(data.chatContainer);
             $('.ttip, [data-toggle="tooltip"]').tooltip();
             $("#streamContainer").fitVids();
 
@@ -147,66 +157,61 @@
 
     function refreshDetail(id)
     {
-        //$("#refresh-match-" + id).addClass('fa-spin');
+
         $("#refresh-match-" + id).attr('disabled', true);
+        $("#refresh-match-" + id + " i").addClass("fa-spin");
 
-        $.get("/ajax/details/" + id + "/", function(data) {
+        $.getJSON("/ajax/details/" + id + "/", function(data) {
 
-            var obj = jQuery.parseJSON(data);
-            var cnt = $(obj.match).contents();
+            var cnt = $(data.match).contents();
+            data.match = cnt;
+
+            var arrOpen = new Array();
+
+            $(".gamesContainer").each(function(index, ele) {
+
+                if($(ele).children('.table-responsive').first().css('display') == 'block')
+                {
+                    arrOpen[arrOpen.length] = index;
+                }
+
+            });
+
             $("#match-" + id + "-details").height($("#match-" + id + "-details").height());
-            obj.match = cnt;
-            $("#match-" + id + "-details").html(obj.match);
+            $("#match-" + id + "-details").html(data.match);
+            $("#match-" + id + "-details").css('height', 'auto');
+
+            $.each(arrOpen, function(index, value) {
+
+                $(".gamesContainer").each(function(ind, ele) {
+
+                    if(ind == value)
+                    {
+                        $(ele).children('h1').children().first().click();
+                    }
+
+                });
+
+            });
+
             $("#refresh-match-" + id).attr('disabled', false);
+            $("#refresh-match-" + id + " i").removeClass("fa-spin");
             $('.ttip, [data-toggle="tooltip"]').tooltip();
             $("[data-toggle=popover]").popover();
-            //$("#refresh-match-" + id).removeClass('fa-spin');
+
 
         });
-    }
-
-    function twitchToggle()
-    {
-
-
-        if( $("#twitchChatEmbed").css('display') == 'none')
-        {
-            $('#twitchCol').animate({
-                height: 490
-            }, 350);
-
-            $('#twitchBlock').animate({
-                height: 484
-            }, 350);
-
-            $('#twitchChatEmbed').slideToggle(250);
-        }
-        else
-        {
-            $('#twitchChatEmbed').slideToggle(250);
-
-            $('#twitchCol').animate({
-                height: 66
-            }, 350);
-
-            $('#twitchBlock').animate({
-                height: 60
-            }, 350);
-        }
-
-
     }
 
     function getBlock(id, dir)
     {
         dir = typeof dir !== 'undefined' ? dir : '';
 
-        $.get("/ajax/block/" + id + "/" + dir, function(data) {
+        $.getJSON("/ajax/block/" + id + "/" + dir, function(data) {
 
-            var obj = jQuery.parseJSON(data);
             var scrl = $(document).scrollTop();
             $("#scheduleBlock button").tooltip('hide');
-            $("#scheduleBlock").html(obj.scheduleBlock);
+            $("#scheduleBlock").html(data.scheduleBlock);
             $('body').scrollTop(scrl);
             $('.ttip, [data-toggle="tooltip"]').tooltip();
 
@@ -219,14 +224,32 @@
 
     }
 
+    function getGameVod(id)
+    {
+        $.getJSON('/ajax/gamevod/' + id + '/', function(data)
+        {
+            var scrl = $(document).scrollTop();
+            $("#streamContainer").html(data.streamContainer);
+            $("#pageHeader").html(data.pageHeader);
+            $("#chatContainer").html(data.chatContainer);
+            $('body').scrollTop(scrl);
+            $("#streamContainer").fitVids();
+            $('html, body').animate({
+                scrollTop: $("#streamContainer").offset().top - 60
+            }, 1000);
+            $('.ttip, [data-toggle="tooltip"]').tooltip();
+
+        });
+    }
+
     function getVod(id, scroll)
     {
         $.get('/ajax/vod/' + id + '/', function(data)
         {
-            var obj = jQuery.parseJSON(data);
             var scrl = $(document).scrollTop();
-            $("#streamContainer").html(obj.streamContainer);
-            $("#pageHeader").html(obj.pageHeader);
+            $("#streamContainer").html(data.streamContainer);
+            $("#pageHeader").html(data.pageHeader);
+            $("#chatContainer").html(data.chatContainer);
             $('body').scrollTop(scrl);
             $("#streamContainer").fitVids();
             if(scroll)
@@ -257,33 +280,36 @@
                     scrollTop: $("#match-" + id).offset().top - 50
                 }, 1000);
 
-                $("#match-" + id + "-button").text("Hide game stats");
+                $("#match-" + id + "-button").text("Hide match result");
             }
             else
             {
                 $("#match-" + id + "-details").slideUp();
-                $("#match-" + id + "-button").text("View game stats");
+                $("#match-" + id + "-button").text("View match result");
             }
 
         }
         else
         {
-            $.get("/ajax/details/" + id + "/", function(data) {
+            $.getJSON("/ajax/details/" + id + "/", function(data) {
 
-                var obj = jQuery.parseJSON(data);
-                $("#match-" + id).after(obj.match);
+
+                $("#match-" + id).after(data.match);
                 $("#match-" + id + "-details").hide();
                 $("#match-" + id + "-details").slideDown('slow');
                 $('html, body').animate({
                     scrollTop: $("#match-" + id).offset().top - 50
                 }, 1000);
-                $("#match-" + id + "-button").text("Hide game stats");
+                $("#match-" + id + "-button").text("Hide match result");
                 $('.ttip, [data-toggle="tooltip"]').tooltip();
                 $("[data-toggle=popover]").popover();
 
 
             });
         }
+
+        $("#match-" + id).children('div').children('button').first().blur();
+
     }
 
     function closeDetails(id)
@@ -298,12 +324,12 @@
                     scrollTop: $("#match-" + id).offset().top - 50
                 }, 1000);
 
-                $("#match-" + id + "-button").text("Hide game stats");
+                $("#match-" + id + "-button").text("Hide match result");
             }
             else
             {
                 $("#match-" + id + "-details").slideUp();
-                $("#match-" + id + "-button").text("View game stats");
+                $("#match-" + id + "-button").text("View match result");
             }
 
         }
@@ -311,12 +337,12 @@
 
     function getLiveGame(id)
     {
-        $.get("/ajax/match/" + id, function(data) {
-
-            var obj = jQuery.parseJSON(data);
-            $("#streamContainer").html(obj.streamContainer);
-            $("#scheduleBlock").html(obj.scheduleBlock);
-            $("#pageHeader").html(obj.pageHeader);
+        $.getJSON("/ajax/match/" + id, function(data)
+        {
+            $("#streamContainer").html(data.streamContainer);
+            $("#scheduleBlock").html(data.scheduleBlock);
+            $("#chatContainer").html(data.chatContainer);
+            $("#pageHeader").html(data.pageHeader);
             $("#streamContainer").fitVids();
             $('.ttip, [data-toggle="tooltip"]').tooltip();
             $('html, body').animate({
@@ -330,14 +356,14 @@
 
     function refreshInfo(id)
     {
-        $.get("/ajax/refreshmatch/" + id, function(data) {
-
-            var obj = jQuery.parseJSON(data);
+        $.getJSON("/ajax/refreshmatch/" + id, function(data)
+        {
             var scrl = $(document).scrollTop();
 
-            $("#streamContainer").html(obj.streamContainer);
-            $("#scheduleBlock").html(obj.scheduleBlock);
-            $("#pageHeader").html(obj.pageHeader);
+            $("#streamContainer").html(data.streamContainer);
+            $("#chatContainer").html(data.chatContainer);
+            $("#scheduleBlock").html(data.scheduleBlock);
+            $("#pageHeader").html(data.pageHeader);
             $("#streamContainer").fitVids();
             $('.ttip, [data-toggle="tooltip"]').tooltip();
             $('body').scrollTop(scrl);
@@ -347,13 +373,19 @@
 
     function refreshTitleSchedule(id)
     {
-        $.get("/ajax/refreshmatch/" + id, function(data) {
+        $.getJSON("/ajax/refreshmatch/" + id, function(data)
+        {
 
-            var obj = jQuery.parseJSON(data);
+            $("#scheduleBlock").height($("#scheduleBlock").height());
+            $("#scheduleBlock").html(data.scheduleBlock);
+            $("#scheduleBlock").css('height', 'auto');
 
-            $("#scheduleBlock").html(obj.scheduleBlock);
-            $("#pageHeader").html(obj.pageHeader);
+            $("#pageHeader").height($("#pageHeader").height());
+            $("#pageHeader").html(data.pageHeader);
+            $("#pageHeader").css('height', 'auto');
+
             $('.ttip, [data-toggle="tooltip"]').tooltip();
+            $("[data-toggle=popover]").popover();
 
         });
     }
@@ -397,6 +429,33 @@
 
     }
 
+    function gameToggle(ele)
+    {
+        if($(ele).is('i'))
+        {
+            $(ele).parent().parent().children('div').fadeToggle();
+            $(ele).parent().parent().children('button').fadeToggle();
+        }
+        else if($(ele).is('button'))
+        {
+            $(ele).parent().children('div').fadeToggle();
+            $(ele).parent().children('button').fadeToggle();
+
+            ele = $(ele).parent().children('h1').children();
+        }
+
+        if($(ele).hasClass('fa-angle-double-up'))
+        {
+            $(ele).removeClass('fa-angle-double-up');
+            $(ele).addClass('fa-angle-double-down');
+        }
+        else
+        {
+            $(ele).removeClass('fa-angle-double-down');
+            $(ele).addClass('fa-angle-double-up');
+        }
+    }
+
     function deleteFantasyTeam(id)
     {
         delete window.fantasyTeams[id];
@@ -422,6 +481,7 @@
         resetSelects();
 
         $("#fantasyTeamSelect").select2();
+
         $("#fantasyDelete").fadeOut(200, function() {
             $(this).remove();
         });
@@ -447,6 +507,7 @@
             timezone: $('[id="{{ Config::get('cookie.timezone') }}"]').select2('val'),
             updates: updatesRes,
             spoilers: spoilersRes,
+            player: $('[id="{{ Config::get('cookie.player') }}"]').select2('val'),
             fantasyTeams: JSON.stringify(window.fantasyTeams)
         },
         function(data)
@@ -468,9 +529,6 @@
     }
 </script>
 
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
 <script src="js/behaviour/voice-commands.js"></script>
 <script src="js/bootstrap/dist/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/jquery.flot/jquery.flot.js"></script>

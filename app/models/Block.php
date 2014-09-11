@@ -8,6 +8,18 @@ class Block extends Eloquent {
         return $this->hasMany('Match', 'blockId', 'blockId');
     }
 
+    public function twitchUsername()
+    {
+        $league = $this->getLeague();
+
+        if (preg_match('/twitch\.tv\/(?:([-\w]+)\/?)/', $league->twitch, $match) > 0)
+        {
+            return $match[1];
+        }
+
+        return 'riotgames';
+    }
+
     public function getLeague()
     {
         if(!isset($this->gotLeague))
@@ -20,7 +32,12 @@ class Block extends Eloquent {
 
     public function getTournament()
     {
-        return Tournament::where('tournamentId', $this->tournamentId)->first();
+        if(!isset($this->_tournament))
+        {
+            $this->_tournament = Tournament::where('tournamentId', $this->tournamentId)->first();
+        }
+
+        return $this->_tournament;
     }
 
     public function getMatches()
@@ -86,6 +103,25 @@ class Block extends Eloquent {
 
     }
 
+    public function requestedGame($gameId)
+    {
+        $this->requestedGame = $gameId;
+    }
+
+    public function getRequestedGame()
+    {
+        foreach($this->getMatches() as $ind => $val)
+        {
+            foreach($val->getGames() as $index => $value)
+            {
+                if($value->gameId == $this->requestedGame)
+                {
+                    return $index;
+                }
+            }
+        }
+    }
+
     public function requestedMatch($matchId)
     {
         $this->newMatchId = $matchId;
@@ -146,7 +182,17 @@ class Block extends Eloquent {
 
     public function isLiveMatch()
     {
-        return (Match::where('blockId', $this->blockId)->where('isLive', true)->get()->count() > 0 ? true : false);
+        $matches = $this->getMatches();
+        foreach($matches as $match)
+        {
+            if($match->isLive == 1)
+            {
+                return true;
+            }
+        }
+
+        return false;
+        //return (Match::where('blockId', $this->blockId)->where('isLive', true)->get()->count() > 0 ? true : false);
     }
 
     public function leagueYoutubeId()
@@ -268,11 +314,11 @@ class Block extends Eloquent {
             {
                 if (($prevPlace % 100) >= 11 && ($prevPlace % 100) <= 13)
                 {
-                    $placesArray[$key] = $prevPlace . 'th';
+                    $placesArray[$key] = $prevPlace;
                 }
                 else
                 {
-                    $placesArray[$key] = $prevPlace . $ends[$prevPlace % 10];
+                    $placesArray[$key] = $prevPlace;
                 }
 
             }
@@ -280,11 +326,11 @@ class Block extends Eloquent {
             {
                 if (($counter % 100) >= 11 && ($counter % 100) <= 13)
                 {
-                    $placesArray[$key] = $counter . 'th';
+                    $placesArray[$key] = $counter;
                 }
                 else
                 {
-                    $placesArray[$key] = $counter . $ends[$counter % 10];
+                    $placesArray[$key] = $counter;
                 }
 
                 $prevPlace = $counter;
@@ -299,22 +345,33 @@ class Block extends Eloquent {
 
     public function futureBlocks()
     {
-        if(Block::where('dateTime', '>', $this->dateTime)->get()->count() > 0)
+        if(!isset($this->_isFutureBlocks))
         {
-            return true;
+            $this->_isFutureBlocks = false;
+
+            if(Block::where('dateTime', '>', $this->dateTime)->get()->count() > 0)
+            {
+                $this->_isFutureBlocks = true;
+            }
+
         }
 
-        return false;
+        return $this->_isFutureBlocks;
     }
 
     public function previousBlocks()
     {
-        if(Block::where('dateTime', '<', $this->dateTime)->get()->count() > 0)
+        if(!isset($this->_isPreviousBlocks))
         {
-            return true;
+            $this->_isPreviousBlocks = false;
+
+            if(Block::where('dateTime', '<', $this->dateTime)->get()->count() > 0)
+            {
+                $this->_isPreviousBlocks = true;
+            }
         }
 
-        return false;
+        return $this->_isPreviousBlocks;
     }
 
     public function spoilers()
@@ -405,6 +462,88 @@ class Block extends Eloquent {
         }
 
         return $this->_timezone;
+    }
+
+    public static function defaultTimezone()
+    {
+        $timezone = Config::get('cookie.timezoneDefault');
+
+        if(Cookie::has(Config::get('cookie.timezone')))
+        {
+            $timezone = Cookie::get(Config::get('cookie.timezone'));
+        }
+
+        return $timezone;
+    }
+
+    public static function currentBlock()
+    {
+        $datetime = new DateTime('now', new DateTimeZone(Block::defaultTimezone()));
+        $dateplus = new DateTime('+1 day', new DateTimeZone(Block::defaultTimezone()));
+
+        $blocks = Block::where('blocks.dateTime', '>=', $datetime->format('Y-m-d H:i:s'))
+                        ->where('blocks.dateTime', '<=', $dateplus->format('Y-m-d H:i:s'))
+                        ->join('matches', 'matches.blockId', '=', 'blocks.blockId')
+                        ->select('blocks.*', 'matches.isFinished', 'matches.isLive')
+                        ->get();
+
+        $todayBlock = null;
+
+        if(!empty($blocks))
+        {
+            foreach($blocks as $block)
+            {
+                if($block->isLive)
+                {
+                    $todayBlock = $block; break;
+                }
+
+                if(!$block->isFinished)
+                {
+                    $todayBlock = $block; break;
+                }
+            }
+
+            if(is_null($todayBlock))
+            {
+                foreach($blocks as $block)
+                {
+                    if($block->isFinished)
+                    {
+                        $todayBlock = $block; break;
+                    }
+                }
+            }
+        }
+
+        if(is_null($todayBlock))
+        {
+            $todayBlock = Block::where('dateTime', '<=',  $datetime->format('Y-m-d H:i:s'))->orderBy('dateTime', 'desc')->first();
+            $todayBlock->currBlock = false;
+        }
+        else
+        {
+            $todayBlock->currBlock = true;
+        }
+
+        $todayBlock->setLatestBlock(true);
+
+        return $todayBlock;
+    }
+
+    public function isLatestBlock()
+    {
+        if(isset($this->_latestBlock))
+        {
+            return $this->_latestBlock;
+        }
+
+        return false;
+    }
+
+    public function setLatestBlock($bool)
+    {
+        $this->_latestBlock = $bool;
     }
 
 }

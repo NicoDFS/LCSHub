@@ -12,50 +12,85 @@ class Game extends Eloquent {
         return $this->_players;
     }
 
+    public function getPlayersAndFantasy()
+    {
+        if(!isset($this->_playersF))
+        {
+            $gamePlayers = GamePlayer::where('gameId', $this->gameId)->get();
+            $fantasyPlayers = null;
+            $join = array();
+
+            if(count($gamePlayers) == 10)
+            {
+                    if($gamePlayers[0]->championId !== null)
+                    {
+                        $fantasyPlayers = FPlayerGame::where('gameId', $this->gameId)->get();
+                    }
+            }
+
+            foreach($gamePlayers as $player)
+            {
+                $temp = $player;
+                $temp->fantasyPlayer = null;
+
+                if(!empty($fantasyPlayers))
+                {
+                    foreach($fantasyPlayers as $fPlayer)
+                    {
+                        if($fPlayer->fId == $player->playerId)
+                        {
+                            $temp->fantasyPlayer = $fPlayer;
+                        }
+                    }
+                }
+
+                $join[] = $temp;
+            }
+
+            $this->_playersF = $join;
+
+        }
+
+        return $this->_playersF;
+    }
+
     public function teams()
     {
         if(!isset($this->_teams))
         {
-            //$teams = array();
-            //$counter = 0;
-            //$players = $this->getPlayers();
-            //foreach($players as $player)
-            //{
-            //    if($counter < 5)
-            //    {
-            //        $teams[0][] = $player;
-            //    }
-            //    else
-            //    {
-            //        $teams[1][] = $player;
-            //    }
-            //
-            //    $counter++;
-            //}
-            //
-            //$this->_teams = $teams;
-
             $teams = array();
 
-            $players = $this->getPlayers();
-            foreach($players as $player)
+            $players = $this->getPlayersAndFantasy();
+
+            if(!empty($players))
             {
-                if($player->teamId == $this->blueId)
+                foreach($players as $player)
                 {
-                    $teams[$this->blueId][] = $player;
-                }
-                elseif($player->teamId == $this->redId)
-                {
-                    $teams[$this->redId][] = $player;
+                    if($player->championId == null)
+                    {
+                        continue;
+                    }
+
+                    if($player->teamId == $this->blueId)
+                    {
+                        $teams[$this->blueId][] = $player;
+                    }
+                    elseif($player->teamId == $this->redId)
+                    {
+                        $teams[$this->redId][] = $player;
+                    }
                 }
             }
 
-            $reorder = array();
-            $reorder[$this->blueId] = $teams[$this->blueId];
-            $reorder[$this->redId] = $teams[$this->redId];
+            if(!empty($teams))
+            {
+                if(array_search($this->blueId, array_keys($teams)) != 0)
+                {
+                    $teams = array_reverse($teams, true);
+                }
+            }
 
-
-            $this->_teams = $reorder;
+            $this->_teams = $teams;
         }
 
         return $this->_teams;
@@ -103,8 +138,26 @@ class Game extends Eloquent {
     {
         if(!isset($this->_fantasyTeams))
         {
+            $fTeamsArray = array();
             $fTeams = FTeamGame::where('gameId', $this->gameId)->get();
-            $this->_fantasyTeams = $fTeams;
+
+            if(!empty($fTeams))
+            {
+                foreach($fTeams as $key => $value)
+                {
+                    if($value->teamId == $this->blueId)
+                    {
+                       $fTeamsArray[$this->blueId] = $value;
+                    }
+
+                    if($value->teamId == $this->redId)
+                    {
+                        $fTeamsArray[$this->redId] = $value;
+                    }
+                }
+            }
+
+            $this->_fantasyTeams = $fTeamsArray;
         }
 
         return $this->_fantasyTeams;
