@@ -148,7 +148,7 @@
                 @endif
 
                 @if($match->status() == 'Live')
-                    onclick="getLiveGame('{{ $match->matchId }}');"
+                    onclick="getMatchDetails('{{ $match->id }}');"
                 @endif
 
             >{{ $tempZone->format('g:i A') }}</button>

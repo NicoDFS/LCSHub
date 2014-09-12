@@ -7,44 +7,17 @@ Route::get('/', function()
     return View::make('html.home')->with('block', Block::currentBlock());
 });
 
+
 Route::get('/test', function()
 {
-
-    //$urls = [];
-    //foreach(Game::all() as $game)
+    //$leagues = League::whereNotNull('defaultTournamentId')->orWhereNotNull('defaultSeriesId')->get();
+    //foreach($leagues as $league)
     //{
-    //    $urls[] = "http://na.lolesports.com/api/game/{$game->gameId}.json";
-    //}
-    //
-    //
-    //$callback = function($data, $info)
-    //{
-    //    echo "a ";
-    //};
-    //
-    //
-    //$requests = new Requests();
-    //$requests->rolling_curl($urls, $callback);
-    //$requests->process($urls, $callback);
-
-    //$game = Game::find(312);
-    //if(count($game->teams()) > 0)
-    //{
-    //    echo "YES";
+    //    echo $league->label . "<br/>";
     //}
 
-    //$match = Match::find(253);
-    //foreach($match->getGames() as $k => $game)
-    //{
-    //    if(count($game->teams()) > 0)
-    //    {
-    //        "yes <br/>";
-    //    }
-    //}
-
-    //dd($match->getGames());
-    //dd($game->teams());
-
+    $insertController = new InsertController;
+    $insertController->tournamentTeamsPlayers();
 });
 
 Route::get('/reset', function()

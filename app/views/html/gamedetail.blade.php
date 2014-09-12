@@ -149,8 +149,8 @@
 
     @if(count($match->getGames()) > 1)
         <button type="button" class="btn btn-default btn-flat" style="width:100%; margin:0px; outline: none; {{ (count($match->getGames()) > 1 ? 'display:none;' : '') }}" onclick="gameToggle(this);"><i class="fa fa-angle-double-up"></i> Hide Game {{ $game->gameNumber }}</button>
-        </div>
     @endif
+    </div>
 
 @endforeach
 

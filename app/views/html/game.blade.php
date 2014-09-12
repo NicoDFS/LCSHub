@@ -4,12 +4,26 @@
         @if($match->winnerId !== null)
             Winner: {{ ($match->winnerId == $match->blueId ? $match->blueAcronym : $match->redAcronym) }}
         @else
-            In Progress: {{ ($match->seriesWinner() == $match->blueId ? $match->blueAcronym : $match->redAcronym) }}
+
+
+            @if($match->seriesWinner() == -1)
+                In Progress: Tied
+            @elseif($match->seriesWinner() == $match->blueId)
+                In Progress: {{ $match->blueAcronym }}
+            @elseif($match->seriesWinner() == $match->redId)
+                In Progress: {{ $match->redAcronym }}
+            @elseif($match->seriesWinner() == -2)
+                &nbsp;
+            @endif
+
         @endif
 
-        @if(count($match->getGames()) > 1) ({{ $match->seriesResult() }})
-        @else &#40;{{ gmdate('G:i:s', $match->getGames()[0]->gameLength) }}&#41;
+        @if(count($match->getGames()) > 1)
+            ({{ $match->seriesResult() }})
+        @elseif(count($match->getGames()) == 1 && $match->maxGames == 1)
+            &#40;{{ gmdate('G:i:s', $match->getGames()[0]->gameLength) }}&#41;
         @endif
+
         <button type="button" class="btn btn-default pull-right" style="margin-top:-6px; outline:none;" id="refresh-match-{{ $match->id }}"  onclick="refreshDetail('{{ $match->id }}');"><i class="fa fa-refresh"></i> Refresh</button>
     </h2>
     @include('html.gamedetail', array('match' => $match))

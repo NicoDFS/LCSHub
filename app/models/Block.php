@@ -180,6 +180,20 @@ class Block extends Eloquent {
         }
     }
 
+    public function isMatchLive($matchId)
+    {
+        $matches = $this->getMatches();
+        foreach($matches as $match)
+        {
+            if($match->isLive == 1 && $match->matchId == $matchId)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function isLiveMatch()
     {
         $matches = $this->getMatches();

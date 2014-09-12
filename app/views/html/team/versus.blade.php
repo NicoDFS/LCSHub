@@ -1,4 +1,4 @@
-<div style="margin: auto; width: 420px;">
+<div style="margin: auto; position: relative;width: 370px;">
 @if(in_array($block->tournamentId, Config::get('standings.approvedTournaments')))
 
     <?php $block->sortPlaces() ?>
@@ -65,23 +65,27 @@
 
             @if($activeMatch->status() == 'Live')
 
-                @if( count($activeMatch->getGames()) > 1)
-                    <span class="label label-success" style=" font-size: 10px; position: absolute; left: 73px; top: 53px; ">({{ $activeMatch->seriesResult() }})</span>
+                @if(count($activeMatch->getGames()) > 1)
+                    @if($activeMatch->seriesWinner() == $activeMatch->blueId)
+                        <span class="label label-success" style=" font-size: 10px; position: absolute; left: 73px; top: 48px;; ">({{ $activeMatch->seriesResult() }})</span>
+                    @elseif($activeMatch->seriesWinner() == $activeMatch->redId)
+                        <span class="label label-success" style=" font-size: 10px; position: absolute; left: 258px; top: 48px;; ">({{ $activeMatch->seriesResult() }})</span>
+                    @endif
                 @endif
 
-                <span class="label label-primary" style=" font-size: 10px; position: absolute; left: 185px; top: 53px; ">Best of {{ $activeMatch->maxGames }}</span>
-                <span class="label label-danger" style=" font-size: 10px; position: absolute; left: 127px; top: 53px; ">Game {{ count($activeMatch->getGames()) }}</span>
+                <span class="label label-primary" style=" font-size: 10px; position: absolute; left: 185px; top: 48px;; ">Best of {{ $activeMatch->maxGames }}</span>
+                <span class="label label-danger" style=" font-size: 10px; position: absolute; left: 127px; top: 48px;; ">Game {{ $activeMatch->liveGameCount() }}</span>
             @elseif($activeMatch->status() == 'Finished')
-                <span class="label label-primary" style=" font-size: 10px; position: relative; left: -15px; top:-15px; letter-spacing: 0px;">Best of {{ $activeMatch->maxGames }}</span>
+                <span class="label label-primary" style=" font-size: 10px; position: absolute; left: 156px; top: 48px;; ">Best of {{ $activeMatch->maxGames }}</span>
 
                 @if($activeMatch->winnerId == $activeMatch->blueId)
-                    <span class="label label-success" style=" font-size: 10px; position: absolute; left: 495px; top: 73px; ">({{ $activeMatch->seriesResult() }})</span>
+                    <span class="label label-success" style=" font-size: 10px; position: absolute; left: 73px; top: 48px;; ">({{ $activeMatch->seriesResult() }})</span>
                 @elseif($activeMatch->winnerId == $activeMatch->redId)
-                    <span class="label label-success" style=" font-size: 10px; position: relative; left: 103px; top: -15px; letter-spacing: 0px;">({{ $activeMatch->seriesResult() }})</span>
+                    <span class="label label-success" style=" font-size: 10px; position: absolute; left: 258px; top: 48px;; ">({{ $activeMatch->seriesResult() }})</span>
                 @endif
 
             @elseif($activeMatch->status() == 'Scheduled')
-                <span class="label label-primary" style=" font-size: 10px; position: absolute; left: 583px; top: 73px; ">Best of {{ $activeMatch->maxGames }}</span>
+                <span class="label label-primary" style=" font-size: 10px; position: absolute; left: 156px; top: 48px;; ">Best of {{ $activeMatch->maxGames }}</span>
             @endif
 
         @endif

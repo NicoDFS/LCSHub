@@ -25,13 +25,22 @@ class Match extends Eloquent {
             if($game->winnerId == $game->blueId) $blueWins++;
         }
 
+        if($blueWins == 0 && $redWins == 0)
+        {
+            return -2;
+        }
+
         if($blueWins > $redWins)
         {
             return $this->blueId;
         }
-        else
+        elseif($redWins > $blueWins)
         {
             return $this->redId;
+        }
+        elseif($redWins == $blueWins)
+        {
+            return -1;
         }
     }
 

@@ -26,6 +26,9 @@ class DatabaseSeeder extends Seeder {
 
                 $insertController = new InsertController;
                 $insertController->all();
+
+                //$insertController->testing();
+                //$insertController->tournamentTeamsPlayers();
                 //$insertController->blocks();
                 //$insertController->games();
 

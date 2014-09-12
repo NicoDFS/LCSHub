@@ -217,7 +217,7 @@
 
             if(id == 'current')
             {
-                window.liveUpdates = 1;
+                //window.liveUpdates = 1;
             }
 
         });

@@ -23,10 +23,10 @@ class InsertController extends BaseController {
         echo $this->debug("Inserted Games and GamePlayers (" . implode($games, ", ") . ")");
 
         $fData = $this->fantasyTeamData(true);
-        echo $this->debug("Inserted Fantasy Teams and Fantasy Players (" . implode($fData, ", ") . ")");
+        echo $this->debug("Inserted FantasyTeams and FantasyPlayers (" . implode($fData, ", ") . ")");
 
         $fGame = $this->fantasyGameData(true);
-        echo $this->debug("Inserted Fantasy Team Games and Fantasy Player Games (" . implode($fGame, ", ") . ")");
+        echo $this->debug("Inserted FantasyTeamGames and FantasyPlayerGames (" . implode($fGame, ", ") . ")");
 
         $end = microtime(true);
 
@@ -94,9 +94,7 @@ class InsertController extends BaseController {
     {
         Eloquent::unguard();
 
-        $leagues = League::whereRaw('defaultTournamentId IS NOT NULL')->get();
-        //$leagues = League::whereRaw("defaultTournamentId = " . Config::get("tournaments.NA_LCS") . " OR defaultTournamentId = " . Config::get("tournaments.EU_LCS"))->get();
-        //$leagues = League::all();
+        $leagues = League::whereNotNull('defaultTournamentId')->orWhereNotNull('defaultSeriesId')->get();
 
         $pastTournaments = array(
 
@@ -110,6 +108,7 @@ class InsertController extends BaseController {
         foreach($pastTournaments as $lId => $tId)
         {
             $temp = new League;
+
             $temp->defaultTournamentId = $tId[1];
             $temp->leagueId = $tId[0];
 
@@ -117,95 +116,104 @@ class InsertController extends BaseController {
 
         }
 
-        //foreach($leagues as $league)
-        //{
-        //    $tIds = explode(', ', $league->leagueTournaments);
-        //    foreach($tIds as $tValue)
-        //    {
-        //        if($tValue == null || $tValue == " " || $tValue == "")
-        //        continue;
-        //        $temp = new League;
-        //        $temp->defaultTournamentId = $tValue;
-        //        $temp->leagueId = $league->leagueId;
-        //
-        //        $leagues[] = $temp;
-        //    }
-        //}
-
-
         foreach($leagues as $league)
         {
-            if($league->defaultTournamentId == null || $league->defaultTournamentId == " ") continue;
-            $leagueDataURL = "http://na.lolesports.com:80/api/tournament/" . $league->defaultTournamentId . ".json?timestamp=" . time();
-            $leagueData = json_decode(file_get_contents($leagueDataURL));
+            $tIds = array();
 
-            $tournament = Tournament::firstOrCreate(["tournamentId" => $league->defaultTournamentId]);
-
-            if(empty($leagueData->winner)) $leagueData->winner = null;
-
-            $tournament->update([
-                "leagueId"          => $league->leagueId,
-                "tournamentId"      => $league->defaultTournamentId,
-                "name"              => $leagueData->name,
-                "namePublic"        => $leagueData->namePublic,
-                "isFinished"        => $leagueData->isFinished,
-                "dateBegin"         => date("Y-m-d H:i:s", strtotime($leagueData->dateBegin)),
-                "dateEnd"           => date("Y-m-d H:i:s", strtotime($leagueData->dateEnd)),
-                "noVods"            => $leagueData->noVods,
-                "season"            => $leagueData->season,
-                "published"         => $leagueData->published,
-                "winner"            => $leagueData->winner
-            ]);
-
-            foreach($leagueData->contestants as $contestant)
+            if($league->defaultTournamentId == null && $league->defaultSeriesId != null)
             {
-                if($contestant->id == null)
+                $seriesDataURL = "http://na.lolesports.com:80/api/series/" . $league->defaultSeriesId . ".json?timestamp=" . time();
+                $seriesData = json_decode(file_get_contents($seriesDataURL));
+
+                foreach($seriesData->tournaments as $tourney)
                 {
-                    continue;
+                    $tIds[] = $tourney;
                 }
 
-                $contestantURL = "http://na.lolesports.com:80/api/team/" . $contestant->id . ".json?expandPlayers=1";
-                $contestantData = json_decode(file_get_contents($contestantURL));
+            }
+            else if($league->defaultTournamentId != null)
+            {
+                $tIds[] = $league->defaultTournamentId;
+            }
 
-                $team = Team::firstOrCreate(["teamId" => $contestant->id]);
+            if(!empty($tIds))
+            {
 
-                $team->update([
-                    "tournamentId"      => $league->defaultTournamentId ,
-                    "teamId"            => $contestant->id,
-                    "name"              => $contestantData->name,
-                    "bio"               => $contestantData->bio,
-                    "noPlayers"         => $contestantData->noPlayers,
-                    "logoUrl"           => $contestantData->logoUrl,
-                    "profileUrl"        => $contestantData->profileUrl,
-                    "teamPhotoUrl"      => $contestantData->teamPhotoUrl,
-                    "acronym"           => ($contestantData->acronym == " " ? null : $contestantData->acronym )
-                ]);
-
-                if($contestantData->roster !== null)
+                foreach($tIds as $tId)
                 {
-                    foreach($contestantData->roster as $pData)
+
+                    $leagueDataURL = "http://na.lolesports.com:80/api/tournament/" . $tId . ".json?timestamp=" . time();
+                    $leagueData = json_decode(file_get_contents($leagueDataURL));
+
+                    $tournament = Tournament::firstOrCreate(["tournamentId" => $tId]);
+
+                    if(empty($leagueData->winner)) $leagueData->winner = null;
+
+                    $tournament->update([
+                        "leagueId"          => $league->leagueId,
+                        "tournamentId"      => $tId,
+                        "name"              => $leagueData->name,
+                        "namePublic"        => $leagueData->namePublic,
+                        "isFinished"        => $leagueData->isFinished,
+                        "dateBegin"         => date("Y-m-d H:i:s", strtotime($leagueData->dateBegin)),
+                        "dateEnd"           => date("Y-m-d H:i:s", strtotime($leagueData->dateEnd)),
+                        "noVods"            => $leagueData->noVods,
+                        "season"            => $leagueData->season,
+                        "published"         => $leagueData->published,
+                        "winner"            => $leagueData->winner
+                    ]);
+
+                    foreach($leagueData->contestants as $contestant)
                     {
-                        $playerId = substr($pData->profileUrl, strpos($pData->profileUrl, "/node/") + 6);
+                        if($contestant->id == null)
+                        {
+                            continue;
+                        }
 
-                        $player = Player::firstOrCreate(["playerId" => $playerId]);
+                        $contestantURL = "http://na.lolesports.com:80/api/team/" . $contestant->id . ".json?expandPlayers=1&timestamp=" . time();
+                        $contestantData = json_decode(file_get_contents($contestantURL));
 
-                        $player->update([
-                            "playerId"      => $playerId,
-                            "name"          => $pData->name,
-                            "bio"           => $pData->bio,
-                            "firstName"     => $pData->firstname,
-                            "lastName"      => $pData->lastName,
-                            "hometown"      => $pData->hometown,
-                            "facebookURL"   => $pData->facebookUrl,
-                            "twitterURL"    => $pData->twitterUrl,
-                            "teamId"        => $contestant->id,
-                            "profileURL"    => $pData->profileUrl,
-                            "role"          => $pData->role,
-                            "roleId"        => $pData->roleId,
-                            "photoURL"      => $pData->photoUrl,
-                            "isStarter"     => $pData->isStarter
+                        $team = Team::firstOrCreate(["teamId" => $contestant->id]);
+
+                        $team->update([
+                            "tournamentId"      => $tId,
+                            "teamId"            => $contestant->id,
+                            "name"              => $contestantData->name,
+                            "bio"               => $contestantData->bio,
+                            "noPlayers"         => $contestantData->noPlayers,
+                            "logoUrl"           => $contestantData->logoUrl,
+                            "profileUrl"        => $contestantData->profileUrl,
+                            "teamPhotoUrl"      => $contestantData->teamPhotoUrl,
+                            "acronym"           => ($contestantData->acronym == " " ? null : $contestantData->acronym )
                         ]);
 
+                        if($contestantData->roster !== null)
+                        {
+                            foreach($contestantData->roster as $pData)
+                            {
+                                $playerId = substr($pData->profileUrl, strpos($pData->profileUrl, "/node/") + 6);
+
+                                $player = Player::firstOrCreate(["playerId" => $playerId]);
+
+                                $player->update([
+                                    "playerId"      => $playerId,
+                                    "name"          => $pData->name,
+                                    "bio"           => $pData->bio,
+                                    "firstName"     => $pData->firstname,
+                                    "lastName"      => $pData->lastName,
+                                    "hometown"      => $pData->hometown,
+                                    "facebookURL"   => $pData->facebookUrl,
+                                    "twitterURL"    => $pData->twitterUrl,
+                                    "teamId"        => $contestant->id,
+                                    "profileURL"    => $pData->profileUrl,
+                                    "role"          => $pData->role,
+                                    "roleId"        => $pData->roleId,
+                                    "photoURL"      => $pData->photoUrl,
+                                    "isStarter"     => $pData->isStarter
+                                ]);
+
+                            }
+                        }
                     }
                 }
             }
@@ -235,30 +243,6 @@ class InsertController extends BaseController {
 
             $this->insertLeagues($leagueData);
         }
-
-
-        //$urls = [];
-        //
-        //for($i = 1; $i < 20; $i++)
-        //{
-        //    $urls[] = "http://na.lolesports.com:80/api/league/$i.json";
-        //}
-        //
-        ////dd($urls);
-        //
-        //$callback = function($data, $info)
-        //{
-        //    if($data != "Entity not found")
-        //    {
-        //        $this->insertLeagues(json_decode($data));
-        //    }
-        //
-        //};
-        //
-        //
-        //$requests = new Requests();
-        //$requests->process($urls, $callback);
-
 
         if($returnCount)
         return League::all()->count();
@@ -943,5 +927,4 @@ class InsertController extends BaseController {
             }
         }
     }
-
 }
