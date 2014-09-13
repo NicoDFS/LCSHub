@@ -4,19 +4,54 @@
         <span style="float:left;padding: 10px;font-size: 15px; display:none;" id="viewerCount"><i class="fa fa-user" style="color:red;"></i></span>
 
         @if($block->isCurrentBlock() && (!isset($block->newMatchId) || $block->isLiveMatch()))
-            <div class="btn-group" style="float:right;">
-                <button type="button" class="btn btn btn-default btn-youtube" style=" padding: 2px; ">
-                    <img src="http://s.jtvnw.net/jtv_user_pictures/hosted_images/GlitchIcon_purple.png" style="height: 28px;">
-                </button>
-                <button type="button" class="btn btn btn-default">{{ $block->twitchUsername() }}</button>
-            </div>
+
+            @if(Cookie::has(Config::get('cookie.player')))
+
+                @if(Cookie::get(Config::get('cookie.player')) == 'twitch')
+
+                    <div class="btn-group" style="float:right;">
+                        <button type="button" class="btn btn btn-default btn-youtube" style=" padding: 2px; ">
+                            <img src="http://s.jtvnw.net/jtv_user_pictures/hosted_images/GlitchIcon_purple.png" style="height: 28px;">
+                        </button>
+                        <button type="button" class="btn btn btn-default">{{ $block->twitchUsername() }}</button>
+                    </div>
+
+                @elseif(Cookie::get(Config::get('cookie.player')) == 'youtube')
+
+                    <div class="btn-group" style="float:right;">
+                        <button type="button" class="btn btn btn-default btn-youtube" style="padding-top: 5px; padding-bottom: 5px; padding-left: 7px; padding-right: 5px;"><i class="fa fa-youtube-play" style=" font-size: 21px; "></i></button>
+                            <button type="button" class="btn btn btn-default">lolchampseries</button>
+                    </div>
+
+                @elseif(Cookie::get(Config::get('cookie.player')) == 'azubu')
+
+                    <div class="btn-group" style="float:right;">
+                        <button type="button" class="btn btn btn-default btn-youtube" style=" padding: 2px; ">
+                            <img src="http://www.azubu.tv/favicon.ico" style="height: 28px; padding:3px;">
+                        </button>
+                        <button type="button" class="btn btn btn-default">Riot_Games</button>
+                    </div>
+
+                @endif
+
+            @else
+                <div class="btn-group" style="float:right;">
+                    <button type="button" class="btn btn btn-default btn-youtube" style=" padding: 2px; ">
+                        <img src="http://s.jtvnw.net/jtv_user_pictures/hosted_images/GlitchIcon_purple.png" style="height: 28px;">
+                    </button>
+                    <button type="button" class="btn btn btn-default">{{ $block->twitchUsername() }}</button>
+                </div>
+            @endif
 
             <button type="button" class="btn btn-default btn-rad" style="margin-top:2px;" onclick="twitchToggle();"><i class="fa fa-bars"></i> &nbsp;Toggle Twitch Chat</button>
+
         @else
+
             <div class="btn-group" style="float:right;">
-                <button type="button" class="btn btn btn-default btn-youtube"><i class="fa fa-youtube-play" style=" font-size: 14px; "></i></button>
+                <button type="button" class="btn btn btn-default btn-youtube" style="padding-top: 5px; padding-bottom: 5px; padding-left: 7px; padding-right: 5px;"><i class="fa fa-youtube-play" style=" font-size: 21px; "></i></button>
                     <button type="button" class="btn btn btn-default">lolchampseries</button>
             </div>
+
         @endif
 
         <iframe frameborder="0" scrolling="no" id="twitchChatEmbed" src="http://twitch.tv/chat/embed?channel={{ $block->twitchUsername() }}&amp;popout_chat=true" height="404" width="100%" style="display:none; margin-top:5px;"></iframe>

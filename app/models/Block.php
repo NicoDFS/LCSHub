@@ -560,4 +560,27 @@ class Block extends Eloquent {
         $this->_latestBlock = $bool;
     }
 
+    public function getVideoPlayer()
+    {
+        if(Cookie::has(Config::get('cookie.player')))
+        {
+            if(Cookie::get(Config::get('cookie.player')) == 'twitch')
+            {
+                return '<object type="application/x-shockwave-flash" height="378" width="620" id="live_embed_player_flash" data="http://www.twitch.tv/widgets/live_embed_player.swf?channel=' . $this->twitchUsername() . '" bgcolor="#F6F6F6"><param name="allowFullScreen" value="true" /><param name="allowScriptAccess" value="always" /><param name="allowNetworking" value="all" /><param name="movie" value="http://www.twitch.tv/widgets/live_embed_player.swf" /><param name="flashvars" value="hostname=www.twitch.tv&channel=' . $this->twitchUsername() . '&auto_play=true&start_volume=100" /></object>';
+            }
+            elseif(Cookie::get(Config::get('cookie.player')) == 'youtube')
+            {
+                return '<iframe width="1280" height="720" src="//www.youtube.com/embed/' . $this->leagueYoutubeId() . '?t=100000000&vq=highres&autohide=1&rel=0&iv_load_policy=3&showinfo=0&theme=light&controls=2&color=white" frameborder="0" allowfullscreen></iframe>';
+            }
+            elseif(Cookie::get(Config::get('cookie.player')) == 'azubu')
+            {
+                return $this->getLeague()->azubu;
+            }
+        }
+        else
+        {
+            return '<object type="application/x-shockwave-flash" height="378" width="620" id="live_embed_player_flash" data="http://www.twitch.tv/widgets/live_embed_player.swf?channel=' . $this->twitchUsername() . '" bgcolor="#F6F6F6"><param name="allowFullScreen" value="true" /><param name="allowScriptAccess" value="always" /><param name="allowNetworking" value="all" /><param name="movie" value="http://www.twitch.tv/widgets/live_embed_player.swf" /><param name="flashvars" value="hostname=www.twitch.tv&channel=' . $this->twitchUsername() . '&auto_play=true&start_volume=100" /></object>';
+        }
+    }
+
 }
