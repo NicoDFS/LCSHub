@@ -19,7 +19,7 @@
         @endif
 
         @if(count($match->getGames()) > 1)
-            ({{ $match->seriesResult() }})
+            ({{ $match->seriesResult(true) }})
         @elseif(count($match->getGames()) == 1 && $match->maxGames == 1)
             &#40;{{ ($match->getGames()[0]->gameLength/60) > 59  ? gmdate('G:i:s', $match->getGames()[0]->gameLength) : gmdate('i:s', $match->getGames()[0]->gameLength)  }}&#41;
             @if($match->getGames()[0]->vodType != null)

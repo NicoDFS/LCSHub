@@ -44,7 +44,7 @@ class Match extends Eloquent {
         }
     }
 
-    public function seriesResult()
+    public function seriesResult($bool = false)
     {
         $games = $this->getGames();
         $blueWins = 0;
@@ -58,10 +58,14 @@ class Match extends Eloquent {
 
         if($blueWins > $redWins)
         {
+            if($bool)
+            return $blueWins . ' - ' . $redWins;
             return $blueWins . ' -- ' . $redWins;
         }
         else
         {
+            if($bool)
+            return $redWins  . ' - ' . $blueWins;
             return $redWins  . ' -- ' . $blueWins;
         }
 
