@@ -30,8 +30,8 @@
 
       <div class="tab-container tab-left">
         <ul class="nav nav-tabs flat-tabs" id="tabContainer">
-          <li class="active" data-toggle='tooltip' title='General' onclick="$(this).tooltip('hide');" data-placement='right'><a href="#general" data-toggle="tab"><i class="fa fa-edit"></i></a></li>
-          <li class="" data-toggle='tooltip' title='Fantasy Teams' onclick="$(this).tooltip('hide');" data-placement='right'><a href="#fantasy" data-toggle="tab"><i class="fa fa-users"></i></a></li>
+          <li class="active" data-toggle='tooltip' data-trigger="hover" title='General' onclick="$(this).tooltip('hide');" data-placement='right'><a href="#general" data-toggle="tab"><i class="fa fa-edit"></i></a></li>
+          <li class="" data-toggle='tooltip' data-trigger="hover" title='Fantasy Teams' onclick="$(this).tooltip('hide');" data-placement='right'><a href="#fantasy" data-toggle="tab"><i class="fa fa-users"></i></a></li>
         </ul>
         <div class="tab-content" style="padding-bottom: 0px; margin-bottom: 10px; padding-top:0px; border-top: 1px solid #E2E2E2;">
 

@@ -2,29 +2,34 @@
     <?php $tblCount = 0; ?>
 
     @if(count($match->getGames()) > 0)
-        <div class='gamesContainer' style="cursor: default; padding-left:15px; padding-bottom: 6px; padding-right:15px; padding-top:5px; border:1px solid rgba(0, 0, 0, 0.2); margin-top: 19px;margin-bottom: 10px; {{ (count($match->getGames()) == $game->gameNumber ? 'margin-bottom:19px;' : '') }}">
-            <h1 style="font-size:18px; text-align:left; margin-top:5px; margin-bottom:5px;">
+        <div class='gamesContainer' style="cursor: default; {{ (count($match->getGames()) > 1 ? 'border:1px solid rgba(0, 0, 0, 0.2); padding-left:15px; padding-bottom: 6px; padding-right:15px; padding-top:5px;' : '') }} margin-top: 19px;margin-bottom: 10px; {{ (count($match->getGames()) == $game->gameNumber ? 'margin-bottom:19px;' : '') }}">
 
-                @if(count($game->teams()) > 0)
+            @if(count($match->getGames()) > 1)
+
+                <h1 style="font-size:18px; text-align:left; margin-top:5px; margin-bottom:5px;">
+
                     <i class="fa fa-angle-double-down" style="cursor:pointer;" onclick="gameToggle(this);" data-toggle="tooltip" data-placement="top" title="Toggle Game {{ $game->gameNumber }}"></i>
-                @endif
-                Game {{ $game->gameNumber }} -
+                    Game {{ $game->gameNumber }} -
 
-                @if($game->winnerId !== null)
-                    {{ ($game->winnerId == $match->blueId ? $match->blueAcronym : $match->redAcronym) }}
-                @else
-                    In Progress
-                @endif
 
-                @if(count($game->teams()) > 0)
-                    - {{ ($game->gameLength/60) > 59  ? gmdate('G:i:s', $game->gameLength) : gmdate('i:s', $game->gameLength)  }}
-                @endif
+                    @if($game->winnerId !== null)
+                        {{ ($game->winnerId == $match->blueId ? $match->blueAcronym : $match->redAcronym) }}
+                    @else
+                        In Progress
+                    @endif
 
-                @if($game->vodType != null)
-                    <span class="pull-right" onclick="getGameVod('{{ $game->gameId }}');" style="cursor: pointer;" data-toggle="tooltip" data-placement="left" title="Watch Game {{ $game->gameNumber }}"><i class="fa fa-youtube-play blueIcon"></i></span>
-                @endif
+                    @if(count($game->teams()) > 0)
+                        - {{ ($game->gameLength/60) > 59  ? gmdate('G:i:s', $game->gameLength) : gmdate('i:s', $game->gameLength)  }}
+                    @endif
 
-            </h1>
+                    @if($game->vodType != null)
+                        <span class="pull-right" onclick="getGameVod('{{ $game->gameId }}');" style="cursor: pointer;" data-toggle="tooltip" data-placement="left" title="Watch Game{{ (count($match->getGames()) > 1 ? ' ' . $game->gameNumber : '') }}"><i class="fa fa-youtube-play blueIcon"></i></span>
+                    @endif
+
+                </h1>
+
+            @endif
+
     @endif
 
     @if(count($game->teams()) == 2)

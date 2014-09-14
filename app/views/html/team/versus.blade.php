@@ -1,33 +1,46 @@
-<div style="margin: auto; position: relative; width: 370px; margin: auto; position: relative; width: 375px; padding-bottom: 13px; background-color: rgb(245, 245, 245); border: 1px solid {{ $activeMatch->color() }}; box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05); margin-bottom:-2px; margin-top: -8px;">
+<div style="margin: auto; position: relative; width: 370px; margin: auto; position: relative; width: 375px; padding-bottom: 13px; background-color: rgb(245, 245, 245); border: 1px solid {{ $activeMatch->color() }}; box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05); margin-bottom:-2px; margin-top: 16px;">
 @if(in_array($block->tournamentId, Config::get('standings.approvedTournaments')))
 
     <?php $block->sortPlaces() ?>
 
     <img src="http://na.lolesports.com{{ $activeMatch->blueLogoURL }}" width='55' height='55' style="border-radius: 5%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:8px; {{ $activeMatch->winnerImg($activeMatch->blueId) }}">
 
+    @if($activeMatch->winnerId == $activeMatch->blueId)
+        <span class="label label-danger" style=" font-size: 10px; position: absolute; left: 46px; top: 46px; border-bottom: 3px solid rgb(96, 192, 96); border-right: 3px solid rgb(96, 192, 96);">{{ $block->_places[$activeMatch->blueAcronym] }}</span>
+    @else
+        <span class="label label-danger" style=" font-size: 10px; position: absolute; left: 49px; top: 49px;">{{ $block->_places[$activeMatch->blueAcronym] }}</span>
+    @endif
+
     <div style="display: inline-table; width:90px; {{ $activeMatch->winner($activeMatch->blueId) }}">
 
         <span style="float:left;">{{ $activeMatch->blueAcronym }}</span> <br/>
 
         <span style="font-size: 14px; float:left;">
-            {{ $block->_places[$activeMatch->blueAcronym] }} ({{ $activeMatch->blueWins }}-{{ $activeMatch->blueLosses }})
+            ({{ $activeMatch->blueWins }}-{{ $activeMatch->blueLosses }})
         </span>
 
     </div>
 
-    <span style="color: {{ ($activeMatch !== null ? $activeMatch->color() : '') }}" title="{{ ($activeMatch !== null ? $activeMatch->status() : '') }}" data-toggle="tooltip">vs</span>
+    <span>vs</span>
+    <span class="label label-primary" style=" font-size: 10px; position: absolute; left: -1px; top: -20px; width: 375px; background-color: rgb(245, 245, 245); box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05); color: black; border: 1px solid {{ $activeMatch->color() }}">{{ $activeMatch->textStatus() }}</span>
 
     <div style="display: inline-table; text-align:right; width:90px; {{ $activeMatch->winner($activeMatch->redId) }}">
 
         <span style="float:right;">{{ $activeMatch->redAcronym }}</span> <br/>
 
         <span style="font-size: 14px; float:right;">
-            {{ $block->_places[$activeMatch->redAcronym] }} ({{ $activeMatch->redWins }}-{{ $activeMatch->redLosses }})
+            ({{ $activeMatch->redWins }}-{{ $activeMatch->redLosses }})
         </span>
 
     </div>
 
     <img src="http://na.lolesports.com{{ $activeMatch->redLogoURL }}" width='55' height='55' style="border-radius: 5%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:10px; {{ $activeMatch->winnerImg($activeMatch->redId) }}">
+
+    @if($activeMatch->winnerId == $activeMatch->redId)
+        <span class="label label-danger" style=" font-size: 10px; position: absolute; left: 307px; top: 47px; border-bottom: 3px solid rgb(96, 192, 96); border-left: 3px solid rgb(96, 192, 96);">{{ $block->_places[$activeMatch->redAcronym] }}</span>
+    @else
+        <span class="label label-danger" style=" font-size: 10px; position: absolute; left: 307px; top: 50px;">{{ $block->_places[$activeMatch->redAcronym] }}</span>
+    @endif
 
 @else
 
@@ -71,6 +84,8 @@
             @endif
 
         @endif
+
+        <span class="label label-primary" style=" font-size: 10px; position: absolute; left: -1px; top: -20px; width: 375px; background-color: rgb(245, 245, 245); box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05); color: black; border: 1px solid {{ $activeMatch->color() }}">{{ $activeMatch->textStatus() }}</span>
 
     </div>
 

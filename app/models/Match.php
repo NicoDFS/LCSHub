@@ -214,4 +214,26 @@ class Match extends Eloquent {
         }
     }
 
+    public function textStatus()
+    {
+        if($this->status() == 'Live')
+        {
+            return "LIVE Match";
+        }
+        elseif($this->status() == 'Finished')
+        {
+            $tempZone = new DateTime($this->dateTime);
+            $tempZone->setTimezone(new DateTimeZone(Block::defaultTimezone()));
+
+            return "Finished Match: " . $tempZone->format('M j, Y') . " at " . $tempZone->format('g:i A');
+        }
+        elseif($this->status() == 'Scheduled')
+        {
+            $tempZone = new DateTime($this->dateTime);
+            $tempZone->setTimezone(new DateTimeZone(Block::defaultTimezone()));
+
+            return "Scheduled Match: " . $tempZone->format('M j, Y') . " at " . $tempZone->format('g:i A');
+        }
+    }
+
 }
