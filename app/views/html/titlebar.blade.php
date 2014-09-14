@@ -23,25 +23,24 @@
     <li><a href="#" onclick="return false;">{{ $block->getLeague()->label }}</a></li>
     <li><a href="#" onclick="return false;">{{ $block->tournamentName }}</a></li>
     <li><a href="#" onclick="return false;">{{ substr($block->label, strpos($block->label, " - ") + 3) }}</a></li>
-    <li class="active">
-        @if($activeMatch !== null)
 
-                <a href="#" onclick="return false;">{{ $activeMatch->matchName }}</a>
+    @if($activeMatch !== null)
+        <li class="active"><a href="#" onclick="return false;">{{ $activeMatch->matchName }}</a></li>
+    @elseif($activeMatch == null && $block->isCurrentBlock())
 
-        @elseif($activeMatch == null && $block->isCurrentBlock())
-
-            @if($block->matchesFinished())
-                Finished
-            @else
-                Scheduled
-            @endif
-
+        @if($block->matchesFinished())
+            <li class="active">Finished</li>
         @else
-            Finished
+            <li class="active">Scheduled</li>
         @endif
-    </li>
+
+    @else
+        <li class="active">Finished</li>
+    @endif
 
     @if($activeMatch !== null && $activeMatch->maxGames > 1 && isset($block->requestedGame))
         <li><a href="#" onclick="return false;">Game {{ $activeMatch->getGames()[$block->getRequestedGame()]->gameNumber }}</a></li>
+    @elseif($activeMatch !== null && $activeMatch->maxGames > 1)
+        <li><a href="#" onclick="return false;">Game {{ $activeMatch->getGames()[0]->gameNumber }}</a></li>
     @endif
 </ol>

@@ -58,11 +58,11 @@ class Match extends Eloquent {
 
         if($blueWins > $redWins)
         {
-            return $blueWins . '-' . $redWins;
+            return $blueWins . ' -- ' . $redWins;
         }
         else
         {
-            return $redWins  . '-' . $blueWins;
+            return $redWins  . ' -- ' . $blueWins;
         }
 
     }

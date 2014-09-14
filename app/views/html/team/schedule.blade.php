@@ -45,9 +45,9 @@
                     <span class="label label-primary" style=" font-size: 10px; position: absolute; left: 156px; top: 53px; ">Best of {{ $match->maxGames }}</span>
 
                     @if($match->winnerId == $match->blueId)
-                        <span class="label label-success" style=" font-size: 10px; position: absolute; left: 73px; top: 53px; ">({{ $match->seriesResult() }})</span>
+                        <span class="label label-success" style=" font-size: 10px; position: absolute; left: 73px; top: 53px; ">{{ $match->seriesResult() }}</span>
                     @elseif($match->winnerId == $match->redId)
-                        <span class="label label-success" style=" font-size: 10px; position: absolute; left: 258px; top: 53px; ">({{ $match->seriesResult() }})</span>
+                        <span class="label label-success" style=" font-size: 10px; position: absolute; left: 255px; top: 53px; ">{{ $match->seriesResult() }}</span>
                     @endif
 
                 @elseif($match->status() == 'Scheduled')
@@ -102,9 +102,9 @@
 
                     @if(count($match->getGames()) > 1)
                         @if($match->seriesWinner() == $match->blueId)
-                            <span class="label label-success" style=" font-size: 10px; position: absolute; left: 73px; top: 53px; ">({{ $match->seriesResult() }})</span>
+                            <span class="label label-success" style=" font-size: 10px; position: absolute; left: 73px; top: 53px; ">{{ $match->seriesResult() }}</span>
                         @elseif($match->seriesWinner() == $match->redId)
-                            <span class="label label-success" style=" font-size: 10px; position: absolute; left: 258px; top: 53px; ">({{ $match->seriesResult() }})</span>
+                            <span class="label label-success" style=" font-size: 10px; position: absolute; left: 258px; top: 53px; ">{{ $match->seriesResult() }}</span>
                         @endif
                     @endif
 
@@ -114,9 +114,9 @@
                     <span class="label label-primary" style=" font-size: 10px; position: absolute; left: 156px; top: 53px; ">Best of {{ $match->maxGames }}</span>
 
                     @if($match->winnerId == $match->blueId)
-                        <span class="label label-success" style=" font-size: 10px; position: absolute; left: 73px; top: 53px; ">({{ $match->seriesResult() }})</span>
+                        <span class="label label-success" style=" font-size: 10px; position: absolute; left: 73px; top: 53px; ">{{ $match->seriesResult() }}</span>
                     @elseif($match->winnerId == $match->redId)
-                        <span class="label label-success" style=" font-size: 10px; position: absolute; left: 258px; top: 53px; ">({{ $match->seriesResult() }})</span>
+                        <span class="label label-success" style=" font-size: 10px; position: absolute; left: 255px; top: 53px; ">{{ $match->seriesResult() }}</span>
                     @endif
 
                 @elseif($match->status() == 'Scheduled')

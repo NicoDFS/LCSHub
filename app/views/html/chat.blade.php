@@ -20,7 +20,7 @@
 
                     <div class="btn-group" style="float:right;">
                         <button type="button" class="btn btn btn-default btn-youtube" style="padding-top: 5px; padding-bottom: 5px; padding-left: 7px; padding-right: 5px;"><i class="fa fa-youtube-play" style=" font-size: 21px; "></i></button>
-                            <button type="button" class="btn btn btn-default">lolchampseries</button>
+                            <button type="button" class="btn btn btn-default">LoLChampSeries</button>
                     </div>
 
                 @elseif(Cookie::get(Config::get('cookie.player')) == 'azubu')
@@ -49,7 +49,7 @@
 
             <div class="btn-group" style="float:right;">
                 <button type="button" class="btn btn btn-default btn-youtube" style="padding-top: 5px; padding-bottom: 5px; padding-left: 7px; padding-right: 5px;"><i class="fa fa-youtube-play" style=" font-size: 21px; "></i></button>
-                    <button type="button" class="btn btn btn-default">lolchampseries</button>
+                    <button type="button" class="btn btn btn-default">LoLChampSeries</button>
             </div>
 
         @endif
