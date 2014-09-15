@@ -121,17 +121,16 @@
 
         window.fantasyTeams = [];
 
-        @if(Cookie::has(Config::get('cookie.fantasyTeams')))
-            <?php $fTeams = Cookie::get(Config::get('cookie.fantasyTeams'));  ?>
-            @foreach($fTeams as $fKey => $fValue)
-                @if($fValue !== null)
-                    window.fantasyTeams[{{ $fKey + 1}}] = new Object();
-                    @foreach($fValue as $pKey => $pValue)
-                        window.fantasyTeams[{{ $fKey + 1 }}].{{ $pKey }} = '{{ $pValue }}';
-                    @endforeach
-                @endif
-            @endforeach
-        @endif
+        <?php
+
+        if(Cookie::has(Config::get('cookie.fantasyTeams')))
+        {
+            $teams = Cookie::get(Config::get('cookie.fantasyTeams'));
+            echo "window.fantasyTeams = jQuery.parseJSON('$teams');";
+        }
+
+        ?>
+
 
 
         $('[id="{{ Config::get('cookie.spoilers') }}"]').bootstrapSwitch();
@@ -399,6 +398,7 @@
     function addFantasyTeam()
     {
         var teamName = prompt('Fantasy Team Name?');
+
         if(teamName)
         {
             var posX = window.fantasyTeams.length;
@@ -407,7 +407,7 @@
             $("#fantasyTeamSelect").append("<option value='" + posX + "'>" + teamName + "</option>");
             $("#fantasyTeamSelect").select2().select2('val', posX);
             window.fantasyTeams[posX] = new Object();
-            window.fantasyTeams[posX].fantasyname = teamName;
+            window.fantasyTeams[posX].fantasyName = teamName;
 
             $(".positionSelect").attr('disabled', false);
             $(".positionSelect").select2('val', null);
@@ -424,6 +424,7 @@
                 deleteFantasyTeam(posX);
 
             });
+            $("#fantasyTeamSelect").select2().select2('val', posX);
 
         }
 
@@ -469,7 +470,7 @@
 
             $.each(fValue, function (qIndex, qValue) {
 
-                if(qIndex == 'fantasyname')
+                if(qIndex == 'fantasyName')
                 {
                     $('#fantasyTeamSelect').append("<option value='" + fKey + "'>" + qValue + "</option>");
                 }
@@ -493,14 +494,6 @@
         var updatesRes = ($('[id="{{ Config::get('cookie.updates') }}"]').is(':checked') ? 1 : 0);
         window.liveUpdates = updatesRes;
         var spoilersRes = ($('[id="{{ Config::get('cookie.spoilers') }}"]').is(':checked') ? 1 : 0);
-
-        if(0 in window.fantasyTeams)
-        {
-            if(window.fantasyTeams[0] == null)
-            {
-                window.fantasyTeams.shift();
-            }
-        }
 
         $.post('/ajax/settings/',
         {

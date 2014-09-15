@@ -135,7 +135,7 @@ class AjaxController extends BaseController {
 
     public function postSettings()
     {
-        if(Input::has('timezone') && Input::has('spoilers') && Input::has('updates') && Input::has('player'))
+        if(Input::has('timezone') || Input::has('spoilers') || Input::has('updates') || Input::has('player') || Input::has('fantasyTeams'))
         {
             if(!is_null(Input::get('timezone')))
             {
@@ -162,17 +162,7 @@ class AjaxController extends BaseController {
 
             if(Input::has('fantasyTeams') && !is_null(Input::get('fantasyTeams')))
             {
-                $output = json_decode(Input::get('fantasyTeams'));
-
-                if(isset($output[0]))
-                {
-                    if(is_null($output[0]))
-                    {
-                        unset($output[0]);
-                    }
-                }
-
-                Cookie::queue(Config::get('cookie.fantasyTeams'), $output, (60 * 24 * 360));
+                Cookie::queue(Config::get('cookie.fantasyTeams'), Input::get('fantasyTeams'), (60 * 24 * 360));
             }
 
             return Response::json([ 'message' => 'success' ]);

@@ -50,9 +50,9 @@ class FTeam extends Eloquent {
                 {
                     $output .= "</optgroup>";
 
-                    $selects[$lastPosition] = $output;
+                    //$selects[$lastPosition] = $output;
 
-                    $output = "<optgroup label='{$team->shortName}'>";
+                    $output .= "<optgroup label='{$team->shortName}'>";
                 }
 
                 $output .= "<option value='{$team->riotId}'>{$team->name} ({$team->acronym})</option>";

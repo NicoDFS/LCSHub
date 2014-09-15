@@ -4861,7 +4861,7 @@ button::-moz-focus-inner {
 /*Gritter Notifications*/
 #gritter-notice-wrapper {
   width: 320px;
-  top: 45px;
+  top: 60px;
 }
 .gritter-item-wrapper {
   background: url(../js/jquery.gritter/images/gritter-bg.png);
@@ -4901,7 +4901,7 @@ button::-moz-focus-inner {
   text-indent: inherit;
 }
 .gritter-close:after {
-  content: '×';
+  content: 'x';
   position: absolute;
   color: #FFF;
   left: 10px;
@@ -4941,7 +4941,7 @@ button::-moz-focus-inner {
   text-indent: inherit;
 }
 .gritter-item-wrapper.clean .gritter-close:after {
-  content: '×';
+  content: 'x';
   position: absolute;
   color: #FFF;
   top: 50%;
@@ -5756,6 +5756,11 @@ ul.timeline li > .date {
 }
 
 a.select2-choice.select2-default:hover {
+    border-color: #2598F9;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+}
+
+.select2-container .select2-choice:hover {
     border-color: #2598F9;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
 }

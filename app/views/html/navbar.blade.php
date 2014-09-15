@@ -41,7 +41,7 @@
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Player</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect" style="width:100%;" name='{{ Config::get('cookie.player') }}' id='{{ Config::get('cookie.player') }}' placeholder="Select a video player">
+                        <select class="fancySelect positionSelect" style="width:100%;" name='{{ Config::get('cookie.player') }}' id='{{ Config::get('cookie.player') }}' placeholder="Select a video player">
                             <option></option>
 
                             <option value="twitch" {{ ( (Cookie::has(Config::get('cookie.player')) and Cookie::get(Config::get('cookie.player')) == 'twitch') ? 'selected="selected"' : Config::get('cookie.playerDefault') == 'twitch' ? 'selected="selected"' : '' ) }}>Twitch</option>
@@ -55,7 +55,7 @@
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Timezone</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect" style="width:100%;" name='{{ Config::get('cookie.timezone') }}' id='{{ Config::get('cookie.timezone') }}' placeholder="Select a timezone">
+                        <select class="fancySelect positionSelect" style="width:100%;" name='{{ Config::get('cookie.timezone') }}' id='{{ Config::get('cookie.timezone') }}' placeholder="Select a timezone">
                             <option></option>
                             <?php
                                 $timezones = array (
@@ -242,20 +242,20 @@
                 <div class="form-group" style="margin-top:18px;">
                     <label for="inputEmail3" class="col-sm-2 control-label" style="margin-top:-8px;">Fantasy Team</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect" id='fantasyTeamSelect' style="width:50%;" placeholder="Select a fantasy team">
+                        <select class="fancySelect positionSelect" id='fantasyTeamSelect' style="width:50%;" placeholder="Select a fantasy team">
                             <option></option>
                             <?php
-                                if( Cookie::has(Config::get('cookie.fantasyTeams')) )
+                                if(Cookie::has(Config::get('cookie.fantasyTeams')))
                                 {
-                                    $dfTeams = Cookie::get(Config::get('cookie.fantasyTeams'));
+                                    $dfTeams = json_decode(Cookie::get(Config::get('cookie.fantasyTeams')));
                                     foreach($dfTeams as $dfKey => $dfValue)
                                     {
                                         if($dfValue !== null)
                                         foreach($dfValue as $pfKey => $pfValue)
                                         {
-                                            if($pfKey == 'fantasyname')
+                                            if($pfKey == 'fantasyName')
                                             {
-                                                echo "<option value='" . ($dfKey + 1) . "'>$pfValue</option>";
+                                                echo "<option value='$dfKey'>$pfValue</option>";
                                             }
                                         }
                                     }

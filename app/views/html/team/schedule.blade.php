@@ -244,6 +244,7 @@
 {
     padding-top:10px;
     padding-bottom:10px;
+    display:none;
 }
 </style>
 
@@ -253,6 +254,7 @@ $(document).ready(function()
     $(".noMatches img").each(function() {
 
         $(this).attr('src', 'http://na.lolesports.com' + $(this).attr('src'));
+        $(this).css('display', 'inline');
 
     });
 
@@ -264,7 +266,7 @@ $(document).ready(function()
 });
 </script>
 
-<li class="list-group-item noMatches blueHover" style='border-left: 5px solid; padding:0; padding-left:11px; background: #F8F8F8; border-left: 5px solid {{ $block->color() }};'>
+<li class="list-group-item noMatches blueHover" style='border-left: 5px solid; padding:0; padding-left:11px; background: #F8F8F8; border-left: 5px solid {{ $block->color() }}; height: 138px;'>
 
     {{ $block->body }}
 

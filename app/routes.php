@@ -10,14 +10,10 @@ Route::get('/', function()
 
 Route::get('/test', function()
 {
-    //$leagues = League::whereNotNull('defaultTournamentId')->orWhereNotNull('defaultSeriesId')->get();
-    //foreach($leagues as $league)
-    //{
-    //    echo $league->label . "<br/>";
-    //}
 
-    $insertController = new InsertController;
-    $insertController->tournamentTeamsPlayers();
+    $fTeam = new FTeam();
+    dd($fTeam->teamOptions());
+
 });
 
 Route::get('/reset', function()
