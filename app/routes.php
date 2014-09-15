@@ -4,6 +4,15 @@ Route::controller('ajax', 'AjaxController');
 
 Route::get('/', function()
 {
+
+    if(Cookie::has(Config::get('cookie.fantasyTeams')))
+    {
+        if(is_array(Cookie::get(Config::get('cookie.fantasyTeams'))))
+        {
+            Cookie::queue(Config::get('cookie.fantasyTeams'), null, (60 * 24 * 360));
+        }
+    }
+
     return View::make('html.home')->with('block', Block::currentBlock());
 });
 
@@ -11,8 +20,8 @@ Route::get('/', function()
 Route::get('/test', function()
 {
 
-    $fTeam = new FTeam();
-    dd($fTeam->teamOptions());
+    //$fTeam = new FTeam();
+    //dd($fTeam->teamOptions());
 
 });
 
