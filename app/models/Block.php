@@ -583,4 +583,40 @@ class Block extends Eloquent {
         }
     }
 
+    public function color()
+    {
+        if($this->bodyTime >= date('Y-m-d H:i:s'))
+        {
+            return "#4D90FD";
+        }
+        else
+        {
+            return "#60C060";
+        }
+    }
+
+    public function colorClass()
+    {
+        if($this->bodyTime >= date('Y-m-d H:i:s'))
+        {
+            return "primary";
+        }
+        else
+        {
+            return "success";
+        }
+    }
+
+    public function status()
+    {
+        if($this->bodyTime >= date('Y-m-d H:i:s'))
+        {
+            return "Scheduled";
+        }
+        else
+        {
+            return "Finished";
+        }
+    }
+
 }

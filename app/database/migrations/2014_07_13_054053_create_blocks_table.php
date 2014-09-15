@@ -29,7 +29,7 @@ class CreateBlocksTable extends Migration {
                 $table->string('week');
                 $table->string('label');
                 $table->datetime('bodyTime')->nullable();
-                $table->string('body')->nullable();
+                $table->text('body')->nullable();
                 $table->string('bodyTitle')->nullable();
 
 

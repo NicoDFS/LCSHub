@@ -64,7 +64,7 @@
                     @if($activeMatch->seriesWinner() == $activeMatch->blueId)
                         <span class="label label-success" style=" font-size: 10px; position: absolute; left: 73px; top: 48px; ">{{ $activeMatch->seriesResult() }}</span>
                     @elseif($activeMatch->seriesWinner() == $activeMatch->redId)
-                        <span class="label label-success" style=" font-size: 10px; position: absolute; left: 263px; top: 48px; ">{{ $activeMatch->seriesResult() }}</span>
+                        <span class="label label-success" style=" font-size: 10px; position: absolute; left: 265px; top: 48px; ">{{ $activeMatch->seriesResult() }}</span>
                     @endif
                 @endif
 
@@ -76,7 +76,7 @@
                 @if($activeMatch->winnerId == $activeMatch->blueId)
                     <span class="label label-success" style=" font-size: 10px; position: absolute; left: 73px; top: 48px; ">{{ $activeMatch->seriesResult() }}</span>
                 @elseif($activeMatch->winnerId == $activeMatch->redId)
-                    <span class="label label-success" style=" font-size: 10px; position: absolute; left: 263px; top: 48px; ">{{ $activeMatch->seriesResult() }}</span>
+                    <span class="label label-success" style=" font-size: 10px; position: absolute; left: 265px; top: 48px; ">{{ $activeMatch->seriesResult() }}</span>
                 @endif
 
             @elseif($activeMatch->status() == 'Scheduled')

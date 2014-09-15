@@ -23,7 +23,7 @@
         @elseif(count($match->getGames()) == 1 && $match->maxGames == 1)
             &#40;{{ ($match->getGames()[0]->gameLength/60) > 59  ? gmdate('G:i:s', $match->getGames()[0]->gameLength) : gmdate('i:s', $match->getGames()[0]->gameLength)  }}&#41;
             @if($match->getGames()[0]->vodType != null)
-               &nbsp;&nbsp; <span data-container='body' onclick="getGameVod('{{ $match->getGames()[0]->gameId }}');" style="cursor: pointer;" data-toggle="tooltip" data-placement="right" title="Watch Game"><i class="fa fa-youtube-play blueIcon"></i></span>
+               &nbsp;&nbsp; <span data-container='body' onclick="getGameVod('{{ $match->getGames()[0]->gameId }}');" style="cursor: pointer;" data-toggle="tooltip" data-placement="right" title="Watch Game"><i class="fa fa-youtube-play"></i></span>
             @endif
         @endif
 

@@ -47,7 +47,7 @@
                     @if($match->winnerId == $match->blueId)
                         <span class="label label-success" style=" font-size: 10px; position: absolute; left: 73px; top: 53px; ">{{ $match->seriesResult() }}</span>
                     @elseif($match->winnerId == $match->redId)
-                        <span class="label label-success" style=" font-size: 10px; position: absolute; left: 255px; top: 53px; ">{{ $match->seriesResult() }}</span>
+                        <span class="label label-success" style=" font-size: 10px; position: absolute; left: 257px; top: 53px; ">{{ $match->seriesResult() }}</span>
                     @endif
 
                 @elseif($match->status() == 'Scheduled')
@@ -116,7 +116,7 @@
                     @if($match->winnerId == $match->blueId)
                         <span class="label label-success" style=" font-size: 10px; position: absolute; left: 73px; top: 53px; ">{{ $match->seriesResult() }}</span>
                     @elseif($match->winnerId == $match->redId)
-                        <span class="label label-success" style=" font-size: 10px; position: absolute; left: 255px; top: 53px; ">{{ $match->seriesResult() }}</span>
+                        <span class="label label-success" style=" font-size: 10px; position: absolute; left: 257px; top: 53px; ">{{ $match->seriesResult() }}</span>
                     @endif
 
                 @elseif($match->status() == 'Scheduled')
@@ -207,3 +207,73 @@
     </li>
 
 @endforeach
+
+@if(count($block->getMatches()) == 0)
+
+<?php $tempZone = new DateTime($block->bodyTime); $tempZone->setTimezone(new DateTimeZone($block->timezone())); ?>
+
+<style>
+.noMatches .show-compact-schedule
+{
+    display: none;
+}
+
+.noMatches .show-schedule
+{
+    display:inline;
+}
+
+.noMatches center
+{
+    text-align: left;
+    display: inline;
+}
+
+.noMatches a
+{
+    pointer-events: none;
+    cursor: default;
+}
+
+.noMatches p
+{
+    display:none;
+}
+
+.noMatches img
+{
+    padding-top:10px;
+    padding-bottom:10px;
+}
+</style>
+
+<script type="text/javascript">
+$(document).ready(function()
+{
+    $(".noMatches img").each(function() {
+
+        $(this).attr('src', 'http://na.lolesports.com' + $(this).attr('src'));
+
+    });
+
+    $(".noMatches a").each(function() {
+
+        $(this).attr('href', 'http://na.lolesports.com' + $(this).attr('href'));
+
+    });
+});
+</script>
+
+<li class="list-group-item noMatches blueHover" style='border-left: 5px solid; padding:0; padding-left:11px; background: #F8F8F8; border-left: 5px solid {{ $block->color() }};'>
+
+    {{ $block->body }}
+
+    <div style='display:inline;height: 116px;padding-top: 10px;padding-right: 11px;float: right;'>
+        <button type="button" class="btn btn-{{ $block->colorClass() }} btn-lg" style="height: 116px; margin-bottom: 0px !important;" data-toggle="tooltip" data-placement="left" data-container="body" title="{{ $block->status() }}">
+        {{ $tempZone->format('g:i A') }}
+        </button>
+    </div>
+
+</li>
+
+@endif
