@@ -9,6 +9,7 @@ Route::get('/', function()
     {
         if(is_array(Cookie::get(Config::get('cookie.fantasyTeams'))))
         {
+            unset($_COOKIE[Config::get('cookie.fantasyTeams')]);
             Cookie::queue(Config::get('cookie.fantasyTeams'), null, (60 * 24 * 360));
         }
     }
