@@ -54,7 +54,7 @@ class FTeamGame extends Eloquent {
                 </tr>
 
                 <tr>
-                  <td>FBlood:</td>
+                  <td>1st Blood:</td>
                   <td class='text-center'>" . $this->firstBlood . " (" . sprintf("%+d", Config::get("fantasy.firstBlood")) . ")</td>
                   <td class='text-center'>" . sprintf("%+d", ($this->firstBlood * Config::get("fantasy.firstBlood"))) . "</td>
                 </tr>
