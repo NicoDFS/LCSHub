@@ -21,11 +21,6 @@ Route::get('/', function()
 Route::get('/test', function()
 {
 
-    //foreach(Cookie::get() as $cookie)
-    //{
-    //    dd($cookie);
-    //}
-
     if(Cookie::has(Config::get('cookie.spoilers')))
     {
         if(Cookie::get(Config::get('cookie.spoilers')) == 1)
@@ -34,6 +29,24 @@ Route::get('/test', function()
         }
 
     }
+
+});
+
+Route::group(array('prefix' => 'reset'), function()
+{
+
+    Route::get('all', function() {
+
+        $tableNames = DB::select('SHOW TABLES');
+
+        foreach ($tableNames as $name)
+        {
+            if ($name->Tables_in_flcshub == 'migrations') continue;
+
+            DB::statement("TRUNCATE {$name->Tables_in_flcshub}");
+        }
+
+    });
 
 });
 
@@ -57,20 +70,26 @@ Route::get('/reset', function()
 
 });
 
-Route::get('/inserttodayleague', 'InsertController@todayLeague');
+Route::group(array('prefix' => 'insert'), function()
+{
 
-Route::get('/inserttoday', 'InsertController@today');
+    Route::get('todayLeague', 'InsertController@todayLeague');
 
-Route::get('/insertall', 'InsertController@all');
+    Route::get('today', 'InsertController@today');
 
-Route::get('/insertfgamedata', 'InsertController@fantasyGameData');
+    Route::get('all', 'InsertController@all');
 
-Route::get('/insertfdata', 'InsertController@fantasyTeamData');
+    Route::get('fantasyGameData', 'InsertController@fantasyGameData');
 
-Route::get('/inserttournaments', 'InsertController@tournamentTeamsPlayers');
+    Route::get('fantasyTeamData', 'InsertController@fantasyTeamData');
 
-Route::get('/insertleagues', 'InsertController@leagues');
+    Route::get('tournamentTeamsPlayers', 'InsertController@tournamentTeamsPlayers');
 
-Route::get('/insertgames', 'InsertController@games');
+    Route::get('leagues', 'InsertController@leagues');
 
-Route::get('/insertblocks', 'InsertController@blocks');
+    Route::get('games', 'InsertController@games');
+
+    Route::get('blocks', 'InsertController@blocks');
+
+});
+
