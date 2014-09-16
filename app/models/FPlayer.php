@@ -54,7 +54,7 @@ class FPlayer extends Eloquent {
             $output = null;
             $lastPosition = null;
 
-            $fPlayers = FPlayer::orderBy('positions', 'asc')->get();
+            $fPlayers = FPlayer::orderBy('positions', 'asc')->join('fTeams', 'fPlayers.proTeamId', '=', 'fTeams.fId')->select('fPlayers.*', 'fTeams.shortName')->get();
 
             foreach($fPlayers as $key => $player)
             {
@@ -72,10 +72,10 @@ class FPlayer extends Eloquent {
                     $output = "<optgroup label='{$player->positions}'>";
                 }
 
-                $output .= "<option value='{$player->riotId}'>{$player->name}</option>";
+                $output .= "<option value='{$player->riotId}'>{$player->name} ({$player->shortName})</option>";
                 $lastPosition = $player->positions;
 
-                $positions[$player->positions][] = $player->name;
+                $positions[$player->positions][] = $player->name .  " ({$player->shortName})";
             }
 
             if($output !== null)

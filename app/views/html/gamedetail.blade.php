@@ -8,7 +8,10 @@
 
                 <h1 style="font-size:18px; text-align:left; margin-top:5px; margin-bottom:5px;">
 
+                    @if($game->gameLength !== null)
                     <i class="fa fa-angle-double-down" style="cursor:pointer;" onclick="gameToggle(this);" data-toggle="tooltip" data-placement="top" title="Toggle Game {{ $game->gameNumber }}"></i>
+                    @endif
+
                     Game {{ $game->gameNumber }} -
 
 
@@ -23,7 +26,7 @@
                     @endif
 
                     @if($game->vodType != null)
-                        <span class="pull-right" onclick="getGameVod('{{ $game->gameId }}');" style="cursor: pointer;" data-toggle="tooltip" data-placement="left" title="Watch Game{{ (count($match->getGames()) > 1 ? ' ' . $game->gameNumber : '') }}"><i class="fa fa-youtube-play blueIcon"></i></span>
+                        <span class="pull-right" onclick="getGameVod('{{ $game->gameId }}');" style="cursor: pointer;" data-toggle="tooltip" data-placement="left" title="Watch Game{{ (count($match->getGames()) > 1 ? ' ' . $game->gameNumber : '') }}"><i id='game-{{ $game->gameId }}-play'class="fa fa-youtube-play blueIcon"></i></span>
                     @endif
 
                 </h1>

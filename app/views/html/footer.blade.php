@@ -206,6 +206,45 @@
     {
         dir = typeof dir !== 'undefined' ? dir : '';
 
+        if (dir == 'prev' || dir == 'next')
+        {
+            $("#" + dir + "Blocks").removeAttr('onclick');
+
+            if (dir == 'prev')
+            {
+                $("#" + dir + "Blocks").removeClass('fa-angle-double-left');
+
+            } else if (dir == 'next')
+            {
+                $("#" + dir + "Blocks").removeClass('fa-angle-double-right');
+            }
+
+            $("#" + dir + "Blocks").addClass("fa-refresh fa-spin");
+
+            $("#" + dir + "Blocks").css({
+                    'font-size': '16px',
+                    'margin-top': '6px',
+                    'cursor': 'default'
+            });
+
+            $("#" + dir + "Blocks").tooltip('hide');
+        }
+
+        if (id == 'current')
+        {
+            $("#currentBlock").removeAttr('onclick');
+            $("#currentBlock").removeClass('fa-reply fa-share');
+            $("#currentBlock").addClass("fa-refresh fa-spin");
+
+            $("#currentBlock").css({
+                    'font-size': '16px',
+                    'margin-top': '6px',
+                    'cursor': 'default'
+            });
+
+            $("#currentBlock").tooltip('hide');
+        }
+
         $.getJSON("/ajax/block/" + id + "/" + dir, function(data) {
 
             var scrl = $(document).scrollTop();
@@ -225,6 +264,12 @@
 
     function getGameVod(id)
     {
+
+        if ($("#game-" + id + "-play").length)
+        {
+            $("#game-" + id + "-play").removeClass('fa-youtube-play blueIcon').addClass('fa-refresh fa-spin');
+        }
+
         $.getJSON('/ajax/gamevod/' + id + '/', function(data)
         {
             var scrl = $(document).scrollTop();
@@ -237,6 +282,11 @@
                 scrollTop: $("#streamContainer").offset().top - 60
             }, 1000);
             $('.ttip, [data-toggle="tooltip"]').tooltip();
+
+            if ($("#game-" + id + "-play").length)
+            {
+                $("#game-" + id + "-play").removeClass('fa-refresh fa-spin').addClass('fa-youtube-play blueIcon');
+            }
 
         });
     }
@@ -290,9 +340,23 @@
         }
         else
         {
-            $.getJSON("/ajax/details/" + id + "/", function(data) {
 
+            if ($("#match-" + id).length)
+            {
+                $("#match-" + id + " button").each(function(index) {
 
+                    $(this).attr('disabled', 'disabled');
+
+                    if (index == 1)
+                    {
+                        $(this).children('span').first().removeClass('caret').addClass('fa fa-refresh fa-spin').css('font-size', '12px');
+                    }
+
+                });
+            }
+
+            $.getJSON("/ajax/details/" + id + "/", function(data)
+            {
                 $("#match-" + id).after(data.match);
                 $("#match-" + id + "-details").hide();
                 $("#match-" + id + "-details").slideDown('slow');
@@ -302,6 +366,20 @@
                 $("#match-" + id + "-button").text("Hide match result");
                 $('.ttip, [data-toggle="tooltip"]').tooltip();
                 $("[data-toggle=popover]").popover();
+
+                if ($("#match-" + id).length)
+                {
+                    $("#match-" + id + " button").each(function(index) {
+
+                        $(this).removeAttr('disabled');
+
+                        if (index == 1)
+                        {
+                            $(this).children('span').first().removeClass('fa fa-refresh fa-spin').addClass('caret');
+                        }
+
+                    });
+                }
 
 
             });
