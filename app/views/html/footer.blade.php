@@ -345,12 +345,14 @@
             {
                 $("#match-" + id + " button").each(function(index) {
 
-                    $(this).attr('disabled', 'disabled');
-
                     if (index == 1)
                     {
-                        $(this).children('span').first().removeClass('caret').addClass('fa fa-refresh fa-spin').css('font-size', '12px');
+                        //$(this).children('span').first().removeClass('caret').addClass('fa fa-refresh fa-spin').css('font-size', '12px');
+                        //$(this).children('span').first().replaceWith('<i class="fa fa-refresh fa-spin" style=" font-size: 12px; "></i>');
                     }
+
+                    $(this).focus();
+                    $(this).attr('disabled', 'disabled');
 
                 });
             }
@@ -375,7 +377,8 @@
 
                         if (index == 1)
                         {
-                            $(this).children('span').first().removeClass('fa fa-refresh fa-spin').addClass('caret');
+                            //$(this).children('i').first().removeClass('fa fa-refresh fa-spin').addClass('caret');
+                            $(this).children('i').first().replaceWith('<span class="caret"></span>');
                         }
 
                     });
