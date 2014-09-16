@@ -15,33 +15,43 @@ class Match extends Eloquent {
 
     public function seriesWinner()
     {
-        $games = $this->getGames();
-        $blueWins = 0;
-        $redWins = 0;
+        if(Cookie::has(Config::get('cookie.spoilers')))
+        {
+            if(Cookie::get(Config::get('cookie.spoilers')) == 1)
+            {
 
-        foreach($games as $game)
-        {
-            if($game->winnerId == $game->redId) $redWins++;
-            if($game->winnerId == $game->blueId) $blueWins++;
+                $games = $this->getGames();
+                $blueWins = 0;
+                $redWins = 0;
+
+                foreach($games as $game)
+                {
+                    if($game->winnerId == $game->redId) $redWins++;
+                    if($game->winnerId == $game->blueId) $blueWins++;
+                }
+
+                if($blueWins == 0 && $redWins == 0)
+                {
+                    return -2;
+                }
+
+                if($blueWins > $redWins)
+                {
+                    return $this->blueId;
+                }
+                elseif($redWins > $blueWins)
+                {
+                    return $this->redId;
+                }
+                elseif($redWins == $blueWins)
+                {
+                    return -1;
+                }
+
+            }
         }
 
-        if($blueWins == 0 && $redWins == 0)
-        {
-            return -2;
-        }
-
-        if($blueWins > $redWins)
-        {
-            return $this->blueId;
-        }
-        elseif($redWins > $blueWins)
-        {
-            return $this->redId;
-        }
-        elseif($redWins == $blueWins)
-        {
-            return -1;
-        }
+        return null;
     }
 
     public function seriesResult($bool = false)
@@ -169,40 +179,40 @@ class Match extends Eloquent {
         }
     }
 
-    public function game()
-    {
-        return Game::where('matchId', $this->matchId)->first();
-    }
-
-    public function getGame()
-    {
-        if(!isset($this->_game))
-        {
-            $this->_game = Game::where('matchId', $this->matchId)->first();
-        }
-
-        return $this->_game;
-    }
-
     public function winner($id)
     {
-        if($id == null) return null;
-
-        if($this->winnerId == $id)
+        if(Cookie::has(Config::get('cookie.spoilers')))
         {
-            return "font-weight: 600;";
+            if(Cookie::get(Config::get('cookie.spoilers')) == 1)
+            {
+                if($id == null) return null;
+
+                if($this->winnerId == $id)
+                {
+                    return "font-weight: 600;";
+                }
+            }
+
         }
+
+        return null;
     }
 
     public function winnerImg($id)
     {
-        if($this->winnerId == $id && $this->winnerId !== null)
+        if(Cookie::has(Config::get('cookie.spoilers')))
         {
-            return "border: 3px solid #60C060;";
-        }
-        elseif($this->winnerId !== null && $this->winnerId !== $id)
-        {
-            return "border: 3px solid rgb(0, 0, 0);";
+            if(Cookie::get(Config::get('cookie.spoilers')) == 1)
+            {
+                if($this->winnerId == $id && $this->winnerId !== null)
+                {
+                    return "border: 3px solid #60C060;";
+                }
+                elseif($this->winnerId !== null && $this->winnerId !== $id)
+                {
+                    return "border: 3px solid rgb(0, 0, 0);";
+                }
+            }
         }
     }
 

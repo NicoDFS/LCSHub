@@ -145,7 +145,7 @@ class AjaxController extends BaseController {
                 }
             }
 
-            if(!is_null(Input::has('spoilers')))
+            if(!is_null(Input::get('spoilers')))
             {
                 Cookie::queue(Config::get('cookie.spoilers'), Input::get('spoilers'), (60 * 24 * 360));
             }

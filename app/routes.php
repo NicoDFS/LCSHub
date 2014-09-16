@@ -21,8 +21,19 @@ Route::get('/', function()
 Route::get('/test', function()
 {
 
-    //$fTeam = new FTeam();
-    //dd($fTeam->teamOptions());
+    //foreach(Cookie::get() as $cookie)
+    //{
+    //    dd($cookie);
+    //}
+
+    if(Cookie::has(Config::get('cookie.spoilers')))
+    {
+        if(Cookie::get(Config::get('cookie.spoilers')) == 1)
+        {
+            dd("YES");
+        }
+
+    }
 
 });
 

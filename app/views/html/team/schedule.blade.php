@@ -10,7 +10,7 @@
 
         <img src="{{ ($match->blueLogoURL !== null ? 'http://na.lolesports.com' . $match->blueLogoURL : 'https://s3-us-west-1.amazonaws.com/riot-api/img/riot-fist-inverted.png') }}" width='55' height='55' style="border-radius: 5%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:8px; {{ $match->winnerImg($match->blueId) }}">
 
-        @if($match->winnerId == $match->blueId)
+        @if($match->winner($match->blueId) == "font-weight: 600;")
             <span class="label label-danger" style=" font-size: 10px; position: absolute; left: 45px; top: 46px; border-bottom: 3px solid rgb(96, 192, 96); border-right: 3px solid rgb(96, 192, 96);">{{ $block->_places[$match->blueAcronym] }}</span>
         @else
             <span class="label label-danger" style=" font-size: 10px; position: absolute; left: 48px; top: 49px;">{{ $block->_places[$match->blueAcronym] }}</span>
@@ -76,7 +76,7 @@
 
         <img src="{{ ($match->redLogoURL !== null ? 'http://na.lolesports.com' . $match->redLogoURL : 'https://s3-us-west-1.amazonaws.com/riot-api/img/riot-fist-inverted.png') }}" width='55' height='55' style="border-radius: 5%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:10px; {{ $match->winnerImg($match->redId) }}">
 
-        @if($match->winnerId == $match->redId)
+        @if($match->winner($match->redId) == "font-weight: 600;")
             <span class="label label-danger" style=" font-size: 10px; position: absolute; left: 318px; top: 47px; border-bottom: 3px solid rgb(96, 192, 96); border-left: 3px solid rgb(96, 192, 96);">{{ $block->_places[$match->redAcronym] }}</span>
         @else
             <span class="label label-danger" style=" font-size: 10px; position: absolute; left: 318px; top: 50px;">{{ $block->_places[$match->redAcronym] }}</span>
@@ -113,10 +113,12 @@
                 @elseif($match->status() == 'Finished')
                     <span class="label label-primary" style=" font-size: 10px; position: absolute; left: 156px; top: 53px; ">Best of {{ $match->maxGames }}</span>
 
-                    @if($match->winnerId == $match->blueId)
-                        <span class="label label-success" style=" font-size: 10px; position: absolute; left: 73px; top: 53px; ">{{ $match->seriesResult() }}</span>
-                    @elseif($match->winnerId == $match->redId)
-                        <span class="label label-success" style=" font-size: 10px; position: absolute; left: 257px; top: 53px; ">{{ $match->seriesResult() }}</span>
+                    @if(count($match->getGames()) > 1)
+                        @if($match->seriesWinner() == $match->blueId)
+                            <span class="label label-success" style=" font-size: 10px; position: absolute; left: 73px; top: 53px; ">{{ $match->seriesResult() }}</span>
+                        @elseif($match->seriesWinner() == $match->redId)
+                            <span class="label label-success" style=" font-size: 10px; position: absolute; left: 258px; top: 53px; ">{{ $match->seriesResult() }}</span>
+                        @endif
                     @endif
 
                 @elseif($match->status() == 'Scheduled')

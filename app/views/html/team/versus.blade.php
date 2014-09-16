@@ -5,7 +5,7 @@
 
     <img src="http://na.lolesports.com{{ $activeMatch->blueLogoURL }}" width='55' height='55' style="border-radius: 5%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:8px; {{ $activeMatch->winnerImg($activeMatch->blueId) }}">
 
-    @if($activeMatch->winnerId == $activeMatch->blueId)
+    @if($activeMatch->winner($activeMatch->blueId) == "font-weight: 600;")
         <span class="label label-danger" style=" font-size: 10px; position: absolute; left: 46px; top: 46px; border-bottom: 3px solid rgb(96, 192, 96); border-right: 3px solid rgb(96, 192, 96);">{{ $block->_places[$activeMatch->blueAcronym] }}</span>
     @else
         <span class="label label-danger" style=" font-size: 10px; position: absolute; left: 49px; top: 49px;">{{ $block->_places[$activeMatch->blueAcronym] }}</span>
@@ -36,7 +36,7 @@
 
     <img src="http://na.lolesports.com{{ $activeMatch->redLogoURL }}" width='55' height='55' style="border-radius: 5%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:10px; {{ $activeMatch->winnerImg($activeMatch->redId) }}">
 
-    @if($activeMatch->winnerId == $activeMatch->redId)
+    @if($activeMatch->winner($activeMatch->redId) == "font-weight: 600;")
         <span class="label label-danger" style=" font-size: 10px; position: absolute; left: 307px; top: 47px; border-bottom: 3px solid rgb(96, 192, 96); border-left: 3px solid rgb(96, 192, 96);">{{ $block->_places[$activeMatch->redAcronym] }}</span>
     @else
         <span class="label label-danger" style=" font-size: 10px; position: absolute; left: 307px; top: 50px;">{{ $block->_places[$activeMatch->redAcronym] }}</span>
@@ -73,10 +73,12 @@
             @elseif($activeMatch->status() == 'Finished')
                 <span class="label label-primary" style=" font-size: 10px; position: absolute; left: 159px; top: 48px; ">Best of {{ $activeMatch->maxGames }}</span>
 
-                @if($activeMatch->winnerId == $activeMatch->blueId)
-                    <span class="label label-success" style=" font-size: 10px; position: absolute; left: 73px; top: 48px; ">{{ $activeMatch->seriesResult() }}</span>
-                @elseif($activeMatch->winnerId == $activeMatch->redId)
-                    <span class="label label-success" style=" font-size: 10px; position: absolute; left: 265px; top: 48px; ">{{ $activeMatch->seriesResult() }}</span>
+                @if(count($activeMatch->getGames()) > 1)
+                    @if($activeMatch->seriesWinner() == $activeMatch->blueId)
+                        <span class="label label-success" style=" font-size: 10px; position: absolute; left: 73px; top: 48px; ">{{ $activeMatch->seriesResult() }}</span>
+                    @elseif($activeMatch->seriesWinner() == $activeMatch->redId)
+                        <span class="label label-success" style=" font-size: 10px; position: absolute; left: 265px; top: 48px; ">{{ $activeMatch->seriesResult() }}</span>
+                    @endif
                 @endif
 
             @elseif($activeMatch->status() == 'Scheduled')

@@ -56,13 +56,13 @@
                                     <th class="text-center">Gold</th>
                                     <th class="text-center">CS</th>
                                     @if($team[0]->fantasyPlayer !== null)
-                                        <th class="text-center" style="font-weight:bold;">FPoints</th>
+                                        <th class="text-center" style="font-weight:bold;">Fantasy</th>
                                     @endif
                                     <th class="text-center">Spells</th>
                                     <th class="text-center" style="width: 224px;">Items</th>
                             </tr>
                     </thead>
-                    <tbody class="no-border-x no-border-y">
+                    <tbody class="no-border-y">
                     @foreach($team as $player)
                             <tr>
                                     <td> <img class="img-rounded" style="border:1px solid black; width:70px; height:50px;" src="{{ $player->photoURL }}"> <span data-toggle="tooltip" title="Position: {{ ( $player->fantasyPlayer !== null ? $player->fantasyPlayer->role : 'N/A') }}"> &nbsp;{{ $player->name }}</span></td>
@@ -93,34 +93,34 @@
 
                     <thead class="no-border">
 
-                        <tr>
+                        <tr style="background: rgb(248, 248, 248);">
 
                             <th>Team</th>
                             <th class="text-center">Win</th>
                             <th class="text-center">Barons</th>
                             <th class="text-center">Dragons</th>
-                            <th class="text-center">FBlood</th>
-                            <th class="text-center">FTower</th>
-                            <th class="text-center">FInhib</th>
+                            <th class="text-center">1st Blood</th>
+                            <th class="text-center">1st Tower</th>
+                            <th class="text-center">1st Inhib</th>
                             <th class="text-center">Towers</th>
-                            <th class="text-center" style="font-weight:bold;">FPoints</th>
+                            <th class="text-center" style="font-weight:bold;">Fantasy</th>
 
                         </tr>
 
                     </thead>
 
-                    <tbody class="no-border-x no-border-y">
+                    <tbody class="no-border-y">
 
                         <tr>
 
                             <td> <img class="img-rounded" style="padding:2px; border:1px solid black; width:32; height:32px; background: #1A1A1A;" src="{{ ($teamKey == $game->blueId ? $game->blueLogoURL : $game->redLogoURL) }}"> &nbsp;{{ ($teamKey == $game->blueId ? $game->blueName : $game->redName) }}</td>
                             @if(count($game->fantasyTeams()) == 2)
-                                <td class="text-center">{{ ($game->fantasyTeams()[$teamKey]->matchVictory == 1 ? '<i class="fa fa-check"></i>' : '<i class="fa fa-times"></i>') }}</td>
+                                <td class="text-center">{{ ($game->fantasyTeams()[$teamKey]->matchVictory == 1 ? '<i style="color: rgb(0, 128, 0);" class="fa fa-check"></i>' : '<i style="color: rgb(237, 91, 86);" class="fa fa-times"></i>') }}</td>
                                 <td class="text-center">{{ $game->fantasyTeams()[$teamKey]->baronsKilled }}</td>
                                 <td class="text-center">{{ $game->fantasyTeams()[$teamKey]->dragonsKilled }}</td>
-                                <td class="text-center">{{ ($game->fantasyTeams()[$teamKey]->firstBlood == 1 ? '<i class="fa fa-check"></i>' : '<i class="fa fa-times"></i>') }}</td>
-                                <td class="text-center">{{ ($game->fantasyTeams()[$teamKey]->firstTower == 1 ? '<i class="fa fa-check"></i>' : '<i class="fa fa-times"></i>') }}</td>
-                                <td class="text-center">{{ ($game->fantasyTeams()[$teamKey]->firstInhibitor == 1 ? '<i class="fa fa-check"></i>' : '<i class="fa fa-times"></i>') }}</td>
+                                <td class="text-center">{{ ($game->fantasyTeams()[$teamKey]->firstBlood == 1 ? '<i style="color: rgb(0, 128, 0);" class="fa fa-check"></i>' : '<i style="color: rgb(237, 91, 86);" class="fa fa-times"></i>') }}</td>
+                                <td class="text-center">{{ ($game->fantasyTeams()[$teamKey]->firstTower == 1 ? '<i style="color: rgb(0, 128, 0);" class="fa fa-check"></i>' : '<i style="color: rgb(237, 91, 86);" class="fa fa-times"></i>') }}</td>
+                                <td class="text-center">{{ ($game->fantasyTeams()[$teamKey]->firstInhibitor == 1 ? '<i style="color: rgb(0, 128, 0);" class="fa fa-check"></i>' : '<i style="color: rgb(237, 91, 86);" class="fa fa-times"></i>') }}</td>
                                 <td class="text-center">{{ $game->fantasyTeams()[$teamKey]->towersKilled }}</td>
                                 <td class="text-center" style="font-weight:bold;">
                                     <div style="border-bottom: 1px dashed #999;display: inline; cursor:pointer;" data-placement="left" data-template="<div class='popover' role='tooltip'><div class='arrow'></div><h3 class='popover-title text-center'></h3><div class='popover-content'></div></div>" data-toggle="popover" data-trigger='hover' data-html="true" data-content="{{ $game->fantasyTeams()[$teamKey]->generatePopover() }}" title="Fantasy Points Breakdown">{{ $game->fantasyTeams()[$teamKey]->fantasyPoints() }}</div>
