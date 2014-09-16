@@ -35,7 +35,8 @@ Route::get('/test', function()
 Route::group(array('prefix' => 'reset'), function()
 {
 
-    Route::get('all', function() {
+    Route::get('all', function()
+    {
 
         $tableNames = DB::select('SHOW TABLES');
 
@@ -47,26 +48,6 @@ Route::group(array('prefix' => 'reset'), function()
         }
 
     });
-
-});
-
-Route::get('/reset', function()
-{
-
-    Block::truncate();
-    FPlayer::truncate();
-    FPlayerGame::truncate();
-    FTeam::truncate();
-    FTeamGame::truncate();
-    Game::truncate();
-    GamePlayer::truncate();
-    League::truncate();
-    Match::truncate();
-    Player::truncate();
-    Team::truncate();
-    Tournament::truncate();
-
-    return "Truncated all tables.";
 
 });
 
