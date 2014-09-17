@@ -17,7 +17,7 @@
 
         App.init();
 
-        $("#streamContainer").fitVids({ customSelector: "object[data^='http://www.twitch.tv/widgets/live_embed_player.swf?channel=']"});
+        $("#streamContainer").fitVids({ customSelector: "object[data^='https://www.twitch.tv/widgets/live_embed_player.swf?channel=']"});
 
         window.liveUpdates = {{ (Cookie::has(Config::get('cookie.updates')) ? Cookie::get(Config::get('cookie.updates')) : 0) }};
 
