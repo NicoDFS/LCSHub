@@ -54,7 +54,7 @@
 
         @endif
 
-        <iframe frameborder="0" scrolling="no" id="twitchChatEmbed" src="https://secure.twitch.tv/chat/embed?channel={{ $block->twitchUsername() }}&amp;popout_chat=true" height="404" width="100%" style="display:none; margin-top:5px;"></iframe>
+        <iframe frameborder="0" scrolling="no" id="twitchChatEmbed" src="https://twitch.tv/chat/embed?channel={{ $block->twitchUsername() }}&amp;popout_chat=true" height="404" width="100%" style="display:none; margin-top:5px;"></iframe>
 
     </div>
 </div>
