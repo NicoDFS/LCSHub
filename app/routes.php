@@ -21,14 +21,18 @@ Route::get('/', function()
 Route::get('/test', function()
 {
 
-    if(Cookie::has(Config::get('cookie.spoilers')))
-    {
-        if(Cookie::get(Config::get('cookie.spoilers')) == 1)
-        {
-            dd("YES");
-        }
+    //dd(Block::currentBlock());
 
-    }
+    $datetime = new DateTime('now', new DateTimeZone(Block::defaultTimezone()));
+    $dateplus = new DateTime('+1 day', new DateTimeZone(Block::defaultTimezone()));
+
+    //dd($datetime->format('Y-m-d H:i:s'));
+
+    dd($blocks = Block::where('blocks.dateTime', '>=', $datetime->format('Y-m-d H:i:s'))
+                        ->where('blocks.dateTime', '<=', $dateplus->format('Y-m-d H:i:s'))
+                        ->join('matches', 'matches.blockId', '=', 'blocks.blockId')
+                        ->select('blocks.*', 'matches.isFinished', 'matches.isLive')
+                        ->toSql());
 
 });
 
