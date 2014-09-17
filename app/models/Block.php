@@ -570,11 +570,11 @@ class Block extends Eloquent {
             }
             elseif(Cookie::get(Config::get('cookie.player')) == 'youtube')
             {
-                return '<iframe width="1280" height="720" src="//www.youtube.com/embed/' . $this->leagueYoutubeId() . '?t=100000000&vq=highres&autohide=1&rel=0&iv_load_policy=3&showinfo=0&theme=light&controls=2&color=white" frameborder="0" allowfullscreen></iframe>';
+                return '<iframe width="1280" height="720" src="https://www.youtube.com/embed/' . $this->leagueYoutubeId() . '?t=100000000&vq=highres&autohide=1&rel=0&iv_load_policy=3&showinfo=0&theme=light&controls=2&color=white" frameborder="0" allowfullscreen></iframe>';
             }
             elseif(Cookie::get(Config::get('cookie.player')) == 'azubu')
             {
-                return $this->getLeague()->azubu;
+                return preg_replace("/^http:/i", "https:", $this->getLeague()->azubu);
             }
         }
         else
