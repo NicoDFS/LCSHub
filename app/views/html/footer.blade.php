@@ -262,12 +262,32 @@
 
     }
 
-    function getGameVod(id)
+    function getGameVod(id, mId)
     {
+        mId = typeof mId !== 'undefined' ? mId : '';
 
-        if ($("#game-" + id + "-play").length)
+        var onClick = "";
+
+        if (mId == '')
         {
-            $("#game-" + id + "-play").removeClass('fa-youtube-play blueIcon').addClass('fa-refresh fa-spin');
+            if ($("#game-" + id + "-play").length)
+            {
+                var onClick = $("#game-" + id + "-play").parent().attr('onclick');
+                $("#game-" + id + "-play").parent().removeAttr('onclick');
+                $("#game-" + id + "-play").removeClass('fa-youtube-play blueIcon').addClass('fa-refresh fa-spin');
+                $("#game-" + id + "-play").css('cursor', 'default').parent().tooltip('hide');
+            }
+        }
+        else
+        {
+            if ($("#match-" + mId).length)
+            {
+                $("#match-" + mId + " button").each(function(index) {
+
+                    $(this).attr('disabled', 'disabled');
+
+                });
+            }
         }
 
         $.getJSON('/ajax/gamevod/' + id + '/', function(data)
@@ -283,9 +303,25 @@
             }, 1000);
             $('.ttip, [data-toggle="tooltip"]').tooltip();
 
-            if ($("#game-" + id + "-play").length)
+            if (mId == '')
             {
-                $("#game-" + id + "-play").removeClass('fa-refresh fa-spin').addClass('fa-youtube-play blueIcon');
+                if ($("#game-" + id + "-play").length)
+                {
+                    $("#game-" + id + "-play").removeClass('fa-refresh fa-spin').addClass('fa-youtube-play blueIcon');
+                    $("#game-" + id + "-play").css('cursor', 'pointer');
+                    $("#game-" + id + "-play").parent().attr('onclick', onClick);
+                }
+            }
+            else
+            {
+                if ($("#match-" + mId).length)
+                {
+                    $("#match-" + mId + " button").each(function(index) {
+
+                        $(this).removeAttr('disabled');
+
+                    });
+                }
             }
 
         });

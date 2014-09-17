@@ -166,7 +166,7 @@
                         @endif
 
                         @foreach($match->getGames() as $game)
-                            <li><a href="#" onclick="getGameVod('{{ $game->gameId }}'); return false;">Watch Game {{ $game->gameNumber }}</a></li>
+                            <li><a href="#" onclick="getGameVod('{{ $game->gameId }}', '{{ $match->id }}'); return false;">Watch Game {{ $game->gameNumber }}</a></li>
                         @endforeach
 
                     @elseif(count($match->getGames()) == 1)
