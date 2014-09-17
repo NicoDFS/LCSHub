@@ -580,7 +580,7 @@ class Block extends Eloquent {
         }
         else
         {
-            return '<object type="application/x-shockwave-flash" height="378" width="620" id="live_embed_player_flash" data="https://www.twitch.tv/widgets/live_embed_player.swf?channel=' . $this->twitchUsername() . '" bgcolor="#F6F6F6"><param name="allowFullScreen" value="true" /><param name="allowScriptAccess" value="always" /><param name="allowNetworking" value="all" /><param name="movie" value="https://www.twitch.tv/widgets/live_embed_player.swf" /><param name="flashvars" value="hostname=www.twitch.tv&channel=' . $this->twitchUsername() . '&auto_play=true&start_volume=100" /></object>';
+            return '<object type="application/x-shockwave-flash" height="378" width="620" id="live_embed_player_flash" data="https://www-cdn.jtvnw.net/swflibs/TwitchPlayer.swf?channel=' . $this->twitchUsername() . '" bgcolor="#F6F6F6"><param name="allowFullScreen" value="true" /><param name="allowScriptAccess" value="always" /><param name="allowNetworking" value="all" /><param name="movie" value="https://www-cdn.jtvnw.net/swflibs/TwitchPlayer.swf" /><param name="flashvars" value="hostname=www.twitch.tv&channel=' . $this->twitchUsername() . '&auto_play=true&start_volume=100" /></object>';
         }
     }
 
