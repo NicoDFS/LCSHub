@@ -68,7 +68,7 @@
                     <tbody class="no-border-y">
                     @foreach($team as $player)
                             <tr>
-                                    <td> <img class="img-rounded" style="border:1px solid black; width:70px; height:50px;" src="{{ $player->photoURL }}"> <span data-toggle="tooltip" title="Position: {{ ( $player->fantasyPlayer !== null ? $player->fantasyPlayer->role : 'N/A') }}"> &nbsp;{{ $player->name }}</span></td>
+                                    <td> <img class="img-rounded" style="border:1px solid black; width:70px; height:50px;" src="{{ preg_replace("/^http:/i", "https:", $player->photoURL); }}"> <span data-toggle="tooltip" title="Position: {{ ( $player->fantasyPlayer !== null ? $player->fantasyPlayer->role : 'N/A') }}"> &nbsp;{{ $player->name }}</span></td>
                                     <td class="text-center"> <img class="img-rounded" style="border:1px solid black;" src="https://lkimg.zamimg.com/shared/riot/images/champions/{{ $player->championId }}_32.png"> &nbsp;({{ $player->endLevel }})</td>
                                     <td class="text-center"><span data-toggle="tooltip" title="{{ floatval((double)$player->kda) }}">{{ $player->kills }}/{{ $player->deaths }}/{{ $player->assists }}</span></td>
                                     <td class="text-center"><span data-toggle="tooltip" title="{{ number_format($player->totalGold) }}">{{ GamePlayer::count_format($player->totalGold) }}</span></td>
@@ -116,7 +116,7 @@
 
                         <tr>
 
-                            <td> <img class="img-rounded" style="padding:2px; border:1px solid black; width:32; height:32px; background: #1A1A1A;" src="{{ ($teamKey == $game->blueId ? $game->blueLogoURL : $game->redLogoURL) }}"> &nbsp;{{ ($teamKey == $game->blueId ? $game->blueName : $game->redName) }}</td>
+                            <td> <img class="img-rounded" style="padding:2px; border:1px solid black; width:32; height:32px; background: #1A1A1A;" src="{{ ($teamKey == $game->blueId ? preg_replace("/^http:/i", "https:", $game->blueLogoURL) : preg_replace("/^http:/i", "https:", $game->redLogoURL) ) }}"> &nbsp;{{ ($teamKey == $game->blueId ? $game->blueName : $game->redName) }}</td>
                             @if(count($game->fantasyTeams()) == 2)
                                 <td class="text-center">{{ ($game->fantasyTeams()[$teamKey]->matchVictory == 1 ? '<i style="color: rgb(0, 128, 0);" class="fa fa-check"></i>' : '<i style="color: rgb(237, 91, 86);" class="fa fa-times"></i>') }}</td>
                                 <td class="text-center">{{ $game->fantasyTeams()[$teamKey]->baronsKilled }}</td>
