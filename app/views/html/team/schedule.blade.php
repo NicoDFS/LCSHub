@@ -8,7 +8,7 @@
 
     @if(in_array($block->tournamentId, Config::get('standings.approvedTournaments')))
 
-        <img src="{{ ($match->blueLogoURL !== null ? 'http://na.lolesports.com' . $match->blueLogoURL : 'https://s3-us-west-1.amazonaws.com/riot-api/img/riot-fist-inverted.png') }}" width='55' height='55' style="border-radius: 5%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:8px; {{ $match->winnerImg($match->blueId) }}">
+        <img src="{{ ($match->blueLogoURL !== null ? 'https://na.lolesports.com' . $match->blueLogoURL : 'https://s3-us-west-1.amazonaws.com/riot-api/img/riot-fist-inverted.png') }}" width='55' height='55' style="border-radius: 5%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:8px; {{ $match->winnerImg($match->blueId) }}">
 
         @if($match->winner($match->blueId) == "font-weight: 600;")
             <span class="label label-danger" style=" font-size: 10px; position: absolute; left: 45px; top: 46px; border-bottom: 3px solid rgb(96, 192, 96); border-right: 3px solid rgb(96, 192, 96);">{{ $block->_places[$match->blueAcronym] }}</span>
@@ -74,7 +74,7 @@
 
         </div>
 
-        <img src="{{ ($match->redLogoURL !== null ? 'http://na.lolesports.com' . $match->redLogoURL : 'https://s3-us-west-1.amazonaws.com/riot-api/img/riot-fist-inverted.png') }}" width='55' height='55' style="border-radius: 5%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:10px; {{ $match->winnerImg($match->redId) }}">
+        <img src="{{ ($match->redLogoURL !== null ? 'https://na.lolesports.com' . $match->redLogoURL : 'https://s3-us-west-1.amazonaws.com/riot-api/img/riot-fist-inverted.png') }}" width='55' height='55' style="border-radius: 5%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:10px; {{ $match->winnerImg($match->redId) }}">
 
         @if($match->winner($match->redId) == "font-weight: 600;")
             <span class="label label-danger" style=" font-size: 10px; position: absolute; left: 318px; top: 47px; border-bottom: 3px solid rgb(96, 192, 96); border-left: 3px solid rgb(96, 192, 96);">{{ $block->_places[$match->redAcronym] }}</span>
@@ -84,7 +84,7 @@
 
     @else
 
-        <img src="{{ ($match->blueLogoURL !== null ? 'http://na.lolesports.com' . $match->blueLogoURL : 'https://s3-us-west-1.amazonaws.com/riot-api/img/riot-fist-inverted.png') }}" width='55' height='55' style="border-radius: 5%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:9px; {{ $match->winnerImg($match->blueId) }}">
+        <img src="{{ ($match->blueLogoURL !== null ? 'https://na.lolesports.com' . $match->blueLogoURL : 'https://s3-us-west-1.amazonaws.com/riot-api/img/riot-fist-inverted.png') }}" width='55' height='55' style="border-radius: 5%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:9px; {{ $match->winnerImg($match->blueId) }}">
 
         <div style="display: inline-table; width:95px; {{ $match->winner($match->blueId) }}">
 
@@ -135,7 +135,7 @@
 
         </div>
 
-        <img src="{{ ($match->redLogoURL !== null ? 'http://na.lolesports.com' . $match->redLogoURL : 'https://s3-us-west-1.amazonaws.com/riot-api/img/riot-fist-inverted.png') }}" width='55' height='55' style="border-radius: 5%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:9px;  {{ $match->winnerImg($match->redId) }}">
+        <img src="{{ ($match->redLogoURL !== null ? 'https://na.lolesports.com' . $match->redLogoURL : 'https://s3-us-west-1.amazonaws.com/riot-api/img/riot-fist-inverted.png') }}" width='55' height='55' style="border-radius: 5%; background: #1A1A1A; padding:5px; margin-bottom:-5px; margin-top:9px;  {{ $match->winnerImg($match->redId) }}">
 
     @endif
 
@@ -255,14 +255,14 @@ $(document).ready(function()
 {
     $(".noMatches img").each(function() {
 
-        $(this).attr('src', 'http://na.lolesports.com' + $(this).attr('src'));
+        $(this).attr('src', 'https://na.lolesports.com' + $(this).attr('src'));
         $(this).css('display', 'inline');
 
     });
 
     $(".noMatches a").each(function() {
 
-        $(this).attr('href', 'http://na.lolesports.com' + $(this).attr('href'));
+        $(this).attr('href', 'https://na.lolesports.com' + $(this).attr('href'));
 
     });
 });

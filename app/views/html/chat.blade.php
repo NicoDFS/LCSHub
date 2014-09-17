@@ -16,8 +16,6 @@
                         <button type="button" class="btn btn btn-default">{{ $block->twitchUsername() }}</button>
                     </div>
 
-                    <button type="button" class="btn btn-default btn-rad" style="margin-top:2px;" onclick="twitchToggle();"><i class="fa fa-bars"></i> &nbsp;Toggle Twitch Chat</button>
-
                 @elseif(Cookie::get(Config::get('cookie.player')) == 'youtube')
 
                     <div class="btn-group" style="float:right;">
@@ -35,6 +33,8 @@
                     </div>
 
                 @endif
+
+                <button type="button" class="btn btn-default btn-rad" style="margin-top:2px;" onclick="twitchToggle();"><i class="fa fa-bars"></i> &nbsp;Toggle Twitch Chat</button>
 
             @else
                 <div class="btn-group" style="float:right;">
