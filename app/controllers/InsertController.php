@@ -693,11 +693,12 @@ class InsertController extends BaseController {
         $fGameURL = "http://na.lolesports.com:80/api/gameStatsFantasy.json?timestamp=" . time() . "&tournamentId=" . $tournamentId;
         $fGameData = json_decode(file_get_contents($fGameURL));
 
-        if(!empty($games))
+
+        if(!empty($games) && !is_null($fGameData))
         {
             foreach($games as $gameId)
             {
-                if(property_exists($fGameData->teamStats, 'game' . $gameId))
+                if(array_key_exists('game' . $gameId, $fGameData->teamStats))
                 {
 
                     $tStats = $fGameData->teamStats->{'game' . $gameId};

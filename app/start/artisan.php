@@ -11,5 +11,5 @@
 |
 */
 
-Artisan::add(new Update);
+Artisan::add(new TodayUpdate);
 Artisan::add(new TodayLeague);
