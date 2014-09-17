@@ -11,10 +11,12 @@
 
                     <div class="btn-group" style="float:right;">
                         <button type="button" class="btn btn btn-default btn-youtube" style=" padding: 2px; ">
-                            <img src="http://s.jtvnw.net/jtv_user_pictures/hosted_images/GlitchIcon_purple.png" style="height: 28px;">
+                            <img src="https://s.jtvnw.net/jtv_user_pictures/hosted_images/GlitchIcon_purple.png" style="height: 28px;">
                         </button>
                         <button type="button" class="btn btn btn-default">{{ $block->twitchUsername() }}</button>
                     </div>
+
+                    <button type="button" class="btn btn-default btn-rad" style="margin-top:2px;" onclick="twitchToggle();"><i class="fa fa-bars"></i> &nbsp;Toggle Twitch Chat</button>
 
                 @elseif(Cookie::get(Config::get('cookie.player')) == 'youtube')
 
@@ -27,7 +29,7 @@
 
                     <div class="btn-group" style="float:right;">
                         <button type="button" class="btn btn btn-default btn-youtube" style=" padding: 2px; ">
-                            <img src="http://www.azubu.tv/favicon.ico" style="height: 28px; padding:3px;">
+                            <img src="https://www.azubu.tv/favicon.ico" style="height: 28px; padding:3px;">
                         </button>
                         <button type="button" class="btn btn btn-default">Riot_Games</button>
                     </div>
@@ -37,13 +39,11 @@
             @else
                 <div class="btn-group" style="float:right;">
                     <button type="button" class="btn btn btn-default btn-youtube" style=" padding: 2px; ">
-                        <img src="http://s.jtvnw.net/jtv_user_pictures/hosted_images/GlitchIcon_purple.png" style="height: 28px;">
+                        <img src="https://s.jtvnw.net/jtv_user_pictures/hosted_images/GlitchIcon_purple.png" style="height: 28px;">
                     </button>
                     <button type="button" class="btn btn btn-default">{{ $block->twitchUsername() }}</button>
                 </div>
             @endif
-
-            <button type="button" class="btn btn-default btn-rad" style="margin-top:2px;" onclick="twitchToggle();"><i class="fa fa-bars"></i> &nbsp;Toggle Twitch Chat</button>
 
         @else
 
@@ -54,7 +54,7 @@
 
         @endif
 
-        <iframe frameborder="0" scrolling="no" id="twitchChatEmbed" src="http://twitch.tv/chat/embed?channel={{ $block->twitchUsername() }}&amp;popout_chat=true" height="404" width="100%" style="display:none; margin-top:5px;"></iframe>
+        <iframe frameborder="0" scrolling="no" id="twitchChatEmbed" src="https://twitch.tv/chat/embed?channel={{ $block->twitchUsername() }}&amp;popout_chat=true" height="404" width="100%" style="display:none; margin-top:5px;"></iframe>
 
     </div>
 </div>
