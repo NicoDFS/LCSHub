@@ -10,7 +10,7 @@
 <script src="js/bootstrap.slider/js/bootstrap-slider.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/jquery.gritter/js/jquery.gritter.js"></script>
 <script type="text/javascript" src="js/jquery.niftymodals/js/jquery.modalEffects.js"></script>
-<script type="text/javascript" src="http://cdn.rawgit.com/davatron5000/FitVids.js/master/jquery.fitvids.js"></script>
+<script type="text/javascript" src="https://cdn.rawgit.com/davatron5000/FitVids.js/master/jquery.fitvids.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function(){
