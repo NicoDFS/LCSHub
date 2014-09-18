@@ -237,10 +237,30 @@
     cursor: default;
 }
 
+@if(strpos($block->label, 'Preview') !== false)
 .noMatches p
 {
     display:none;
 }
+@else
+.noMatches p
+{
+    display: inline;
+    width: 60%;
+    border: 1px solid rgb(0, 0, 0);
+    padding: 10px;
+    margin-top: 3%;
+    margin-left: 1%;
+    float: left;
+    color: rgb(0, 0, 0) !important;
+}
+
+.noMatches p a strong
+{
+    color: rgb(85, 85, 85);
+    font-weight: normal;
+}
+@endif
 
 .noMatches img
 {
