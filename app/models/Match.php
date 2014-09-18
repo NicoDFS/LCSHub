@@ -235,7 +235,7 @@ class Match extends Eloquent {
             $tempZone = new DateTime($this->dateTime);
             $tempZone->setTimezone(new DateTimeZone(Block::defaultTimezone()));
 
-            return "LIVE Match " . $tempZone->format('M j, Y') . " at " . $tempZone->format('g:i A');
+            return "LIVE Match: " . $tempZone->format('M j, Y') . " at " . $tempZone->format('g:i A');
         }
         elseif($this->status() == 'Finished')
         {
