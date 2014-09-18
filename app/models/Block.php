@@ -565,23 +565,49 @@ class Block extends Eloquent {
     {
         if(Cookie::has(Config::get('cookie.player')))
         {
-            if(Cookie::get(Config::get('cookie.player')) == 'twitch')
+            if(Cookie::get(Config::get('cookie.player')) == 'twitch' && $this->getLeague()->twitch !== null)
             {
-                return '<object type="application/x-shockwave-flash" height="378" width="620" id="live_embed_player_flash" data="https://www-cdn.jtvnw.net/swflibs/TwitchPlayer.swf?channel=' . $this->twitchUsername() . '" bgcolor="#F6F6F6"><param name="allowFullScreen" value="true" /><param name="allowScriptAccess" value="always" /><param name="allowNetworking" value="all" /><param name="movie" value="https://www-cdn.jtvnw.net/swflibs/TwitchPlayer.swf" /><param name="flashvars" value="hostname=www.twitch.tv&channel=' . $this->twitchUsername() . '&auto_play=true&start_volume=100" /></object>';
+                $this->_stream = 'twitch';
+                return '<object type="application/x-shockwave-flash" height="378" width="620" id="live_embed_player_flash" data="http://www.twitch.tv/widgets/live_embed_player.swf?channel=' . $this->twitchUsername() . '" bgcolor="#F6F6F6"><param name="allowFullScreen" value="true" /><param name="allowScriptAccess" value="always" /><param name="allowNetworking" value="all" /><param name="movie" value="http://www.twitch.tv/widgets/live_embed_player.swf" /><param name="flashvars" value="hostname=www.twitch.tv&channel=' . $this->twitchUsername() . '&auto_play=true&start_volume=100" /></object>';
             }
-            elseif(Cookie::get(Config::get('cookie.player')) == 'youtube')
+            elseif(Cookie::get(Config::get('cookie.player')) == 'youtube' && $this->getLeague()->youtube !== null)
             {
+                $this->_stream = 'youtube';
                 return '<iframe width="1280" height="720" src="https://www.youtube.com/embed/' . $this->leagueYoutubeId() . '?t=100000000&vq=highres&autohide=1&rel=0&iv_load_policy=3&showinfo=0&theme=light&controls=2&color=white" frameborder="0" allowfullscreen></iframe>';
             }
-            elseif(Cookie::get(Config::get('cookie.player')) == 'azubu')
+            elseif(Cookie::get(Config::get('cookie.player')) == 'azubu' && $this->getLeague()->azubu !== null)
             {
+                $this->_stream = 'azubu';
                 return preg_replace("/^http:/i", "https:", $this->getLeague()->azubu);
             }
+
+            $vids = ['twitch', 'youtube', 'azubu'];
+            foreach($vids as $vid)
+            {
+                if($this->getLeague()->$vid !== null)
+                {
+                    if($vid == 'twitch')
+                    {
+                        $this->_stream = 'twitch';
+                        return '<object type="application/x-shockwave-flash" height="378" width="620" id="live_embed_player_flash" data="http://www.twitch.tv/widgets/live_embed_player.swf?channel=' . $this->twitchUsername() . '" bgcolor="#F6F6F6"><param name="allowFullScreen" value="true" /><param name="allowScriptAccess" value="always" /><param name="allowNetworking" value="all" /><param name="movie" value="http://www.twitch.tv/widgets/live_embed_player.swf" /><param name="flashvars" value="hostname=www.twitch.tv&channel=' . $this->twitchUsername() . '&auto_play=true&start_volume=100" /></object>';
+                    }
+                    elseif($vid == 'youtube')
+                    {
+                        $this->_stream = 'youtube';
+                        return '<iframe width="1280" height="720" src="https://www.youtube.com/embed/' . $this->leagueYoutubeId() . '?t=100000000&vq=highres&autohide=1&rel=0&iv_load_policy=3&showinfo=0&theme=light&controls=2&color=white" frameborder="0" allowfullscreen></iframe>';
+                    }
+                    elseif($vid == 'azubu')
+                    {
+                        $this->_stream = 'azubu';
+                        return preg_replace("/^http:/i", "https:", $this->getLeague()->azubu);
+                    }
+                }
+            }
         }
-        else
-        {
-            return '<object type="application/x-shockwave-flash" height="378" width="620" id="live_embed_player_flash" data="https://www-cdn.jtvnw.net/swflibs/TwitchPlayer.swf?channel=' . $this->twitchUsername() . '" bgcolor="#F6F6F6"><param name="allowFullScreen" value="true" /><param name="allowScriptAccess" value="always" /><param name="allowNetworking" value="all" /><param name="movie" value="https://www-cdn.jtvnw.net/swflibs/TwitchPlayer.swf" /><param name="flashvars" value="hostname=www.twitch.tv&channel=' . $this->twitchUsername() . '&auto_play=true&start_volume=100" /></object>';
-        }
+
+        $this->_stream = 'twitch';
+        return '<object type="application/x-shockwave-flash" height="378" width="620" id="live_embed_player_flash" data="http://www.twitch.tv/widgets/live_embed_player.swf?channel=' . $this->twitchUsername() . '" bgcolor="#F6F6F6"><param name="allowFullScreen" value="true" /><param name="allowScriptAccess" value="always" /><param name="allowNetworking" value="all" /><param name="movie" value="http://www.twitch.tv/widgets/live_embed_player.swf" /><param name="flashvars" value="hostname=www.twitch.tv&channel=' . $this->twitchUsername() . '&auto_play=true&start_volume=100" /></object>';
+
     }
 
     public function color()
