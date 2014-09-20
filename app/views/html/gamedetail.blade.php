@@ -162,6 +162,6 @@
 
 @endforeach
 
-@if(count($match->getGames()) > 0)
+@if(count($match->getFinishedGames()) > 0)
     <button type="button" class="btn btn-default btn-flat" style="width:100%; margin:0px; outline: none; font-size:18px; font-weight:300; padding-top: 8px;padding-bottom: 8px;" onclick="closeDetails('{{ $match->id }}');"><i class="fa fa-angle-double-up" style="font-size:18px; font-weight:300;"></i> Hide game{{ (count($match->getGames()) > 1 ? 's' : '') }}</button>
 @endif

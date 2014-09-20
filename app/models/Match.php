@@ -253,4 +253,22 @@ class Match extends Eloquent {
         }
     }
 
+    public function getFinishedGames()
+    {
+        $games = $this->getGames();
+
+        $count = 0;
+
+        foreach($games as $game)
+        {
+            if($game->fullPlayers())
+            {
+                $count++;
+            }
+        }
+
+        return $count;
+
+    }
+
 }
