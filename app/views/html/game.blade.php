@@ -13,7 +13,7 @@
             @elseif($match->seriesWinner() == $match->redId)
                 <span class='label label-danger' style='font-size:16px;'>In Progress: {{ $match->redAcronym }}</span>
             @elseif($match->seriesWinner() == -2)
-                &nbsp;
+                <span class='label label-danger' style='font-size:16px;'>In Progress</span>
             @endif
 
         @endif
