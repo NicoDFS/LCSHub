@@ -26,7 +26,7 @@
                     @endif
 
                     @if($game->vodType != null)
-                        <span class="pull-right" onclick="getGameVod('{{ $game->gameId }}');" style="cursor: pointer;" data-toggle="tooltip" data-placement="left" title="Watch Game{{ (count($match->getGames()) > 1 ? ' ' . $game->gameNumber : '') }}"><i id='game-{{ $game->gameId }}-play'class="fa fa-youtube-play blueIcon"></i></span>
+                        <span class="pull-right" onclick="getGameVod('{{ $game->gameId }}');" style="cursor: pointer;" data-toggle="tooltip" data-placement="left" title="Watch Game{{ (count($match->getGames()) > 1 ? ' ' . $game->gameNumber : '') }}"><i id='game-{{ $game->gameId }}-play'class="fa fa-youtube-play"></i></span>
                     @endif
 
                 </h1>
