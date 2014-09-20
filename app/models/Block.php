@@ -578,7 +578,8 @@ class Block extends Eloquent {
             elseif(Cookie::get(Config::get('cookie.player')) == 'azubu' && $this->getLeague()->azubu !== null)
             {
                 $this->_stream = 'azubu';
-                return preg_replace("/^http:/i", "https:", $this->getLeague()->azubu);
+                //return preg_replace("/^http:/i", "https:", $this->getLeague()->azubu);
+                return $this->getLeague()->azubu;
             }
 
             $vids = ['twitch', 'youtube', 'azubu'];
@@ -599,7 +600,8 @@ class Block extends Eloquent {
                     elseif($vid == 'azubu')
                     {
                         $this->_stream = 'azubu';
-                        return preg_replace("/^http:/i", "https:", $this->getLeague()->azubu);
+                        //return preg_replace("/^http:/i", "https:", $this->getLeague()->azubu);
+                        return $this->getLeague()->azubu;
                     }
                 }
             }
