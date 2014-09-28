@@ -6,7 +6,7 @@
                 <div class="side-user">
 
                   <div class="info">
-                    <a href="#">Fantasy Stats Coming Soon</a>
+                    <a href="#">Whatever</a>
                      <span>Soon (tm)</span>
                         <br/>
                         <p style="color:white; margin-top:30px;">

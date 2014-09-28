@@ -21,12 +21,8 @@ Route::get('/', function()
 Route::get('/test', function()
 {
 
-    //dd(Block::currentBlock());
-
     $datetime = new DateTime('now', new DateTimeZone(Block::defaultTimezone()));
     $dateplus = new DateTime('+1 day', new DateTimeZone(Block::defaultTimezone()));
-
-    //dd($datetime->format('Y-m-d H:i:s'));
 
     dd($blocks = Block::where('blocks.dateTime', '>=', $datetime->format('Y-m-d H:i:s'))
                         ->where('blocks.dateTime', '<=', $dateplus->format('Y-m-d H:i:s'))
@@ -46,7 +42,10 @@ Route::group(array('prefix' => 'reset'), function()
 
         foreach ($tableNames as $name)
         {
-            if ($name->Tables_in_flcshub == 'migrations') continue;
+            if ($name->Tables_in_flcshub == 'migrations')
+            {
+                continue;
+            }
 
             DB::statement("TRUNCATE {$name->Tables_in_flcshub}");
         }
@@ -58,23 +57,13 @@ Route::group(array('prefix' => 'reset'), function()
 Route::group(array('prefix' => 'insert'), function()
 {
 
-    Route::get('todayLeague', 'InsertController@todayLeague');
+    $methods = get_class_methods('InsertController');
 
-    Route::get('today', 'InsertController@today');
+    foreach($methods as $methodName)
+    {
+        Route::get($methodName, 'InsertController@' . $methodName);
+    }
 
-    Route::get('all', 'InsertController@all');
-
-    Route::get('fantasyGameData', 'InsertController@fantasyGameData');
-
-    Route::get('fantasyTeamData', 'InsertController@fantasyTeamData');
-
-    Route::get('tournamentTeamsPlayers', 'InsertController@tournamentTeamsPlayers');
-
-    Route::get('leagues', 'InsertController@leagues');
-
-    Route::get('games', 'InsertController@games');
-
-    Route::get('blocks', 'InsertController@blocks');
 
 });
 
