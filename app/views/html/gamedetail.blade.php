@@ -53,7 +53,7 @@
                                     <th class="text-center" style="border-left: none;"></th>
                             </tr>
                             <tr>
-                                    <th>Player</th>
+                                    <th style="font-weight:bold;">Player</th>
                                     <th class="text-center" style="font-weight:bold;">Champ</th>
                                     <th class="text-center" style="font-weight:bold;">KDA</th>
                                     <th class="text-center" style="font-weight:bold;">Gold</th>
