@@ -54,15 +54,15 @@
                             </tr>
                             <tr>
                                     <th>Player</th>
-                                    <th class="text-center">Champ</th>
-                                    <th class="text-center">KDA</th>
-                                    <th class="text-center">Gold</th>
-                                    <th class="text-center">CS</th>
+                                    <th class="text-center" style="font-weight:bold;">Champ</th>
+                                    <th class="text-center" style="font-weight:bold;">KDA</th>
+                                    <th class="text-center" style="font-weight:bold;">Gold</th>
+                                    <th class="text-center" style="font-weight:bold;">CS</th>
                                     @if($team[0]->fantasyPlayer !== null)
                                         <th class="text-center" style="font-weight:bold;">Fantasy</th>
                                     @endif
-                                    <th class="text-center">Spells</th>
-                                    <th class="text-center" style="width: 224px;">Items</th>
+                                    <th class="text-center" style="font-weight:bold;">Spells</th>
+                                    <th class="text-center" style="width: 224px; font-weight:bold;">Items</th>
                             </tr>
                     </thead>
                     <tbody class="no-border-y">
