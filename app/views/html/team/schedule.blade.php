@@ -290,9 +290,15 @@ $(document).ready(function()
 
 <li class="list-group-item noMatches blueHover" style='border-left: 5px solid; padding:0; padding-left:11px; background: #F8F8F8; border-left: 5px solid {{ $block->color() }}; height: 138px;'>
 
-    <div class="riotBody">
+    @if(preg_match("/<[^<]+>/",$block->body,$m) != 0)
+        <p>
+            {{ $block->body }}
+        </p>
+    @else
+
         {{ $block->body }}
-    </div>
+
+    @endif
 
     <div style='display:inline;height: 116px;padding-top: 10px;padding-right: 11px;float: right;'>
         <button type="button" class="btn btn-{{ $block->colorClass() }} btn-lg" style="height: 116px; margin-bottom: 0px !important;" data-toggle="tooltip" data-placement="left" data-container="body" title="{{ $block->status() }}">
