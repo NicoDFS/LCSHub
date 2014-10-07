@@ -4,11 +4,11 @@
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
           <span class="fa fa-gear"></span>
         </button>
-        <a class="navbar-brand" href="https://lcshub.tv"><span style="font-size: 25px;">lcshub.tv</span></a>
+        <a class="navbar-brand" href="http://lcshub.tv"><span style="font-size: 25px;">lcshub.tv</span></a>
       </div>
       <div class="navbar-collapse collapse">
         <!--<ul class="nav navbar-nav">
-          <li class="active"><a href="https://lcshub.tv" >Home</a></li>
+          <li class="active"><a href="http://lcshub.tv" >Home</a></li>
         </ul>-->
         <ul class="nav navbar-nav navbar-right not-nav">
           <li class="button md-trigger" data-modal="settingsModal"><a href="#" onclick="return false;" style="width: 96px; font-weight: 300; letter-spacing: 0px; font-style: initial; font-size: 14px; cursor: pointer;"><i class="fa fa-wrench"></i> &nbsp;Settings</a></li>

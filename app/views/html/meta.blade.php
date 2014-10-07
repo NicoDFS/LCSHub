@@ -5,8 +5,8 @@
 <link rel="shortcut icon" href="images/favicon.png">
 
 <title>{{ $title }}</title>
-<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,400italic,700,800' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Raleway:300,200,100' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,400italic,700,800' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Raleway:300,200,100' rel='stylesheet' type='text/css'>
 
 <!-- Bootstrap core CSS -->
 <link href="js/bootstrap/dist/css/bootstrap.css" rel="stylesheet">

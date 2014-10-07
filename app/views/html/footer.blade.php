@@ -10,14 +10,14 @@
 <script src="js/bootstrap.slider/js/bootstrap-slider.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/jquery.gritter/js/jquery.gritter.js"></script>
 <script type="text/javascript" src="js/jquery.niftymodals/js/jquery.modalEffects.js"></script>
-<script type="text/javascript" src="https://cdn.rawgit.com/davatron5000/FitVids.js/master/jquery.fitvids.js"></script>
+<script type="text/javascript" src="http://cdn.rawgit.com/davatron5000/FitVids.js/master/jquery.fitvids.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function(){
 
         App.init();
 
-        $("#streamContainer").fitVids({ customSelector: "object[data^='https://www.twitch.tv/widgets/live_embed_player.swf?channel=']"});
+        $("#streamContainer").fitVids({ customSelector: "object[data^='http://www.twitch.tv/widgets/live_embed_player.swf?channel=']"});
 
         window.liveUpdates = {{ (Cookie::has(Config::get('cookie.updates')) ? Cookie::get(Config::get('cookie.updates')) : 0) }};
 
@@ -646,7 +646,7 @@
 <script type="text/javascript" src="js/jquery.flot/jquery.flot.resize.js"></script>
 <script type="text/javascript" src="js/jquery.flot/jquery.flot.labels.js"></script>
 @if(!Cookie::has(Config::get('cookie.timezone')))
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.js"></script>
 <script type="text/javascript">
     $(function() {
 

@@ -25,7 +25,7 @@
 
                 <div class="btn-group" style="float:right;">
                     <button type="button" class="btn btn btn-default btn-youtube" style=" padding: 2px; ">
-                        <img src="https://www.azubu.tv/favicon.ico" style="height: 28px; padding:3px;">
+                        <img src="http://www.azubu.tv/favicon.ico" style="height: 28px; padding:3px;">
                     </button>
                     <button type="button" class="btn btn btn-default">Riot_Games</button>
                 </div>
@@ -61,7 +61,7 @@ $(document).ready(function()
 function updateViewerCount()
 {
     $.ajax({
-        url: 'https://api.twitch.tv/kraken/streams/{{ $block->twitchUsername() }}',
+        url: 'http://api.twitch.tv/kraken/streams/{{ $block->twitchUsername() }}',
         type: 'GET',
         contentType: 'application/json',
         dataType: 'jsonp',

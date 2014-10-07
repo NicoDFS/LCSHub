@@ -69,17 +69,17 @@
                     @foreach($team as $player)
                             <tr>
                                     <td> <img class="img-rounded" style="border:1px solid black; width:70px; height:50px;" src="{{ preg_replace("/^http:/i", "https:", $player->photoURL); }}"> <span data-toggle="tooltip" title="Position: {{ ( $player->fantasyPlayer !== null ? $player->fantasyPlayer->role : 'N/A') }}"> &nbsp;{{ $player->name }}</span></td>
-                                    <td class="text-center"> <img class="img-rounded" style="border:1px solid black;" src="https://lkimg.zamimg.com/shared/riot/images/champions/{{ $player->championId }}_32.png"> &nbsp;({{ $player->endLevel }})</td>
+                                    <td class="text-center"> <img class="img-rounded" style="border:1px solid black;" src="http://lkimg.zamimg.com/shared/riot/images/champions/{{ $player->championId }}_32.png"> &nbsp;({{ $player->endLevel }})</td>
                                     <td class="text-center"><span data-toggle="tooltip" title="{{ floatval((double)$player->kda) }}">{{ $player->kills }}/{{ $player->deaths }}/{{ $player->assists }}</span></td>
                                     <td class="text-center"><span data-toggle="tooltip" title="{{ number_format($player->totalGold) }}">{{ GamePlayer::count_format($player->totalGold) }}</span></td>
                                     <td class="text-center">{{ number_format($player->minionsKilled) }}</td>
                                     @if($player->fantasyPlayer !== null)
                                         <td class="text-center" style="font-weight:bold;"> <div style="border-bottom: 1px dashed #999;display: inline; cursor:pointer; {{ ($player->fantasyPlayer->fantasyPoints() > 0 ? 'color: rgb(0, 128, 0);' : 'color: rgb(237, 91, 86);') }}" data-placement="left" data-template="<div class='popover' role='tooltip'><div class='arrow'></div><h3 class='popover-title text-center'></h3><div class='popover-content'></div></div>" data-toggle="popover" data-trigger='hover' data-html="true" data-content="{{ $player->fantasyPlayer->generatePopover() }}" title="Fantasy Points Breakdown">{{ $player->fantasyPlayer->fantasyPoints() }}</div></td>
                                     @endif
-                                    <td class="text-center"> <img src="https://lkimg.zamimg.com/images/spells/{{ $player->spell0Id }}.png" style="width:32px; height:32px; border:1px solid black;" class="img-rounded"> <img src="https://lkimg.zamimg.com/images/spells/{{ $player->spell1Id }}.png" style="width:32px; height:32px; border:1px solid black;" class="img-rounded"> </td>
+                                    <td class="text-center"> <img src="http://lkimg.zamimg.com/images/spells/{{ $player->spell0Id }}.png" style="width:32px; height:32px; border:1px solid black;" class="img-rounded"> <img src="http://lkimg.zamimg.com/images/spells/{{ $player->spell1Id }}.png" style="width:32px; height:32px; border:1px solid black;" class="img-rounded"> </td>
                                     <td class="text-left">
                                     @foreach($player->items() as $item)
-                                        <img src="https://lkimg.zamimg.com/shared/riot/images/items/{{ $item }}_32.png" style="width:32px; height:32px; border:1px solid black;" class="img-rounded">
+                                        <img src="http://lkimg.zamimg.com/shared/riot/images/items/{{ $item }}_32.png" style="width:32px; height:32px; border:1px solid black;" class="img-rounded">
                                     @endforeach
                                     </td>
 
