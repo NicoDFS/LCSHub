@@ -249,7 +249,7 @@
     width: 60%;
     border: 1px solid rgb(0, 0, 0);
     padding: 10px;
-    margin-top: 3%;
+    margin-top: 4%;
     margin-left: 1%;
     float: left;
     color: rgb(0, 0, 0) !important;
@@ -290,13 +290,15 @@ $(document).ready(function()
 
 <li class="list-group-item noMatches blueHover" style='border-left: 5px solid; padding:0; padding-left:11px; background: #F8F8F8; border-left: 5px solid {{ $block->color() }}; height: 138px;'>
 
-    @if(preg_match("/<[^<]+>/",$block->body,$m) != 0)
-        <p>
-            {{ $block->body }}
-        </p>
-    @else
+    @if(preg_match("/<[^<]+>/", $block->body, $m) != 0)
 
         {{ $block->body }}
+
+    @else
+
+    <p>
+        {{ $block->body }}
+    </p>
 
     @endif
 
