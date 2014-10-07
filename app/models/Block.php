@@ -533,7 +533,13 @@ class Block extends Eloquent {
 
         if(is_null($todayBlock))
         {
-            $todayBlock = Block::where('dateTime', '<=',  $datetime->format('Y-m-d H:i:s'))->orderBy('dateTime', 'desc')->first();
+            $todayBlock = Block::where('blocks.dateTime', '<=', $datetime->format('Y-m-d H:i:s'))
+                                ->join('matches', 'matches.blockId', '=', 'blocks.blockId')
+                                ->select('blocks.*', 'matches.isFinished', 'matches.isLive')
+                                ->orderBy('dateTime', 'desc')
+                                ->first();
+
+            //$todayBlock = Block::where('dateTime', '<=',  $datetime->format('Y-m-d H:i:s'))->orderBy('dateTime', 'desc')->first();
             $todayBlock->currBlock = false;
         }
         else

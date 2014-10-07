@@ -21,14 +21,20 @@ Route::get('/', function()
 Route::get('/test', function()
 {
 
-    $datetime = new DateTime('now', new DateTimeZone(Block::defaultTimezone()));
-    $dateplus = new DateTime('+1 day', new DateTimeZone(Block::defaultTimezone()));
+    //$datetime = new DateTime('now', new DateTimeZone(Block::defaultTimezone()));
+    //$dateplus = new DateTime('+1 day', new DateTimeZone(Block::defaultTimezone()));
+    //
+    //dd($blocks = Block::where('blocks.dateTime', '>=', $datetime->format('Y-m-d H:i:s'))
+    //                    ->where('blocks.dateTime', '<=', $dateplus->format('Y-m-d H:i:s'))
+    //                    ->join('matches', 'matches.blockId', '=', 'blocks.blockId')
+    //                    ->select('blocks.*', 'matches.isFinished', 'matches.isLive')
+    //                    ->toSql());
 
-    dd($blocks = Block::where('blocks.dateTime', '>=', $datetime->format('Y-m-d H:i:s'))
-                        ->where('blocks.dateTime', '<=', $dateplus->format('Y-m-d H:i:s'))
-                        ->join('matches', 'matches.blockId', '=', 'blocks.blockId')
-                        ->select('blocks.*', 'matches.isFinished', 'matches.isLive')
-                        ->toSql());
+    //dd(Block::currentBlock());
+
+    //$block = Block::currentBlock();
+    //dd($block);
+    //dd(DB::getQueryLog());
 
 });
 
