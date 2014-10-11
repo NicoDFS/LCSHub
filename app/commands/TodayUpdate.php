@@ -13,7 +13,7 @@ class TodayUpdate extends ScheduledCommand {
 	 *
 	 * @var string
 	 */
-	protected $name = 'command:todayupdate';
+	protected $name = 'command:TodayUpdate';
 
 	/**
 	 * The console command description.
