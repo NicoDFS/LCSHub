@@ -6,6 +6,26 @@ class InsertController extends BaseController {
     public function all()
     {
 
+        if(Config::get('database.default') == 'mysql')
+        {
+            Config::set('database.default', 'mysql1');
+        }
+        else if(Config::get('database.default') == 'mysql1')
+        {
+            Config::set('database.default', 'mysql');
+        }
+
+
+        $tableNames = DB::table('information_schema.tables')->select('table_name')->whereRaw('`table_schema` = DATABASE()')->get();
+
+        foreach ($tableNames as $name)
+        {
+            if ($name->table_name != 'migrations')
+            {
+                DB::statement("TRUNCATE {$name->table_name}");
+            }
+        }
+
         $start = microtime(true);
 
         echo $this->debug("Starting database seed");
@@ -31,6 +51,33 @@ class InsertController extends BaseController {
         $end = microtime(true);
 
         echo $this->debug("Finished database seed (" . gmdate("H:i:s", (int) ($end - $start)) . ")");
+
+
+        $envFile = dirname(__FILE__) . "/../../";
+
+        if (App::environment('local'))
+        {
+            $envFile .= '.env.local.php';
+        }
+        elseif(App::environment('production'))
+        {
+            $envFile .= '.env.php';
+        }
+
+
+        $fh = fopen($envFile, 'w+');
+
+        $fileContents = "<?php\n"
+                        . "\n"
+                        . "return array(\n"
+                        . "    'MYSQL_DATABASE' => '" . getenv('MYSQL_DATABASE_1') . "', \n"
+                        . "    'MYSQL_DATABASE_1' => '" . getenv('MYSQL_DATABASE') . "', \n"
+                        . "    'MYSQL_USERNAME' => '" . getenv('MYSQL_USERNAME') . "', \n"
+                        . "    'MYSQL_PASSWORD' => '" . getenv('MYSQL_PASSWORD') . "' \n"
+                        . ");";
+
+        fwrite($fh, $fileContents);
+
     }
 
     public function debug($message)
