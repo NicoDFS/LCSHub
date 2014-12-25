@@ -255,8 +255,7 @@ class InsertController extends BaseController {
                                     "profileURL"    => $pData->profileUrl,
                                     "role"          => $pData->role,
                                     "roleId"        => $pData->roleId,
-                                    "photoURL"      => $pData->photoUrl,
-                                    "isStarter"     => $pData->isStarter
+                                    "photoURL"      => $pData->photoUrl
                                 ]);
 
                             }

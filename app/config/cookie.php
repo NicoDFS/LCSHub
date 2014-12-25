@@ -4,7 +4,7 @@ return array(
     'timezone'          => 'settings[timezone]',
     'timezoneDefault'   => 'America/Los_Angeles',
     'spoilers'          => 'settings[spoilers]',
-    'spoilersDefault'   => 'checked',
+    'spoilersDefault'   => '',
     'updates'           => 'settings[updates]',
     'updatesDefault'    => 'checked',
     'fantasyTeams'      => 'settings[fantasyTeams]',

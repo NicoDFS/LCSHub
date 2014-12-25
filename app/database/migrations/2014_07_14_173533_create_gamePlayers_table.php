@@ -22,7 +22,7 @@ class CreateGamePlayersTable extends Migration {
                 $table->integer('gameId')->index();
                 $table->integer('playerId');
                 $table->integer('teamId');
-                $table->string('name');
+                $table->string('name')->nullable();
                 $table->string('photoURL');
 
                 $table->integer('championId')->nullable();
