@@ -25,8 +25,8 @@
                         - {{ ($game->gameLength/60) > 59  ? gmdate('G:i:s', $game->gameLength) : gmdate('i:s', $game->gameLength)  }}
                     @endif
 
-                    @if($game->vodType != null)
-                        <span class="pull-right" onclick="getGameVod('{{ $game->gameId }}');" style="cursor: pointer;" data-toggle="tooltip" data-placement="left" title="Watch Game{{ (count($match->getGames()) > 1 ? ' ' . $game->gameNumber : '') }}"><i id='game-{{ $game->gameId }}-play'class="fa fa-youtube-play"></i></span>
+                    @if($game->vodType !== null)
+                        <span class="pull-right" onclick="getGameVod('{{ $game->gameId }}');" style="cursor: pointer;" data-toggle="tooltip" data-placement="left" title="Watch Game{{ (count($match->getGames()) > 1 ? ' ' . $game->gameNumber : '') }}"><i id='game-{{ $game->gameId }}-play'class="fa fa-youtube-play" style="display: inline !important;"></i></span>
                     @endif
 
                 </h1>
@@ -68,7 +68,7 @@
                     <tbody class="no-border-y">
                     @foreach($team as $player)
                             <tr>
-                                    <td> <img class="img-rounded" style="border:1px solid black; width:70px; height:50px;" src="{{ preg_replace("/^http:/i", "http:", $player->photoURL); }}"> <span data-toggle="tooltip" title="Position: {{ ( $player->fantasyPlayer !== null ? $player->fantasyPlayer->role : 'N/A') }}"> &nbsp;{{ $player->name }}</span></td>
+                                    <td> <img class="img-rounded" style="border:1px solid black; width:70px; height:50px;" src="{{ (!empty($player->photoURL) ? $player->photoURL : 'http://na.lolesports.com/sites/default/files/templateSilhoutte_4.jpg')  }}"> <span data-toggle="tooltip" title="Position: {{ ( $player->fantasyPlayer !== null ? $player->fantasyPlayer->role : 'N/A') }}"> &nbsp;{{ $player->name }}</span></td>
                                     <td class="text-center"> <img class="img-rounded" style="border:1px solid black;" src="http://lkimg.zamimg.com/shared/riot/images/champions/{{ $player->championId }}_32.png"> &nbsp;({{ $player->endLevel }})</td>
                                     <td class="text-center"><span data-toggle="tooltip" title="{{ floatval((double)$player->kda) }}">{{ $player->kills }}/{{ $player->deaths }}/{{ $player->assists }}</span></td>
                                     <td class="text-center"><span data-toggle="tooltip" title="{{ number_format($player->totalGold) }}">{{ GamePlayer::count_format($player->totalGold) }}</span></td>
