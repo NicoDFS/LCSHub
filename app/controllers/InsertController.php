@@ -190,74 +190,77 @@ class InsertController extends BaseController {
                 {
 
                     $leagueDataURL = "http://na.lolesports.com:80/api/tournament/" . $tId . ".json?timestamp=" . time();
-                    $leagueData = json_decode(file_get_contents($leagueDataURL));
-
-                    $tournament = Tournament::firstOrCreate(["tournamentId" => $tId]);
-
-                    if(empty($leagueData->winner)) $leagueData->winner = null;
-
-                    $tournament->update([
-                        "leagueId"          => $league->leagueId,
-                        "tournamentId"      => $tId,
-                        "name"              => $leagueData->name,
-                        "namePublic"        => $leagueData->namePublic,
-                        "isFinished"        => $leagueData->isFinished,
-                        "dateBegin"         => date("Y-m-d H:i:s", strtotime($leagueData->dateBegin)),
-                        "dateEnd"           => date("Y-m-d H:i:s", strtotime($leagueData->dateEnd)),
-                        "noVods"            => $leagueData->noVods,
-                        "season"            => $leagueData->season,
-                        "published"         => $leagueData->published,
-                        "winner"            => $leagueData->winner
-                    ]);
-
-                    foreach($leagueData->contestants as $contestant)
+                    if($leagueData = @file_get_contents($leagueDataURL))
                     {
-                        if($contestant->id == null)
-                        {
-                            continue;
-                        }
 
-                        $contestantURL = "http://na.lolesports.com:80/api/team/" . $contestant->id . ".json?expandPlayers=1&timestamp=" . time();
-                        $contestantData = json_decode(file_get_contents($contestantURL));
+                        $leagueData = json_decode($leagueData);
+                        $tournament = Tournament::firstOrCreate(["tournamentId" => $tId]);
 
-                        $team = Team::firstOrCreate(["teamId" => $contestant->id]);
+                        if(empty($leagueData->winner)) $leagueData->winner = null;
 
-                        $team->update([
+                        $tournament->update([
+                            "leagueId"          => $league->leagueId,
                             "tournamentId"      => $tId,
-                            "teamId"            => $contestant->id,
-                            "name"              => $contestantData->name,
-                            "bio"               => $contestantData->bio,
-                            "noPlayers"         => $contestantData->noPlayers,
-                            "logoUrl"           => $contestantData->logoUrl,
-                            "profileUrl"        => $contestantData->profileUrl,
-                            "teamPhotoUrl"      => $contestantData->teamPhotoUrl,
-                            "acronym"           => ($contestantData->acronym == " " ? null : $contestantData->acronym )
+                            "name"              => $leagueData->name,
+                            "namePublic"        => $leagueData->namePublic,
+                            "isFinished"        => $leagueData->isFinished,
+                            "dateBegin"         => date("Y-m-d H:i:s", strtotime($leagueData->dateBegin)),
+                            "dateEnd"           => date("Y-m-d H:i:s", strtotime($leagueData->dateEnd)),
+                            "noVods"            => $leagueData->noVods,
+                            "season"            => $leagueData->season,
+                            "published"         => $leagueData->published,
+                            "winner"            => $leagueData->winner
                         ]);
 
-                        if($contestantData->roster !== null)
+                        foreach($leagueData->contestants as $contestant)
                         {
-                            foreach($contestantData->roster as $pData)
+                            if($contestant->id == null)
                             {
-                                $playerId = substr($pData->profileUrl, strpos($pData->profileUrl, "/node/") + 6);
+                                continue;
+                            }
 
-                                $player = Player::firstOrCreate(["playerId" => $playerId]);
+                            $contestantURL = "http://na.lolesports.com:80/api/team/" . $contestant->id . ".json?expandPlayers=1&timestamp=" . time();
+                            $contestantData = json_decode(file_get_contents($contestantURL));
 
-                                $player->update([
-                                    "playerId"      => $playerId,
-                                    "name"          => $pData->name,
-                                    "bio"           => $pData->bio,
-                                    "firstName"     => $pData->firstname,
-                                    "lastName"      => $pData->lastName,
-                                    "hometown"      => $pData->hometown,
-                                    "facebookURL"   => $pData->facebookUrl,
-                                    "twitterURL"    => $pData->twitterUrl,
-                                    "teamId"        => $contestant->id,
-                                    "profileURL"    => $pData->profileUrl,
-                                    "role"          => $pData->role,
-                                    "roleId"        => $pData->roleId,
-                                    "photoURL"      => $pData->photoUrl
-                                ]);
+                            $team = Team::firstOrCreate(["teamId" => $contestant->id]);
 
+                            $team->update([
+                                "tournamentId"      => $tId,
+                                "teamId"            => $contestant->id,
+                                "name"              => $contestantData->name,
+                                "bio"               => $contestantData->bio,
+                                "noPlayers"         => $contestantData->noPlayers,
+                                "logoUrl"           => $contestantData->logoUrl,
+                                "profileUrl"        => $contestantData->profileUrl,
+                                "teamPhotoUrl"      => $contestantData->teamPhotoUrl,
+                                "acronym"           => ($contestantData->acronym == " " ? null : $contestantData->acronym )
+                            ]);
+
+                            if($contestantData->roster !== null)
+                            {
+                                foreach($contestantData->roster as $pData)
+                                {
+                                    $playerId = substr($pData->profileUrl, strpos($pData->profileUrl, "/node/") + 6);
+
+                                    $player = Player::firstOrCreate(["playerId" => $playerId]);
+
+                                    $player->update([
+                                        "playerId"      => $playerId,
+                                        "name"          => $pData->name,
+                                        "bio"           => $pData->bio,
+                                        "firstName"     => $pData->firstname,
+                                        "lastName"      => $pData->lastName,
+                                        "hometown"      => $pData->hometown,
+                                        "facebookURL"   => $pData->facebookUrl,
+                                        "twitterURL"    => $pData->twitterUrl,
+                                        "teamId"        => $contestant->id,
+                                        "profileURL"    => $pData->profileUrl,
+                                        "role"          => $pData->role,
+                                        "roleId"        => $pData->roleId,
+                                        "photoURL"      => $pData->photoUrl
+                                    ]);
+
+                                }
                             }
                         }
                     }

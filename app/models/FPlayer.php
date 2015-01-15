@@ -81,7 +81,7 @@ class FPlayer extends Eloquent {
             if($output !== null)
             {
                 $output .= "</optgroup>";
-                $selects['Top Lane'] = $output;
+                $selects['TOP_LANE'] = $output;
 
                 $this->_playersPositions = $positions;
             }

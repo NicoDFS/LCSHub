@@ -274,45 +274,45 @@
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Top</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect positionSelect" id='topSelect' style="width:100%;" placeholder="{{ $fantasyPlayer->playerRandom('Top Lane') }}" disabled="disabled">
+                        <select class="fancySelect positionSelect" id='topSelect' style="width:100%;" placeholder="{{ $fantasyPlayer->playerRandom('TOP_LANE') }}" disabled="disabled">
                             <option></option>
-                            {{ $fantasyPlayer->playerOptions('Top Lane') }}
+                            {{ $fantasyPlayer->playerOptions('TOP_LANE') }}
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Jungle</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect positionSelect" id='jungleSelect' style="width:100%;" placeholder="{{ $fantasyPlayer->playerRandom('Jungler') }}" disabled="disabled">
+                        <select class="fancySelect positionSelect" id='jungleSelect' style="width:100%;" placeholder="{{ $fantasyPlayer->playerRandom('JUNGLER') }}" disabled="disabled">
                             <option></option>
-                            {{ $fantasyPlayer->playerOptions('Jungler') }}
+                            {{ $fantasyPlayer->playerOptions('JUNGLER') }}
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Mid</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect positionSelect" id='midSelect' style="width:100%;" placeholder="{{ $fantasyPlayer->playerRandom('Mid Lane') }}" disabled="disabled">
+                        <select class="fancySelect positionSelect" id='midSelect' style="width:100%;" placeholder="{{ $fantasyPlayer->playerRandom('MID_LANE') }}" disabled="disabled">
                             <option></option>
-                            {{ $fantasyPlayer->playerOptions('Mid Lane') }}
+                            {{ $fantasyPlayer->playerOptions('MID_LANE') }}
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">ADC</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect positionSelect" id='adcSelect' style="width:100%;" placeholder="{{ $fantasyPlayer->playerRandom('AD Carry') }}" disabled="disabled">
+                        <select class="fancySelect positionSelect" id='adcSelect' style="width:100%;" placeholder="{{ $fantasyPlayer->playerRandom('AD_CARRY') }}" disabled="disabled">
                             <option></option>
-                            {{ $fantasyPlayer->playerOptions('AD Carry') }}
+                            {{ $fantasyPlayer->playerOptions('AD_CARRY') }}
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Support</label>
                     <div class="col-sm-10">
-                        <select class="fancySelect positionSelect" id='supportSelect' style="width:100%;" placeholder="{{ $fantasyPlayer->playerRandom('Support') }}" disabled="disabled">
+                        <select class="fancySelect positionSelect" id='supportSelect' style="width:100%;" placeholder="{{ $fantasyPlayer->playerRandom('SUPPORT') }}" disabled="disabled">
                             <option></option>
-                            {{ $fantasyPlayer->playerOptions('Support') }}
+                            {{ $fantasyPlayer->playerOptions('SUPPORT') }}
                         </select>
                     </div>
                 </div>
