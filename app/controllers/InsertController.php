@@ -100,7 +100,8 @@ class InsertController extends BaseController {
     {
         Eloquent::unguard();
 
-        $fTeamURL = "http://fantasy.na.lolesports.com/en-US/api/season/4?timestamp=" . time();
+        //$fTeamURL = "http://fantasy.na.lolesports.com/en-US/api/season/4?timestamp=" . time
+        $fTeamURL = "http://fantasy.na.lolesports.com/en-US/api/season/8?timestamp=" . time();
         $fTeamData = json_decode(file_get_contents($fTeamURL));
 
         foreach($fTeamData->proTeams as $team)
